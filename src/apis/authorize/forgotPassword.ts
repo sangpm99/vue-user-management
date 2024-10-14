@@ -11,8 +11,6 @@ const forgotPassword = async (email: string, reCaptcha: string) => {
         })
 
         if (response.status === 200) {
-            console.log(response.data)
-
             router.push({
                 path: '/authorize/recoverpassword',
                 query: { email }

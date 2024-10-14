@@ -1,41 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import AuthLayout from '@/layouts/AuthLayout.vue'
+import AdminLayout from '@/layouts/AdminLayout.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
-            path: '',
-            name: 'home',
-            component: DefaultLayout,
-            children: [
-                {
-                    path: '/',
-                    name: 'home',
-                    component: () => import('../views/pages/Home.vue')
-                },
-                {
-                    path: 'shop',
-                    name: 'shop',
-                    component: () => import('../views/pages/Shop.vue')
-                },
-                {
-                    path: 'about',
-                    name: 'about',
-                    component: () => import('../views/pages/About.vue')
-                },
-                {
-                    path: 'blog',
-                    name: 'blog',
-                    component: () => import('../views/pages/Blog.vue')
-                },
-                {
-                    path: 'contact',
-                    name: 'contact',
-                    component: () => import('../views/pages/Contact.vue')
-                }
-            ]
+            path: '/',
+            redirect: '/authorize/signin'
         },
         {
             path: '/authorize/',
@@ -61,6 +33,28 @@ const router = createRouter({
                     path: 'recoverpassword',
                     name: 'recover password',
                     component: () => import('../views/authorize/RecoverPassword.vue')
+                }
+            ]
+        },
+        {
+            path: '/admin/',
+            component: AdminLayout,
+            name: 'admin',
+            children: [
+                {
+                    path: 'myprofile',
+                    name: 'my profile',
+                    component: () => import('../views/admin/MyProfile.vue')
+                },
+                {
+                    path: 'changepassword',
+                    name: 'Change Password',
+                    component: () => import('../views/admin/ChangePassword.vue')
+                },
+                {
+                    path: 'user',
+                    name: 'User',
+                    component: () => import('../views/admin/User.vue')
                 }
             ]
         }

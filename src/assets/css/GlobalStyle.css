@@ -1,5 +1,9 @@
 @import 'bootstrap/dist/css/bootstrap.css';
 
+:root {
+    --color-primary: #3498db;
+}
+
 ul {
     list-style-type: none;
     padding: 0;

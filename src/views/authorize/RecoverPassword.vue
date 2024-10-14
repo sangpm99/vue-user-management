@@ -37,77 +37,65 @@ const handleRecoverPassword = async () => {
 </script>
 
 <template>
-    <section class="vh-100" style="background-color: #eee">
-        <div class="container py-5 h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col col-lg-9 col-xl-7">
-                    <div class="card rounded-3">
-                        <div class="card-body p-4">
-                            <h4 class="text-center my-3 pb-3">Recover Password</h4>
+    <h4 class="text-center my-3 pb-3">Recover Password</h4>
 
-                            <form action="" method="POST" class="row mb-4 pb-2">
-                                <div class="col-12">
-                                    <div data-mdb-input-init class="form-outline">
-                                        <label for="" class="w-100 mb-2">
-                                            Email
-                                            <input
-                                                disabled
-                                                type="email"
-                                                class="form-control not-allow"
-                                                v-model="email"
-                                            />
-                                        </label>
-                                        <br />
-                                        <label for="" class="w-100 mb-2">
-                                            New Password
-                                            <input
-                                                type="password"
-                                                class="form-control"
-                                                v-model="newPassword"
-                                            />
-                                        </label>
-                                        <br />
-                                        <label
-                                            for=""
-                                            :class="
-                                                notifyPasswordNotMatch
-                                                    ? 'w-100 mb-2 text-danger'
-                                                    : 'w-100 mb-2'
-                                            "
-                                        >
-                                            Confirm New Password
-                                            <input
-                                                type="password"
-                                                :class="
-                                                    notifyPasswordNotMatch
-                                                        ? 'form-control border-danger'
-                                                        : 'form-control'
-                                                "
-                                                v-model="confirmNewPassword"
-                                            />
-                                        </label>
-                                        <br />
-                                        <label
-                                            v-if="notifyPasswordNotMatch"
-                                            for=""
-                                            class="text-danger small"
-                                        >
-                                            Confirm new password must match new password
-                                        </label>
-                                        <br />
-                                        <input
-                                            class="mt-2 btn btn-primary float-end"
-                                            type="submit"
-                                            value="Recover Password"
-                                            @click.prevent="handleRecoverPassword"
-                                        />
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+    <form action="" method="POST" class="row mb-4 pb-2">
+        <div class="col-12">
+            <div data-mdb-input-init class="form-outline">
+                <label for="" class="w-100 mb-2">
+                    Email
+                    <input
+                        disabled
+                        type="email"
+                        class="form-control not-allow"
+                        v-model="email"
+                    />
+                </label>
+                <br />
+                <label for="" class="w-100 mb-2">
+                    New Password
+                    <input
+                        type="password"
+                        class="form-control"
+                        v-model="newPassword"
+                    />
+                </label>
+                <br />
+                <label
+                    for=""
+                    :class="
+                        notifyPasswordNotMatch
+                            ? 'w-100 mb-2 text-danger'
+                            : 'w-100 mb-2'
+                    "
+                >
+                    Confirm New Password
+                    <input
+                        type="password"
+                        :class="
+                            notifyPasswordNotMatch
+                                ? 'form-control border-danger'
+                                : 'form-control'
+                        "
+                        v-model="confirmNewPassword"
+                    />
+                </label>
+                <br />
+                <label
+                    v-if="notifyPasswordNotMatch"
+                    for=""
+                    class="text-danger small"
+                >
+                    Confirm new password must match new password
+                </label>
+                <br />
+                <input
+                    class="mt-2 btn btn-primary float-end"
+                    type="submit"
+                    value="Recover Password"
+                    @click.prevent="handleRecoverPassword"
+                />
             </div>
         </div>
-    </section>
+    </form>
 </template>
