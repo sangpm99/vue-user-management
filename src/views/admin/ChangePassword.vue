@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { getCookie } from '@/stores/userCookie'
 import getUser from '@/apis/admin/getUser'
 import changePassword from '@/apis/admin/changePassword'
+import Swal from 'sweetalert2';
 
 const userId = ref(null)
 
@@ -51,36 +52,87 @@ watch(
     },
     { immediate: true }
 )
+
+const handleUpdate = () => {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to proceed with the update?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, update it!',
+        cancelButtonText: 'Cancel'
+    }).then(async (result) => {
+        if(result.isConfirmed) {
+            const statusCode = await changePassword(oldPassword.value, newPassword.value, confirmNewPassword.value);
+            console.log(statusCode)
+            switch (Number(statusCode)) {
+                case 200: {
+                    Swal.fire({
+                        text: "Password changed successfully",
+                        icon: "success"
+                    })
+                    break;
+                }
+
+                case 406: {
+                    Swal.fire({
+                        text: "Password not accepted",
+                        icon: "warning"
+                    })
+                    break;
+                }
+                
+                default: {
+                    Swal.fire({
+                        text: "An error occurred, please try again later.",
+                        icon: "error"
+                    })
+                    break;
+                }
+            }
+        }
+    })
+}
+
 </script>
 
 <template>
     <div v-if="userInfo !== null">
         <h1>Change Password</h1>
 
-        <form>
-            <label>
-                Old Password
-                <input type="password" v-model="oldPassword" />
-            </label>
-            <br />
+        <form method="POST" class="row mb-4 pb-2">
+        <div class="col-12">
+            <div data-mdb-input-init class="form-outline">
+                <label class="w-100 mb-2">
+                    Old Password
+                    <input
+                        type="password"
+                        class="form-control"
+                        v-model="oldPassword"
+                    />
+                </label>
+                <br />
+                <label class="w-100 mb-2">
+                    New Password
+                    <input
+                        type="password"
+                        class="form-control"
+                        v-model="newPassword"
+                    />
+                </label>
 
-            <label>
-                New Password
-                <input type="password" v-model="newPassword" />
-            </label>
-            <br />
-
-            <label>
-                Confirm New Password
-                <input type="password" v-model="confirmNewPassword" />
-            </label>
-            <br />
-
-            <input
-                type="submit"
-                value="Update"
-                @click.prevent="changePassword(oldPassword, newPassword, confirmNewPassword)"
-            />
-        </form>
+                <br />
+                <label class="w-100 mb-2">
+                    Confirm New Password
+                    <input
+                        type="password"
+                        class="form-control"
+                        v-model="confirmNewPassword"
+                    />
+                </label>
+                <input class="btn btn-primary float-end" type="submit" value="Update" @click.prevent="handleUpdate">
+            </div>
+        </div>
+    </form>
     </div>
 </template>

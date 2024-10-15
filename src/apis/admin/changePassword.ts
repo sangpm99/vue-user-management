@@ -15,12 +15,13 @@ const changePassword = async (
         })
 
         if (response.status === 200) {
-            alert('Password has changed successfully!')
-            return response.data
+            return response.status
         }
     } catch (err) {
-        console.log('Lỗi fetch dữ liệu:', err)
-        return null
+        if(err instanceof Error) {
+            console.log('Error fetching data', err);
+            return (err as any).status
+        }
     }
 }
 

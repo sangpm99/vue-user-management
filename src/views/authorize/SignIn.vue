@@ -43,14 +43,7 @@ const rememberMe = ref<boolean>(false)
                 />
                 <label for="rememberMe">Remember me?</label>
                 <br />
-                <input
-                    class="mt-2 btn btn-primary float-end"
-                    type="submit"
-                    value="Sign In"
-                    @click.prevent="
-                        signIn(email, password, reCaptcha, rememberMe)
-                    "
-                />
+                <input class="btn btn-primary float-end" type="submit" value="Sign In" @click.prevent="signIn(email, password, reCaptcha, rememberMe)">
                 <br />
                 <p class="text-center mt-5">
                     Don't have an account?

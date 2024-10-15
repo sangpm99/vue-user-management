@@ -14,7 +14,7 @@ import Header from '@/components/Header.vue'
             <Sidebar />
         </div>
 
-        <div class="col-9">
+        <div class="col-7">
             <RouterView />
         </div>
     </div>
