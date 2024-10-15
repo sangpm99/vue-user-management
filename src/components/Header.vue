@@ -11,14 +11,8 @@ const routes = router.options.routes
 
 <template>
     <header class="py-3 border-bottom">
-        <div class="container">
-            <div
-                class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
-            >
-                <ul
-                    class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0"
-                ></ul>
-
+        <div class="row">
+            <div class="col-10 d-flex flex-wrap align-items-center justify-content-end">
                 <div v-if="userData" class="text-end">
                     <span class="nav-link" href=""
                         >Hi, {{ userData ? userData.data.fullName : '' }}</span
@@ -31,11 +25,12 @@ const routes = router.options.routes
                         </li>
                     </ul>
                 </div>
-
                 <div v-if="!userData" class="text-end">
                     <RouterLink class="me-2" to="/authorize/signin">Sign In</RouterLink>
                 </div>
             </div>
+
+            <div class="col-3"></div>
         </div>
     </header>
 </template>

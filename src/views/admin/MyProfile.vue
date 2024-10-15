@@ -57,7 +57,7 @@ watch(
                 <img src="@/assets/images/no-user-image-square.jpg"
                     alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
                     style="width: 150px; z-index: 1">
-                <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-dark text-body" style="z-index: 1;">
+                <button type="button" class="btn btn-outline-dark edit" style="z-index: 1;">
                     Edit profile
                 </button>
                 </div>
