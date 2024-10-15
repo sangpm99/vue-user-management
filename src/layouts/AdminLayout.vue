@@ -1,21 +1,23 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import Sidebar from '@/components/Sidebar.vue'
-import Header from '@/components/Header.vue'
 </script>
 
 <template>
     <div class="row">
-        <div class="col-12">
-            <Header />
-        </div>
-        <div class="col-3">
-            <h1>Dashboard</h1>
+        <div class="col-2 position-relative">
             <Sidebar />
         </div>
 
-        <div class="col-7">
+        <div class="col-10 content">
             <RouterView />
         </div>
     </div>
 </template>
+
+<style scoped>
+    .content {
+        background-color: #dddddd;
+        min-height: 100vh;
+    }
+</style>

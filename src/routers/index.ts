@@ -44,16 +44,19 @@ const router = createRouter({
                 {
                     path: 'myprofile',
                     name: 'my profile',
+                    icon: 'far address-card',
                     component: () => import('../views/admin/MyProfile.vue')
                 },
                 {
                     path: 'changepassword',
                     name: 'Change Password',
+                    icon: 'fas lock',
                     component: () => import('../views/admin/ChangePassword.vue')
                 },
                 {
                     path: 'user',
                     name: 'User',
+                    icon: 'fa-solid fa-users',
                     component: () => import('../views/admin/User.vue')
                 }
             ]
