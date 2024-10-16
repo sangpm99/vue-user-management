@@ -1,12 +1,12 @@
-import 'vuetify/styles';
+// import 'vuetify/styles';
 
-import { createVuetify } from 'vuetify';
-import '@mdi/font/css/materialdesignicons.css';
+// import { createVuetify } from 'vuetify';
+// import '@mdi/font/css/materialdesignicons.css';
 
-export default createVuetify(
-    {
-        icons: {
-            defaultSet: 'mdi',
-        }
-    }
-);
+// export default createVuetify(
+//     {
+//         icons: {
+//             defaultSet: 'mdi',
+//         }
+//     }
+// );

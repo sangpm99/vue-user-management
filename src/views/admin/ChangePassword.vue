@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, type Ref } from 'vue'
 import { getCookie } from '@/stores/userCookie'
 import getUser from '@/apis/admin/getUser'
 import changePassword from '@/apis/admin/changePassword'
 import Swal from 'sweetalert2';
 
-const userId = ref(null)
+const userId: Ref<any> = ref(null)
 
-const user = ref(null)
+const user: Ref<any> = ref(null)
 
-const userInfo = ref(null)
+const userInfo: Ref<any> = ref(null)
 
-const oldPassword = ref('')
+const oldPassword: Ref<string> = ref('')
 
-const newPassword = ref('')
+const newPassword: Ref<string> = ref('')
 
-const confirmNewPassword = ref('')
+const confirmNewPassword: Ref<any> = ref('')
 
 watch(
     () => user.value,
@@ -26,7 +26,7 @@ watch(
             if (cookieData !== JSON.stringify(user.value)) {
                 try {
                     user.value = JSON.parse(cookieData)
-                    userId.value = user.value.data.id
+                    userId.value = user?.value?.data?.id || ''
                 } catch (error) {
                     console.error('Cookie data is not valid JSON:', error)
                 }
@@ -38,7 +38,7 @@ watch(
 
 watch(
     () => userId.value,
-    async (id: string) => {
+    async (id) => {
         if (id !== null) {
             try {
                 const userInfoResponse = await getUser(id)

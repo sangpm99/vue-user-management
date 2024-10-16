@@ -38,7 +38,7 @@
 
 <template>
     <div class="card h-100 shadow p-3">
-        <h1>List User</h1>
+        <h1>User List</h1>
         <h3>Totals: {{ totals }}</h3>
         <label>
             Show

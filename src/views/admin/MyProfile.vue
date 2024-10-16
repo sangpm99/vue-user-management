@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, type Ref } from 'vue'
 import { getCookie } from '@/stores/userCookie'
 import getUser from '@/apis/admin/getUser'
+import changeProfile from '@/apis/admin/changeProfile'
 
-const userId = ref(null)
+const userId: Ref<string> = ref('')
 
-const user = ref(null)
+const user: Ref<any> = ref(null)
 
-const userInfo = ref(null)
+const userInfo: Ref<any> = ref(null)
 
-const isEdit = ref(false)
+const isEdit: Ref<boolean> = ref(false)
 
 watch(
     () => user.value,
@@ -32,7 +33,7 @@ watch(
 
 watch(
     () => userId.value,
-    async (id: string) => {
+    async (id) => {
         if (id !== null) {
             try {
                 const userInfoResponse = await getUser(id)
@@ -46,6 +47,21 @@ watch(
     },
     { immediate: true }
 )
+
+const handleChangeProfile = async () => {
+    // const response = changeProfile(
+    //     userInfo.value.fullName,
+    //     userInfo.value.userName,
+    //     userInfo.value.email,
+    //     userInfo.value.phoneNumber,
+    //     userInfo.value.address,
+    //     userInfo.value.department
+    // )
+
+    // if(response) {
+
+    // }
+}
 </script>
 
 <template>
@@ -161,7 +177,7 @@ watch(
                                 <br />
 
                                 <div v-if="isEdit">
-                                    <input class="btn btn-primary float-end" type="submit" value="Update" @click.prevent="">
+                                    <input class="btn btn-primary float-end" type="submit" value="Update" @click.prevent="handleChangeProfile">
                                     <input class="btn btn-secondary float-end me-2" type="submit" value="Cancel" @click.prevent="isEdit = false">
                                 </div>
 

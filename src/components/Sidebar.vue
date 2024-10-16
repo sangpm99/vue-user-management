@@ -22,22 +22,38 @@ const routes = router.options.routes
         <hr>
 
         <ul class="nav nav-pills flex-column mb-auto">
-            <template v-for="item in routes">
-                <template v-if="item.name === 'admin'">
-                    <template v-for="(route, index) in item.children" :key="index">
-                        <li class="nav-item">
-                            <RouterLink
-                                :to="item.path + route.path"
-                                class="capitalize nav-link text-white position-relative mb-2"
-                                aria-current="page"
-                                >
-                                <font-awesome-icon v-if="route.icon" :icon="route.icon.split(' ')"/>
-                                <span class="position-absolute space-icon">{{ route.name }}</span>
-                                </RouterLink>
-                        </li>
-                    </template>
-                </template>
-            </template>
+            <li class="nav-item">
+                <RouterLink
+                    to="/admin/myprofile"
+                    class="capitalize nav-link text-white position-relative mb-2"
+                    aria-current="page"
+                >
+                <font-awesome-icon :icon="['far','address-card']"/>
+                <span class="position-absolute space-icon">My Profile</span>
+                </RouterLink>
+            </li>
+
+            <li class="nav-item">
+                <RouterLink
+                    to="/admin/changepassword"
+                    class="capitalize nav-link text-white position-relative mb-2"
+                    aria-current="page"
+                >
+                <font-awesome-icon :icon="['fas','lock']"/>
+                <span class="position-absolute space-icon">Change Password</span>
+                </RouterLink>
+            </li>
+
+            <li class="nav-item">
+                <RouterLink
+                    to="/admin/user"
+                    class="capitalize nav-link text-white position-relative mb-2"
+                    aria-current="page"
+                >
+                <font-awesome-icon :icon="['fa-solid','fa-users']"/>
+                <span class="position-absolute space-icon">User List</span>
+                </RouterLink>
+            </li>
         </ul>
         <div class="toggle">
             <ul class="text-small glass rounded p-2 dropdown-content" aria-labelledby="dropdownUser1">
