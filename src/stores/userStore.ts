@@ -2,12 +2,11 @@ import axios from '@/plugins/axios'
 import { defineStore } from "pinia";
 
 export const useUserStore = defineStore('users', () => {
-
-    const getUsers = async () => {
+    const getUsers = async (pageIndex: number, pageSize: number) => {
         try {
             const params = {
-                pageIndex: 1, 
-                pageSize: 20
+                pageIndex, 
+                pageSize
             }
 
             const response = await axios.get(`/User/GetUsers`, {

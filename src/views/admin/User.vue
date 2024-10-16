@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import { ref, onMounted, watch } from 'vue';
+    import { ref, watch } from 'vue';
     import {useUserStore} from '@/stores/userStore';
 
     const totals = ref<number>(0);
@@ -9,48 +9,45 @@
 
     const currentPage = ref<number>(1);
 
-    const paginationList = ref<Array<any>>([]);
+    const userStore = useUserStore();
 
-    onMounted(async () => {
-        const userStore = useUserStore();
-        const data = await userStore.getUsers();
-
-        if(data) {
-            totals.value = data.data.itemsCount;
-            userList.value = data.data.items;
-        }
-    })
+    const pagination = ref<Number>(1);
 
     watch(
-        [() => itemsPerPage.value, () => userList.value],
+        () => itemsPerPage.value,
         () => {
-            let i = 0;
-            const copyUserList = [...userList.value];
-            const newUserList = [];
+            currentPage.value = 1;
+        }
+    );
 
-            while (i < copyUserList.length) {
-                newUserList.push(copyUserList.slice(i, itemsPerPage.value + i));
-                i += itemsPerPage.value;
+    watch(
+        [() => itemsPerPage.value, () => currentPage.value],
+        async () => {
+            const data = await userStore.getUsers(currentPage.value, itemsPerPage.value);
+
+            if (data) {
+                totals.value = data.data.itemsCount;
+                userList.value = data.data.items;
+
+                pagination.value = (totals.value % itemsPerPage.value) === 0 ? Math.floor(totals.value / itemsPerPage.value) : Math.floor(totals.value / itemsPerPage.value) + 1;
             }
-
-            paginationList.value = [...newUserList];
         },
         { immediate: true }
-    )
+    );
 </script>
 
 <template>
     <div class="card h-100 shadow p-3">
         <h1>List User</h1>
         <h3>Totals: {{ totals }}</h3>
-        <label for="">
+        <label>
             Show
             <input class="item-per-page form-control d-inline" type="number" min="1" v-model.lazy="itemsPerPage">
             Items Per Pages
         </label>
 
-        <table class="table mt-2">
-        <thead>
+        <table class="table mt-2 table-bordered">
+        <thead class="table-dark">
             <tr>
             <th scope="col">FullName</th>
             <th scope="col">Department</th>
@@ -59,11 +56,11 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(user,index) in paginationList[currentPage - 1]" :key="index">
+            <tr v-for="(user,index) in userList" :key="index">
                 <td>{{ user.fullName }}</td>
                 <td>{{ user.department }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ user.roles }}</td>
+                <td><span v-for="(role, index) in user.roles" :key="index">{{ role }}&nbsp;</span></td>
             </tr>
         </tbody>
         </table>
@@ -72,22 +69,28 @@
             <nav aria-label="...">
                 <ul class="pagination">
                     <li class="page-item">
-                        <a :class="currentPage === 1 ? 'page-link disabled' : 'page-link'" @click="currentPage--"><</a>
+                        <a :class="currentPage === 1 ? 'page-link disabled' : 'page-link'" @click="currentPage = 1">&laquo;</a>
+                    </li>
+                    <li class="page-item">
+                        <a :class="currentPage === 1 ? 'page-link disabled' : 'page-link'" @click="currentPage--">prev</a>
                     </li>
 
-                    <template v-for="(page, index) in paginationList" :key="index">
+                    <template v-for="index in pagination" :key="index">
                         <li class="page-item">
                             <a 
-                                :class="(index + 1) === currentPage ? 'page-link active' : 'page-link'"
-                                @click="currentPage = index + 1"
+                                :class="(Number(index)) === currentPage ? 'page-link active' : 'page-link'"
+                                @click="currentPage = Number(index)"
                             >
-                                {{ index + 1 }}
+                                {{ Number(index)}}
                             </a>
                         </li>
                     </template>
 
                     <li class="page-item">
-                        <a :class="currentPage === paginationList.length ? 'page-link disabled' : 'page-link'" @click="currentPage++">></a>
+                        <a :class="currentPage === pagination ? 'page-link disabled' : 'page-link'" @click="currentPage++">next</a>
+                    </li>
+                    <li class="page-item">
+                        <a :class="currentPage === Number(pagination) ? 'page-link disabled' : 'page-link'" @click="currentPage = Number(pagination)">&raquo;</a>
                     </li>
                 </ul>
             </nav>
@@ -97,6 +100,6 @@
 
 <style scoped>
     input.item-per-page {
-        width: 50px;
+        width: 70px;
     }
 </style>
