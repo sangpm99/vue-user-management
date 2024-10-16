@@ -97,42 +97,58 @@ const handleUpdate = () => {
 </script>
 
 <template>
-    <div v-if="userInfo !== null">
-        <h1>Change Password</h1>
+    <div class="h-100" v-if="userInfo !== null">
 
-        <form method="POST" class="row mb-4 pb-2">
-        <div class="col-12">
-            <div data-mdb-input-init class="form-outline">
-                <label class="w-100 mb-2">
-                    Old Password
-                    <input
-                        type="password"
-                        class="form-control"
-                        v-model="oldPassword"
-                    />
-                </label>
-                <br />
-                <label class="w-100 mb-2">
-                    New Password
-                    <input
-                        type="password"
-                        class="form-control"
-                        v-model="newPassword"
-                    />
-                </label>
+        <div class="card h-100 shadow p-3">
+            <h1>Change Password</h1>
+            <form method="POST" class="row mb-4 pb-2">
+            <div class="col-12">
+                <div data-mdb-input-init class="form-outline">
+                    <label class="w-100 mb-2">
+                        Old Password
+                        <input
+                            type="password"
+                            class="form-control"
+                            v-model="oldPassword"
+                        />
+                    </label>
+                    <br />
+                    <label class="w-100 mb-2">
+                        New Password
+                        <input
+                            type="password"
+                            class="form-control"
+                            v-model="newPassword"
+                        />
+                    </label>
 
-                <br />
-                <label class="w-100 mb-2">
-                    Confirm New Password
-                    <input
-                        type="password"
-                        class="form-control"
-                        v-model="confirmNewPassword"
-                    />
-                </label>
-                <input class="btn btn-primary float-end" type="submit" value="Update" @click.prevent="handleUpdate">
+                    <br />
+                    <label class="w-100 mb-2">
+                        Confirm New Password
+                        <input
+                            type="password"
+                            class="form-control"
+                            v-model="confirmNewPassword"
+                        />
+                    </label>
+                    <input class="btn btn-primary float-end" type="submit" value="Update" @click.prevent="handleUpdate">
+                </div>
             </div>
+        </form>
+        <p>
+            Password Must:
+            <br>
+            - Include lower and upper characters.
+            <br>
+            - Include at least 1 number and symbol.
+            <br>
+            - Be at least 8 characters long.
+            <br>
+            - New password and Confirm New Password must math.
+            <br>
+            - Can not contain spaces and tab.
+        </p>
         </div>
-    </form>
+
     </div>
 </template>
