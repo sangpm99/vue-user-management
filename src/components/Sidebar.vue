@@ -5,10 +5,26 @@ import router from '@/routers'
 import { delCookie } from '@/stores/userCookie'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faGaugeHigh, faLock, faUsers, faRightFromBracket  } from '@fortawesome/free-solid-svg-icons'
+import { 
+    faGaugeHigh,
+    faLock,
+    faUsers,
+    faRightFromBracket,
+    faChartPie,
+    faUserGroup,
+    faChartSimple 
+        } from '@fortawesome/free-solid-svg-icons'
 import { faAddressCard } from '@fortawesome/free-regular-svg-icons';
-library.add(faGaugeHigh, faLock, faUsers, faRightFromBracket );
-library.add(faAddressCard);
+library.add(
+    faGaugeHigh,
+    faLock,
+    faUsers,
+    faRightFromBracket,
+    faChartPie,
+    faAddressCard,
+    faUserGroup,
+    faChartSimple 
+);
 
 const routes = router.options.routes
 </script>
@@ -22,6 +38,17 @@ const routes = router.options.routes
         <hr>
 
         <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <RouterLink
+                    to="/admin/overview"
+                    class="capitalize nav-link text-white position-relative mb-2"
+                    aria-current="page"
+                >
+                <font-awesome-icon :icon="['fas', 'chart-pie']" />
+                <span class="position-absolute space-icon">Overview</span>
+                </RouterLink>
+            </li>
+
             <li class="nav-item">
                 <RouterLink
                     to="/admin/myprofile"
@@ -51,7 +78,18 @@ const routes = router.options.routes
                     aria-current="page"
                 >
                 <font-awesome-icon :icon="['fa-solid','fa-users']"/>
-                <span class="position-absolute space-icon">User List</span>
+                <span class="position-absolute space-icon">User</span>
+                </RouterLink>
+            </li>
+
+            <li class="nav-item">
+                <RouterLink
+                    to="/role/getroles"
+                    class="capitalize nav-link text-white position-relative mb-2"
+                    aria-current="page"
+                >
+                <font-awesome-icon :icon="['fas', 'chart-simple']" />
+                <span class="position-absolute space-icon">Role</span>
                 </RouterLink>
             </li>
         </ul>
@@ -90,12 +128,21 @@ const routes = router.options.routes
         border: 1px solid transparent;
     }
 
-    .my-sidebar .nav li:hover a{
+    .my-sidebar .nav>li:hover>a {
+        opacity: 0.8;
         background: rgba(255, 255, 255, 0.2);
         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         backdrop-filter: blur(5px);
         -webkit-backdrop-filter: blur(5px);
         border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .my-sidebar .sub-nav li a{
+        font-size: 90%;
+    }
+
+    .my-sidebar .sub-nav li:hover a{
+        opacity: 0.8;
     }
 
     .dropdown-content {

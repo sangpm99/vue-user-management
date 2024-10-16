@@ -42,6 +42,11 @@ const router = createRouter({
             name: 'admin',
             children: [
                 {
+                    path: 'overview',
+                    name: 'overview',
+                    component: () => import('../views/admin/Overview.vue')
+                },
+                {
                     path: 'myprofile',
                     name: 'my profile',
                     component: () => import('../views/admin/MyProfile.vue')
@@ -55,6 +60,18 @@ const router = createRouter({
                     path: 'user',
                     name: 'User',
                     component: () => import('../views/admin/User.vue')
+                }
+            ]
+        },
+        {
+            path: '/role/',
+            component: AdminLayout,
+            name: 'role',
+            children: [
+                {
+                    path: 'getroles',
+                    name: 'get roles',
+                    component: () => import('../views/role/GetRoles.vue')
                 }
             ]
         }
