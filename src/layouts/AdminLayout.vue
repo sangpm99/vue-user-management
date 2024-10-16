@@ -17,7 +17,7 @@ import Sidebar from '@/components/Sidebar.vue'
 
 <style scoped>
     .content {
-        background-color: #dddddd;
+        background-color: #F7F7F9;
         min-height: 100vh;
     }
 </style>

@@ -56,10 +56,17 @@ const router = createRouter({
                     name: 'Change Password',
                     component: () => import('../views/admin/ChangePassword.vue')
                 },
+            ]
+        },
+        {
+            path: '/user/',
+            component: AdminLayout,
+            name: 'user',
+            children: [
                 {
-                    path: 'user',
-                    name: 'User',
-                    component: () => import('../views/admin/User.vue')
+                    path: 'getusers',
+                    name: 'get users',
+                    component: () => import('../views/user/GetUsers.vue')
                 }
             ]
         },

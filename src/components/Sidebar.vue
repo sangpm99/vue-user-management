@@ -73,7 +73,7 @@ const routes = router.options.routes
 
             <li class="nav-item">
                 <RouterLink
-                    to="/admin/user"
+                    to="/user/GetUsers"
                     class="capitalize nav-link text-white position-relative mb-2"
                     aria-current="page"
                 >
