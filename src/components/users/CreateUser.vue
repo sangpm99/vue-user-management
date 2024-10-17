@@ -30,7 +30,7 @@ const rulesPassword = [
 
 const rulesConfirmPassword = [
     (value: string) => !!value || 'You must enter this field',
-    (value: string) => value === user.password || 'Confirm Password and New Password must be math'
+    (value: string) => value === user.password || 'Confirm Password and New Password must be match'
 ]
 
 const department: Array<string> = [
@@ -80,19 +80,6 @@ const handleSave = async () => {
     dialog.value = false
 }
 
-const handleClose = () => {
-    user.email = '',
-    user.userName = '',
-    user.fullName = '',
-    user.password = '',
-    user.confirmPassword = '',
-    user.address = '',
-    user.phoneNumber = '',
-    user.department = '',
-    user.roles = []
-
-    dialog.value = false
-}
 </script>
 
 <template>
@@ -203,7 +190,7 @@ const handleClose = () => {
                 <button class="btn btn-success" @click="handleSave">
                     <font-awesome-icon :icon="['far', 'floppy-disk']" />
                 </button>
-                <button class="btn btn-secondary" @click="handleClose">
+                <button class="btn btn-secondary" @click="dialog = false">
                     <font-awesome-icon :icon="['fas', 'xmark']" />
                 </button>
             </v-card-actions>

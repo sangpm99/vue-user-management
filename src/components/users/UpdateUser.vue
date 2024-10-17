@@ -4,7 +4,7 @@ import { faPenToSquare, faTrashCan, faFloppyDisk } from '@fortawesome/free-regul
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import getNames from '@/apis/roles/getNames'
-import getUser from '@/apis/admin/getUser'
+import getUser from '@/apis/users/getUser'
 import { useUserStore } from '@/stores/userStore';
 library.add(faPenToSquare, faTrashCan, faFloppyDisk, faXmark)
 
@@ -79,19 +79,6 @@ const handleSave = async () => {
     } else {
         console.log('Fail to Update User')
     }
-    dialog.value = false
-}
-
-const handleClose = () => {
-    user.id = '',
-    user.email = '',
-    user.userName = '',
-    user.fullName = '',
-    user.address = '',
-    user.phoneNumber = '',
-    user.department = '',
-    user.roles = []
-
     dialog.value = false
 }
 </script>
@@ -182,7 +169,7 @@ const handleClose = () => {
                 <button class="btn btn-success" @click="handleSave">
                     <font-awesome-icon :icon="['far', 'floppy-disk']" />
                 </button>
-                <button class="btn btn-secondary" @click="handleClose">
+                <button class="btn btn-secondary" @click="dialog = false">
                     <font-awesome-icon :icon="['fas', 'xmark']" />
                 </button>
             </v-card-actions>

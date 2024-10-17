@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, type Ref } from 'vue'
 import { getCookie } from '@/stores/userCookie'
-import getUser from '@/apis/admin/getUser'
+import getUser from '@/apis/users/getUser'
 import changePassword from '@/apis/admin/changePassword'
 import Swal from 'sweetalert2'
 
@@ -143,7 +143,7 @@ const handleUpdate = () => {
                 <br />
                 - Be at least 8 characters long.
                 <br />
-                - New password and Confirm New Password must math.
+                - New password and Confirm New Password must match.
                 <br />
                 - Can not contain spaces and tab.
             </p>

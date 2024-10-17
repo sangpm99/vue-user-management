@@ -137,7 +137,7 @@ const userStore = useUserStore();
 .my-sidebar {
     right: calc(10 / 12 * 100%);
     width: inherit;
-    background-image: url('@/assets/images/star-night-2.jpg');
+    background-image: url('@/assets/images/star-night.webp');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;

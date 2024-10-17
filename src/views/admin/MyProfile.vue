@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, type Ref } from 'vue'
 import { getCookie } from '@/stores/userCookie'
-import getUser from '@/apis/admin/getUser'
+import getUser from '@/apis/users/getUser'
 import changeProfile from '@/apis/admin/changeProfile'
 
 const userId: Ref<string> = ref('')
@@ -224,7 +224,7 @@ const handleChangeProfile = async () => {
                         <img
                             width="100%"
                             height="500px"
-                            src="https://media.baoquangninh.vn/dataimages/201809/original/images1098138_vinh_ha_long.jpg"
+                            src="@/assets/images/view-breathtaking-beach-nature-landscape.webp"
                             alt="image 1"
                             class="w-100 rounded-3"
                         />
@@ -233,7 +233,7 @@ const handleChangeProfile = async () => {
                         <img
                             width="100%"
                             height="500px"
-                            src="https://assets2.htv.com.vn/Images/.NEWZ/08.2023/18/NHI/Screenshot%202023-08-18%20113855.png"
+                            src="@/assets/images/autumn-landscape-pond-with-gazebo.webp"
                             alt="image 2"
                             class="w-100 rounded-3"
                         />
@@ -244,7 +244,7 @@ const handleChangeProfile = async () => {
                         <img
                             width="100%"
                             height="500px"
-                            src="https://mia.vn/media/uploads/blog-du-lich/danh-lam-thang-canh-viet-nam-09-1710680494.jpeg"
+                            src="@/assets/images/nature-landscape-with-starry-clear-sky.webp"
                             alt="image 3"
                             class="w-100 rounded-3"
                         />
@@ -253,7 +253,7 @@ const handleChangeProfile = async () => {
                         <img
                             width="100%"
                             height="500px"
-                            src="https://static.vinwonders.com/production/danh-lam-thang-canh-ha-noi-8.jpg"
+                            src="@/assets/images/beautiful-rainbow-nature.webp"
                             alt="image 4"
                             class="w-100 rounded-3"
                         />
@@ -266,7 +266,7 @@ const handleChangeProfile = async () => {
 
 <style scoped>
 .cover {
-    background-image: url('@/assets/images/star-night-2.jpg');
+    background-image: url('@/assets/images/star-night.webp');
     background-position: bottom;
     background-size: cover;
     background-repeat: no-repeat;

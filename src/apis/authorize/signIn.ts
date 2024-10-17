@@ -14,7 +14,7 @@ const signIn = async (email: string, password: string, reCaptcha: string, rememb
         if (response.status === 200) {
             setCookie('User Data', response.data, 0.08)
 
-            window.location.href = '/admin/myprofile'
+            window.location.href = '/admin/overview'
         }
     } catch (err) {
         console.log('Lỗi fetch dữ liệu')
