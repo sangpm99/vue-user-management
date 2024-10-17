@@ -14,11 +14,7 @@ const reCaptcha = ref<string>('string')
             <div data-mdb-input-init class="form-outline">
                 <label for="" class="w-100 mb-2">
                     Email
-                    <input
-                        type="email"
-                        class="form-control"
-                        v-model="email"
-                    />
+                    <input type="email" class="form-control" v-model="email" />
                 </label>
                 <br />
                 <input

@@ -4,7 +4,7 @@ import axios from '@/plugins/axios'
 const getAllUser = async () => {
     try {
         const params = {
-            pageIndex: 1, 
+            pageIndex: 1,
             pageSize: 20
         }
 
@@ -21,4 +21,4 @@ const getAllUser = async () => {
     }
 }
 
-export default getAllUser;
+export default getAllUser

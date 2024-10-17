@@ -44,48 +44,29 @@ const handleRecoverPassword = async () => {
             <div data-mdb-input-init class="form-outline">
                 <label for="" class="w-100 mb-2">
                     Email
-                    <input
-                        disabled
-                        type="email"
-                        class="form-control not-allow"
-                        v-model="email"
-                    />
+                    <input disabled type="email" class="form-control not-allow" v-model="email" />
                 </label>
                 <br />
                 <label for="" class="w-100 mb-2">
                     New Password
-                    <input
-                        type="password"
-                        class="form-control"
-                        v-model="newPassword"
-                    />
+                    <input type="password" class="form-control" v-model="newPassword" />
                 </label>
                 <br />
                 <label
                     for=""
-                    :class="
-                        notifyPasswordNotMatch
-                            ? 'w-100 mb-2 text-danger'
-                            : 'w-100 mb-2'
-                    "
+                    :class="notifyPasswordNotMatch ? 'w-100 mb-2 text-danger' : 'w-100 mb-2'"
                 >
                     Confirm New Password
                     <input
                         type="password"
                         :class="
-                            notifyPasswordNotMatch
-                                ? 'form-control border-danger'
-                                : 'form-control'
+                            notifyPasswordNotMatch ? 'form-control border-danger' : 'form-control'
                         "
                         v-model="confirmNewPassword"
                     />
                 </label>
                 <br />
-                <label
-                    v-if="notifyPasswordNotMatch"
-                    for=""
-                    class="text-danger small"
-                >
+                <label v-if="notifyPasswordNotMatch" for="" class="text-danger small">
                     Confirm new password must match new password
                 </label>
                 <br />

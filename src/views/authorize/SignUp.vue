@@ -21,53 +21,29 @@ const reCaptcha = ref<string>('string')
             <div data-mdb-input-init class="form-outline">
                 <label for="" class="w-100 mb-2">
                     User name
-                    <input
-                        type="text"
-                        class="form-control"
-                        v-model="userName"
-                    />
+                    <input type="text" class="form-control" v-model="userName" />
                 </label>
                 <br />
                 <label for="" class="w-100 mb-2">
                     Email
-                    <input
-                        type="email"
-                        class="form-control"
-                        v-model="email"
-                    />
+                    <input type="email" class="form-control" v-model="email" />
                 </label>
                 <br />
                 <label for="" class="w-100 mb-2">
                     Password
-                    <input
-                        type="password"
-                        class="form-control"
-                        v-model="password"
-                    />
+                    <input type="password" class="form-control" v-model="password" />
                 </label>
                 <br />
                 <label for="" class="w-100 mb-2">
                     Confirm Password
-                    <input
-                        type="password"
-                        class="form-control"
-                        v-model="confirmPassword"
-                    />
+                    <input type="password" class="form-control" v-model="confirmPassword" />
                 </label>
                 <br />
                 <input
                     class="mt-2 btn btn-primary float-end"
                     type="submit"
                     value="Sign Up"
-                    @click.prevent="
-                        signUp(
-                            userName,
-                            email,
-                            password,
-                            confirmPassword,
-                            reCaptcha
-                        )
-                    "
+                    @click.prevent="signUp(userName, email, password, confirmPassword, reCaptcha)"
                 />
             </div>
         </div>

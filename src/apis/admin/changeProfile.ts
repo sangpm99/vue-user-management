@@ -1,4 +1,4 @@
-import axios from '@/plugins/axios';
+import axios from '@/plugins/axios'
 
 const changeProfile = async (
     fullName: string,
@@ -6,7 +6,8 @@ const changeProfile = async (
     email: string,
     phoneNumber: string,
     address: string,
-    department: string ) => {
+    department: string
+) => {
     try {
         const response = await axios.put('User/ChangeProfile', {
             fullName,
@@ -17,13 +18,13 @@ const changeProfile = async (
             department
         })
 
-        if(response.status === 200) {
+        if (response.status === 200) {
             return response.status
         }
     } catch (err) {
-        console.log("An error occurred, please try again later", err)
-        return null;
+        console.log('An error occurred, please try again later', err)
+        return null
     }
 }
 
-export default changeProfile;
+export default changeProfile

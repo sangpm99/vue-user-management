@@ -1,0 +1,212 @@
+<script setup lang="ts">
+import { onBeforeMount, reactive, ref, type Ref, type Reactive } from 'vue'
+import { faPenToSquare, faTrashCan, faFloppyDisk } from '@fortawesome/free-regular-svg-icons'
+import { faXmark, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import createUser from '@/apis/users/createUser'
+import getNames from '@/apis/roles/getNames'
+library.add(faPenToSquare, faTrashCan, faFloppyDisk, faXmark, faPlus)
+
+const dialog: Ref<boolean> = ref(false)
+
+const roles: Ref<Array<any>> = ref([])
+
+const rules = [(value: string) => !!value || 'You must enter this field']
+
+onBeforeMount(async () => {
+    const getRoles = await getNames()
+    for (let i = 0; i < getRoles?.data?.items.length; i++) {
+        roles.value.push(getRoles?.data?.items[i]?.name)
+    }
+})
+
+const rulesPassword = [
+    (value: string) => !!value || 'You must enter this field',
+    (value: string) => /[A-Z]/.test(value) || 'Password must contain a capital letter',
+    (value: string) => /[0-9]/.test(value) || 'Password must contain a number',
+    (value: string) => /[!@#$%^&*(),.?":{}|<>]/.test(value) || 'Password must contain a symbol',
+    (value: string) => value.length >= 8 || 'You must enter at least 8 characters'
+]
+
+const rulesConfirmPassword = [
+    (value: string) => !!value || 'You must enter this field',
+    (value: string) => value === user.password || 'Confirm Password and New Password must be math'
+]
+
+const department: Array<string> = [
+    'CEO',
+    'Assistance',
+    'Sale',
+    'Design',
+    'Design Manager',
+    'Accounting',
+    'Fulfillment',
+    'Customer Service',
+    'Support',
+    'IT',
+    'Build Acc'
+]
+
+const user: Reactive<any> = reactive({
+    email: '',
+    userName: '',
+    password: '',
+    confirmPassword: '',
+    fullName: '',
+    address: '',
+    phoneNumber: '',
+    department: '',
+    roles: []
+})
+
+const handleSave = async () => {
+    const response = await createUser(
+        user.email,
+        user.userName,
+        user.password,
+        user.confirmPassword,
+        user.fullName,
+        user.phoneNumber,
+        user.address,
+        user.department,
+        user.roles
+    )
+    if (response) {
+        console.log('Add New User Successfully')
+        window.location.reload()
+    } else {
+        console.log('Fail to Add New User')
+    }
+    dialog.value = false
+}
+
+const handleClose = () => {
+    user.email = '',
+    user.userName = '',
+    user.fullName = '',
+    user.password = '',
+    user.confirmPassword = '',
+    user.address = '',
+    user.phoneNumber = '',
+    user.department = '',
+    user.roles = []
+
+    dialog.value = false
+}
+</script>
+
+<template>
+    <v-dialog v-model="dialog" max-width="800">
+        <template v-slot:activator="{ props: activatorProps }">
+            <span v-tooltip="'Add New User'">
+                <button class="btn btn-success" v-bind="activatorProps">
+                    <font-awesome-icon :icon="['fas', 'plus']" />
+                </button>
+            </span>
+        </template>
+
+
+        <v-card title="Add New User">
+            <v-card-text>
+                <v-row dense>
+                    <v-col cols="6">
+                        <v-text-field
+                            variant="solo"
+                            label="Email Address*"
+                            :rules="rules"
+                            v-model="user.email"
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="6">
+                        <v-text-field
+                            variant="solo"
+                            label="User Name*"
+                            :rules="rules"
+                            v-model="user.userName"
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="6">
+                        <v-text-field
+                            variant="solo"
+                            label="Password*"
+                            :rules="rulesPassword"
+                            v-model="user.password"
+                            type="password"
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="6">
+                        <v-text-field
+                            variant="solo"
+                            label="Confirm Password*"
+                            v-model="user.confirmPassword"
+                            :rules="rulesConfirmPassword"
+                            type="password"
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="6">
+                        <v-text-field
+                            variant="solo"
+                            label="Full Name*"
+                            :rules="rules"
+                            v-model="user.fullName"
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="6">
+                        <v-text-field
+                            variant="solo"
+                            label="Address"
+                            v-model="user.address"
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="6">
+                        <v-text-field
+                            variant="solo"
+                            label="Phone Number"
+                            v-model="user.phoneNumber"
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="6">
+                        <v-autocomplete
+                            label="Department"
+                            auto-select-first
+                            variant="solo"
+                            :items="department"
+                            v-model="user.department"
+                        ></v-autocomplete>
+                    </v-col>
+
+                    <v-col cols="12" v-if="JSON.stringify(roles) !== '{}'">
+                        <v-autocomplete
+                            label="Roles"
+                            auto-select-first
+                            multiple
+                            variant="solo"
+                            :items="roles"
+                            v-model="user.roles"
+                        ></v-autocomplete>
+                    </v-col>
+                </v-row>
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+                <v-spacer></v-spacer>
+
+                <button class="btn btn-success" @click="handleSave">
+                    <font-awesome-icon :icon="['far', 'floppy-disk']" />
+                </button>
+                <button class="btn btn-secondary" @click="handleClose">
+                    <font-awesome-icon :icon="['fas', 'xmark']" />
+                </button>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</template>

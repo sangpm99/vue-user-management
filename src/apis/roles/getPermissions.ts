@@ -1,10 +1,10 @@
 import axios from '@/plugins/axios'
 
-const getRoles = async (id: string) => {
-    const slug = '/Role/GetRoles'
+const getPermissions = async () => {
+    const slug = '/Role/GetPermissions'
 
     try {
-        const response = await axios.get(`${slug}/?id=${id}`)
+        const response = await axios.get(slug)
 
         if (response.status === 200) {
             return response.data
@@ -15,4 +15,4 @@ const getRoles = async (id: string) => {
     }
 }
 
-export default getRoles
+export default getPermissions

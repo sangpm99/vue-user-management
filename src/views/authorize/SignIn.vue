@@ -19,20 +19,12 @@ const rememberMe = ref<boolean>(false)
             <div data-mdb-input-init class="form-outline">
                 <label for="" class="w-100 mb-2">
                     Email
-                    <input
-                        type="email"
-                        class="form-control"
-                        v-model="email"
-                    />
+                    <input type="email" class="form-control" v-model="email" />
                 </label>
                 <br />
                 <label for="" class="w-100 mb-2">
                     Password
-                    <input
-                        type="password"
-                        class="form-control"
-                        v-model="password"
-                    />
+                    <input type="password" class="form-control" v-model="password" />
                 </label>
                 <br />
                 <input
@@ -43,18 +35,21 @@ const rememberMe = ref<boolean>(false)
                 />
                 <label for="rememberMe">Remember me?</label>
                 <br />
-                <input class="btn btn-primary float-end" type="submit" value="Sign In" @click.prevent="signIn(email, password, reCaptcha, rememberMe)">
+                <input
+                    class="btn btn-primary float-end"
+                    type="submit"
+                    value="Sign In"
+                    @click.prevent="signIn(email, password, reCaptcha, rememberMe)"
+                />
                 <br />
                 <p class="text-center mt-5">
                     Don't have an account?
                     <RouterLink to="/authorize/signup">Sign Up</RouterLink>
                 </p>
                 <p class="text-center mt-2">
-                    <RouterLink to="/authorize/forgotpassword"
-                        >Forgot password?</RouterLink
-                    >
+                    <RouterLink to="/authorize/forgotpassword">Forgot password?</RouterLink>
                 </p>
             </div>
         </div>
     </form>
-  </template>
+</template>

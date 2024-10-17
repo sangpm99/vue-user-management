@@ -9,15 +9,15 @@ import Sidebar from '@/components/Sidebar.vue'
             <Sidebar />
         </div>
 
-        <div class="col-10 content">
+        <div class="col-10 content px-10">
             <RouterView />
         </div>
     </div>
 </template>
 
 <style scoped>
-    .content {
-        background-color: #F7F7F9;
-        min-height: 100vh;
-    }
+.content {
+    background-color: #f7f7f9;
+    min-height: 100vh;
+}
 </style>

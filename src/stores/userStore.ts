@@ -1,11 +1,17 @@
 import axios from '@/plugins/axios'
-import { defineStore } from "pinia";
+import { getCookie } from '@/stores/userCookie';
+import { defineStore } from 'pinia'
+import { computed, ref, type Ref } from 'vue';
 
 export const useUserStore = defineStore('users', () => {
+    // Properties
+    const isLoading: Ref<boolean> = ref(false);
+
+    // Actions
     const getUsers = async (pageIndex: number, pageSize: number) => {
         try {
             const params = {
-                pageIndex, 
+                pageIndex,
                 pageSize
             }
 
@@ -16,11 +22,36 @@ export const useUserStore = defineStore('users', () => {
             if (response.status === 200) {
                 return response.data
             }
-
         } catch (error) {
             return null
         }
     }
 
-    return {getUsers}
+    const getCurrentUser = computed(() => {
+        const currentUser = getCookie('User Data');
+        return currentUser ? JSON.parse(currentUser) : null;
+    })
+
+    const updateUser = async(
+        id: string,
+        email: string,
+        userName: string,
+        fullName: string,
+        address: string,
+        phoneNumber: string,
+        department: string,
+        roles: Array<any> ) => {
+            try {
+                const body = { id, email, userName, fullName, address, phoneNumber, department, roles }
+                const request = axios.put('/User/Update', body)
+                return request;
+            } catch (err) {
+                console.log(err);
+                return false;
+            } finally {
+
+            }
+    }
+
+    return { getUsers, getCurrentUser, isLoading, updateUser}
 })

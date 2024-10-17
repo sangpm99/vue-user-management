@@ -18,8 +18,8 @@ const changePassword = async (
             return response.status
         }
     } catch (err) {
-        if(err instanceof Error) {
-            console.log('Error fetching data', err);
+        if (err instanceof Error) {
+            console.log('Error fetching data', err)
             return (err as any).status
         }
     }

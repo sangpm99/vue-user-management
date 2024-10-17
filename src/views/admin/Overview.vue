@@ -1,7 +1,9 @@
 <script setup lang="ts">
-    import Card from '@/components/Card.vue';
-    import Button from '@/components/Button.vue';
+import Card from '@/components/Card.vue'
+import Button from '@/components/Button.vue'
+import { useUserStore } from '@/stores/userStore';
 
+const userStore = useUserStore();
 </script>
 
 <template>
@@ -11,14 +13,20 @@
             <Card>
                 <div class="row">
                     <div class="col-8">
-                        <h3>Congratulations Pham Minh Sang! 🎉</h3>
-                        <p>You have done 68% 😎 more sales today.<br>
-                            Check your new raising badge in your profile.</p>
+                        <h3>Congratulations {{ userStore.getCurrentUser.data.fullName }}! 🎉</h3>
+                        <p>
+                            You have done 68% 😎 more sales today.<br />
+                            Check your new raising badge in your profile.
+                        </p>
                         <Button path="/admin/myprofile">View Profile</Button>
                     </div>
 
                     <div class="col-4 position-absolute bottom-0 end-0">
-                        <img class="w-100" src="@/assets/images/illustration-john-light-D8CgFblM.png" alt="image">
+                        <img
+                            class="w-100"
+                            src="@/assets/images/illustration-john-light-D8CgFblM.png"
+                            alt="image"
+                        />
                     </div>
                 </div>
             </Card>
@@ -30,7 +38,9 @@
                     <h3>Users</h3>
                     <p>5</p>
                     <p>Total Users</p>
-                    <Button path="/admin/user" class="position-absolute bottom-0">View All</Button>
+                    <Button path="/users/getusers" class="position-absolute bottom-0"
+                        >View All</Button
+                    >
                 </div>
             </Card>
         </div>
@@ -41,7 +51,9 @@
                     <h3>Roles</h3>
                     <p>2</p>
                     <p>Total Roles</p>
-                    <Button path="/role/getroles" class="position-absolute bottom-0">View All</Button>
+                    <Button path="/roles/getroles" class="position-absolute bottom-0"
+                        >View All</Button
+                    >
                 </div>
             </Card>
         </div>

@@ -6,12 +6,12 @@ const getUser = async (id: string) => {
     try {
         const response = await axios.get(`${slug}/?id=${id}`)
 
-        if (response.status === 200) {
-            return response.data
-        }
+        // 200, 201, 204, 
+        return response.data
     } catch (err) {
         console.log('Lỗi fetch dữ liệu:', err)
         return null
+    } finally{
     }
 }
 

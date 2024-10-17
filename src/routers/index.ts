@@ -55,30 +55,30 @@ const router = createRouter({
                     path: 'changepassword',
                     name: 'Change Password',
                     component: () => import('../views/admin/ChangePassword.vue')
-                },
-            ]
-        },
-        {
-            path: '/user/',
-            component: AdminLayout,
-            name: 'user',
-            children: [
-                {
-                    path: 'getusers',
-                    name: 'get users',
-                    component: () => import('../views/user/GetUsers.vue')
                 }
             ]
         },
         {
-            path: '/role/',
+            path: '/users/',
             component: AdminLayout,
-            name: 'role',
+            name: 'users',
+            children: [
+                {
+                    path: 'getusers',
+                    name: 'get users',
+                    component: () => import('../views/users/GetUsers.vue')
+                }
+            ]
+        },
+        {
+            path: '/roles/',
+            component: AdminLayout,
+            name: 'roles',
             children: [
                 {
                     path: 'getroles',
                     name: 'get roles',
-                    component: () => import('../views/role/GetRoles.vue')
+                    component: () => import('../views/roles/GetRoles.vue')
                 }
             ]
         }
