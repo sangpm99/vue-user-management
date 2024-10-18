@@ -113,3 +113,30 @@ export const useUserStore = defineStore('users', () => {
 
     return { getUsers, getCurrentUser, isLoading, updateUser, getActivities, revokeAllTokens, revokeToken, getRolesName}
 })
+
+//export const useUserStore = defineStore('users', () => {
+export const useRoleStore = defineStore('role', () => {
+    const getPermissions = async() => {
+        try {
+            const res = await axios.get('/Role/GetPermissions');
+            return res.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const createRole = async(name: string, permissions: Array<string>) => {
+        const body = {
+            name,
+            permissions
+        }
+        try {
+            const res = await axios.post('/Role/Create', body);
+            return res.data;
+        } catch (err) {
+
+        }
+    }
+
+    return { getPermissions, createRole }
+})

@@ -207,7 +207,7 @@ const handleChangeProfile = async () => {
                                 variant="solo"
                                 label="Roles"
                                 v-model.lazy="userInfo.roles"
-                                disabled
+                                readonly
                             ></v-text-field>
                         </v-col>
 

@@ -4,6 +4,8 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { useUserStore } from '@/stores/userStore';
 import RevokeToken from '@/components/users/RevokeToken.vue';
+import { delCookie } from '@/stores/userCookie';
+
 library.add(faXmark)
 
 const dialog: Ref<boolean> = ref(false)
@@ -59,7 +61,7 @@ const handleRevokeAllTokens = async() => {
 }
 
 const directToSignIn = () => {
-    window.location.href = '/authorize/signin';
+    delCookie('User Data');
 }
 
 </script>
@@ -121,7 +123,7 @@ const directToSignIn = () => {
                                 :class="item.Blocked ? 'badge disabled' : 'badge bg-warning'"
                                 :id="id"
                                 :signInAt="item.SignedInAt"
-                                @isDone="reMountDialog++"
+                                @isDone="(value) => {if (value) reMountDialog++}"
                             />
                         </td>
                     </tr>
@@ -151,7 +153,7 @@ const directToSignIn = () => {
     >
       <v-card
         prepend-icon="mdi-help-circle-outline"
-        text="Are you sure you want to revoke all tokens of this user?"
+        text="Sure about revoking all of this user's tokens?"
         title="Are you sure?"
       >
         <template v-slot:actions>
@@ -174,14 +176,14 @@ const directToSignIn = () => {
       persistent
     >
       <v-card
-        title="Login version has expired!"
-        text="Please log in to use this function"
+        title="Your session has expired!"
+        text="Please sign in again to use this feature"
       >
         <template v-slot:actions>
           <v-spacer></v-spacer>
 
           <button class="btn btn-primary" @click="directToSignIn">
-            Login
+            Sign In
           </button>
         </template>
       </v-card>
