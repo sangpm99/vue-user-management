@@ -1,24 +1,29 @@
 <script setup lang="ts">
-import { onBeforeMount, reactive, ref, type Ref, type Reactive } from 'vue'
+import { reactive, ref, type Ref, type Reactive, watch, onBeforeMount } from 'vue'
 import { faPenToSquare, faTrashCan, faFloppyDisk } from '@fortawesome/free-regular-svg-icons'
 import { faXmark, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import createUser from '@/apis/users/createUser'
-import getNames from '@/apis/roles/getNames'
+import { useUserStore } from '@/stores/userStore'
 library.add(faPenToSquare, faTrashCan, faFloppyDisk, faXmark, faPlus)
 
 const dialog: Ref<boolean> = ref(false)
 
-const roles: Ref<Array<any>> = ref([])
-
 const rules = [(value: string) => !!value || 'You must enter this field']
 
-onBeforeMount(async () => {
-    const getRoles = await getNames()
-    for (let i = 0; i < getRoles?.data?.items.length; i++) {
-        roles.value.push(getRoles?.data?.items[i]?.name)
+const userStore = useUserStore();
+
+const roles: Ref<any> = ref([]);
+
+watch(
+    dialog,
+    async(dialogIsOpen) => {
+        if(dialogIsOpen) {
+            const getRoles = await userStore.getRolesName();
+            roles.value = getRoles
+        }
     }
-})
+)
 
 const rulesPassword = [
     (value: string) => !!value || 'You must enter this field',

@@ -5,7 +5,6 @@ import CreateUser from '@/components/users/CreateUser.vue'
 import UpdateUser from '@/components/users/UpdateUser.vue';
 import DeleteUser from '@/components/users/DeleteUser.vue';
 import GetActivityUser from '@/components/users/GetActivity.vue';
-import RevokeToken from '@/components/users/RevokeToken.vue';
 
 const totals = ref<number>(0)
 const userList = ref<Array<any>>([])
@@ -42,6 +41,7 @@ watch(
     },
     { immediate: true }
 )
+
 </script>
 
 <template>
@@ -78,10 +78,20 @@ watch(
             </thead>
             <tbody>
                 <tr v-for="(user, index) in userList" :key="index">
-                    <td>
+                    <td class="my-user">
                         {{ user.fullName }}
                         <br>
-                        <UpdateUser :id="user.id" /> | <GetActivityUser /> | <RevokeToken /> | <DeleteUser :id="user.id"/>
+                        <div class="my-nav">
+                            <div class="d-inline first">
+                                <UpdateUser :id="user.id" />
+                            </div> | 
+                            <div class="d-inline second">
+                                <GetActivityUser :id="user.id"/>
+                            </div> |
+                            <div class="d-inline third">
+                                <DeleteUser :id="user.id"/>
+                            </div>
+                        </div>
                     </td>
                     <td>{{ user.department }}</td>
                     <td>{{ user.email }}</td>
@@ -154,5 +164,16 @@ watch(
 <style scoped>
 input.item-per-page {
     width: 70px;
+}
+
+.my-user .my-nav {
+    opacity: 0;
+    transition: all 0.25s ease;
+    transform: translateY(10px);
+}
+
+.my-user:hover .my-nav {
+    opacity: 1;
+    transform: translateY(0)
 }
 </style>

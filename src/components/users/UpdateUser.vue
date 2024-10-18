@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { onBeforeMount, reactive, ref, type Ref, type Reactive } from 'vue'
+import { watch, reactive, ref, type Ref, type Reactive } from 'vue'
 import { faPenToSquare, faTrashCan, faFloppyDisk } from '@fortawesome/free-regular-svg-icons'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import getNames from '@/apis/roles/getNames'
 import getUser from '@/apis/users/getUser'
 import { useUserStore } from '@/stores/userStore';
 library.add(faPenToSquare, faTrashCan, faFloppyDisk, faXmark)
@@ -11,13 +10,13 @@ import Swal from 'sweetalert2'
 
 const dialog: Ref<boolean> = ref(false)
 
-const roles: Ref<Array<any>> = ref([])
-
 const rules = [(value: string) => !!value || 'You must enter this field']
 
 const props = defineProps<{id: string}>();
 
 const userStore = useUserStore();
+
+const roles: Ref<any> = ref([]);
 
 const user: Reactive<any> = reactive({
     id: '',
@@ -30,22 +29,24 @@ const user: Reactive<any> = reactive({
     roles: []
 })
 
-onBeforeMount(async () => {
-    const getRoles = await getNames()
-    for (let i = 0; i < getRoles?.data?.items.length; i++) {
-        roles.value.push(getRoles?.data?.items[i]?.name)
-    }
+watch(
+    dialog,
+    async (dialogIsOpen) => {
+    if(dialogIsOpen) {
+        const getRoles = await userStore.getRolesName();
+        roles.value = getRoles;
 
-    const getUserById = await getUser(props.id)
-    if(getUserById) {
-        user.id = getUserById.data.id;
-        user.email = getUserById.data.email;
-        user.userName = getUserById.data.userName;
-        user.phoneNumber = getUserById.data.phoneNumber;
-        user.fullName = getUserById.data.fullName;
-        user.address = getUserById.data.address;
-        user.department = getUserById.data.department;
-        user.roles = getUserById.data.roles;
+        const getUserById = await getUser(props.id)
+        if(getUserById) {
+            user.id = getUserById.data.id;
+            user.email = getUserById.data.email;
+            user.userName = getUserById.data.userName;
+            user.phoneNumber = getUserById.data.phoneNumber;
+            user.fullName = getUserById.data.fullName;
+            user.address = getUserById.data.address;
+            user.department = getUserById.data.department;
+            user.roles = getUserById.data.roles;
+        }
     }
 })
 

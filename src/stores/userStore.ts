@@ -53,5 +53,63 @@ export const useUserStore = defineStore('users', () => {
             }
     }
 
-    return { getUsers, getCurrentUser, isLoading, updateUser}
+    const getRolesName = async(pageIndex?: number, pageSize?: number) => {
+        const params = {
+            pageIndex,
+            pageSize
+        }
+
+        try {
+            const res = await axios.get('/Role/GetRoles',{params})
+            const arr = [];
+                for(let i = 0; i < res.data.data?.items.length; i++) {
+                    arr.push(res.data.data?.items[i]?.name);
+                }
+            return arr;
+        } catch (err) {
+            console.log(err);
+            return false;
+        }
+    }
+
+    const getActivities = async(
+        id: string,
+        pageIndex?: number,
+        pageSize?: number) => {
+            const params = {
+                pageIndex,
+                pageSize
+            }
+            try {
+                const request = await axios.get(`/User/GetActivity/${id}`, {params})
+                return request.data;
+
+            } catch (err) {
+                console.log(err);
+                return false;
+            } finally {
+
+            }
+        }
+
+    const revokeAllTokens = async(signInAt: string) => {
+        try {
+            return await axios.put(`/User/RevokeAllTokens/${signInAt}`)
+        } catch (err) {
+            console.log(err);
+            return false;
+        }
+    }
+
+    const revokeToken = async(id: string, signInAt: string) => {
+        try {
+            const res = await axios.put(`/User/RevokeToken/${id}/${signInAt}`)
+            return res.data;
+        } catch (err) {
+            console.log(err);
+            return false;
+        }
+    }
+
+    return { getUsers, getCurrentUser, isLoading, updateUser, getActivities, revokeAllTokens, revokeToken, getRolesName}
 })
