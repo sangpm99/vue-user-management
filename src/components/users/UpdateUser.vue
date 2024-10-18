@@ -7,6 +7,7 @@ import getNames from '@/apis/roles/getNames'
 import getUser from '@/apis/users/getUser'
 import { useUserStore } from '@/stores/userStore';
 library.add(faPenToSquare, faTrashCan, faFloppyDisk, faXmark)
+import Swal from 'sweetalert2'
 
 const dialog: Ref<boolean> = ref(false)
 
@@ -50,16 +51,16 @@ onBeforeMount(async () => {
 
 const department: Array<string> = [
     'CEO',
-    'Assistance',
-    'Sale',
-    'Design',
-    'Design Manager',
-    'Accounting',
-    'Fulfillment',
-    'Customer Service',
-    'Support',
+    'ASSISTANCE',
+    'SALE',
+    'DESIGN',
+    'DESIGN_MANAGER',
+    'ACCOUNTING',
+    'FULFILLMENT',
+    'CUSTOMER_SERVICE',
+    'SUPPORT',
     'IT',
-    'Build Acc'
+    'BUILD_ACC'
 ]
 
 const handleSave = async () => {
@@ -74,12 +75,15 @@ const handleSave = async () => {
         user.roles
     )
     if (response) {
-        console.log('Update Successfully')
         window.location.reload()
+        dialog.value = false
     } else {
-        console.log('Fail to Update User')
+        dialog.value = false
+        Swal.fire({
+        title: 'Fail',
+        text: 'Username Or Email is Exist, please try another',
+        icon: 'error'})
     }
-    dialog.value = false
 }
 </script>
 

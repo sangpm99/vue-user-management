@@ -1,12 +1,12 @@
 import axios from '@/plugins/axios'
 
 const changeProfile = async (
-    fullName: string,
     userName: string,
     email: string,
-    phoneNumber: string,
-    address: string,
-    department: string
+    fullName?: string,
+    phoneNumber?: string,
+    address?: string,
+    department?: string
 ) => {
     try {
         const response = await axios.put('User/ChangeProfile', {
@@ -18,12 +18,10 @@ const changeProfile = async (
             department
         })
 
-        if (response.status === 200) {
-            return response.status
-        }
+        return response.data;
     } catch (err) {
         console.log('An error occurred, please try again later', err)
-        return null
+        return false;
     }
 }
 

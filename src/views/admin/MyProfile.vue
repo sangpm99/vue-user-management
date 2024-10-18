@@ -3,6 +3,7 @@ import { ref, watch, type Ref } from 'vue'
 import { getCookie } from '@/stores/userCookie'
 import getUser from '@/apis/users/getUser'
 import changeProfile from '@/apis/admin/changeProfile'
+import Swal from 'sweetalert2'
 
 const userId: Ref<string> = ref('')
 
@@ -11,6 +12,26 @@ const user: Ref<any> = ref(null)
 const userInfo: Ref<any> = ref(null)
 
 const isEdit: Ref<boolean> = ref(false)
+
+const reMount: Ref<number> = ref(0);
+
+const rules = [
+    (value: string) => !!value || 'Field is required',
+]
+
+const department: Array<string> = [
+    'CEO',
+    'ASSISTANCE',
+    'SALE',
+    'DESIGN',
+    'DESIGN_MANAGER',
+    'ACCOUNTING',
+    'FULFILLMENT',
+    'CUSTOMER_SERVICE',
+    'SUPPORT',
+    'IT',
+    'BUILD_ACC'
+]
 
 watch(
     () => user.value,
@@ -49,21 +70,33 @@ watch(
 )
 
 const handleChangeProfile = async () => {
-    // const response = changeProfile(
-    //     userInfo.value.fullName,
-    //     userInfo.value.userName,
-    //     userInfo.value.email,
-    //     userInfo.value.phoneNumber,
-    //     userInfo.value.address,
-    //     userInfo.value.department
-    // )
-    // if(response) {
-    // }
+    const response = await changeProfile(
+        userInfo.value.userName,
+        userInfo.value.email,
+        userInfo.value.fullName,
+        userInfo.value.phoneNumber,
+        userInfo.value.address,
+        userInfo.value.department
+    );
+
+    if(response) {
+        reMount.value++;
+        isEdit.value = false;
+        Swal.fire({
+        title: 'Success',
+        text: 'Your Profile Update Successfully',
+        icon: 'success'})
+    } else {
+        Swal.fire({
+        title: 'Fail',
+        text: 'Username Or Email is Exist, please try another',
+        icon: 'error'})
+    }
 }
 </script>
 
 <template>
-    <div v-if="userInfo !== null">
+    <div v-if="userInfo !== null" :key="reMount">
         <h1>My Profile</h1>
 
         <div class="card shadow">
@@ -109,111 +142,93 @@ const handleChangeProfile = async () => {
             <div class="card-body p-4 text-black">
                 <div class="mb-5 text-body">
                     <h3 class="mb-1">About</h3>
-                    <div class="px-4 pt-4 bg-body-tertiary">
-                        <form class="row mb-4">
-                            <div class="col-12">
-                                <div data-mdb-input-init class="form-outline">
-                                    <label for="" class="w-100 mb-2">
-                                        Full Name
-                                        <input
-                                            type="text"
-                                            :class="
-                                                isEdit ? 'form-control' : 'form-control disabled'
-                                            "
-                                            v-model.lazy="userInfo.fullName"
-                                        />
-                                    </label>
-                                    <br />
+                    <v-card-text>
+                        <v-row dense>
+                        <v-col cols="6">
+                            <v-text-field
+                                variant="solo"
+                                label="Full Name"
+                                v-model.lazy="userInfo.fullName"
+                                :readonly="!isEdit"
+                            ></v-text-field>
+                        </v-col>
 
-                                    <label for="" class="w-100 mb-2">
-                                        User Name
-                                        <input
-                                            type="text"
-                                            :class="
-                                                isEdit ? 'form-control' : 'form-control disabled'
-                                            "
-                                            v-model.lazy="userInfo.userName"
-                                        />
-                                    </label>
-                                    <br />
+                        <v-col cols="6">
+                            <v-text-field
+                                variant="solo"
+                                label="User Name"
+                                v-model.lazy="userInfo.userName"
+                                :readonly="!isEdit"
+                                :rules="rules"
+                            ></v-text-field>
+                        </v-col>
 
-                                    <label for="" class="w-100 mb-2">
-                                        Email
-                                        <input
-                                            type="text"
-                                            :class="
-                                                isEdit ? 'form-control' : 'form-control disabled'
-                                            "
-                                            v-model.lazy="userInfo.email"
-                                        />
-                                    </label>
-                                    <br />
+                        <v-col cols="6">
+                            <v-text-field
+                                variant="solo"
+                                label="Email"
+                                v-model.lazy="userInfo.email"
+                                :readonly="!isEdit"
+                                :rules="rules"
+                            ></v-text-field>
+                        </v-col>
 
-                                    <label for="" class="w-100 mb-2">
-                                        Phone Number
-                                        <input
-                                            type="text"
-                                            :class="
-                                                isEdit ? 'form-control' : 'form-control disabled'
-                                            "
-                                            v-model.lazy="userInfo.phoneNumber"
-                                        />
-                                    </label>
-                                    <br />
+                        <v-col cols="6">
+                            <v-text-field
+                                variant="solo"
+                                label="Phone Number"
+                                v-model.lazy="userInfo.phoneNumber"
+                                :readonly="!isEdit"
+                            ></v-text-field>
+                        </v-col>
 
-                                    <label for="" class="w-100 mb-2">
-                                        Address
-                                        <input
-                                            type="text"
-                                            :class="
-                                                isEdit ? 'form-control' : 'form-control disabled'
-                                            "
-                                            v-model.lazy="userInfo.address"
-                                        />
-                                    </label>
-                                    <br />
+                        <v-col cols="6">
+                            <v-text-field
+                                variant="solo"
+                                label="Address"
+                                v-model.lazy="userInfo.address"
+                                :readonly="!isEdit"
+                            ></v-text-field>
+                        </v-col>
 
-                                    <label for="" class="w-100 mb-2">
-                                        Department
-                                        <input
-                                            type="text"
-                                            :class="
-                                                isEdit ? 'form-control' : 'form-control disabled'
-                                            "
-                                            v-model.lazy="userInfo.department"
-                                        />
-                                    </label>
+                        <v-col cols="6">
+                            <v-autocomplete
+                                label="Department"
+                                auto-select-first
+                                variant="solo"
+                                :items="department"
+                                v-model.lazy="userInfo.department"
+                                :readonly="!isEdit"
+                            ></v-autocomplete>
+                        </v-col>
 
-                                    <label for="" class="w-100 mb-2">
-                                        Roles
-                                        <input
-                                            type="text"
-                                            class="form-control disabled"
-                                            v-model.lazy="userInfo.roles"
-                                        />
-                                    </label>
-                                    <br />
+                        <v-col cols="6">
+                            <v-text-field
+                                variant="solo"
+                                label="Roles"
+                                v-model.lazy="userInfo.roles"
+                                disabled
+                            ></v-text-field>
+                        </v-col>
 
-                                    <div v-if="isEdit">
-                                        <input
-                                            class="btn btn-primary float-end"
-                                            type="submit"
-                                            value="Update"
-                                            @click.prevent="handleChangeProfile"
-                                        />
-                                        <input
-                                            class="btn btn-secondary float-end me-2"
-                                            type="submit"
-                                            value="Cancel"
-                                            @click.prevent="isEdit = false"
-                                        />
-                                    </div>
+                        <div class="w-100" v-if="isEdit">
+                            <input
+                                class="btn btn-secondary float-end"
+                                type="submit"
+                                value="Cancel"
+                                @click.prevent="isEdit = false"
+                            />
+                            <input
+                                class="btn btn-primary float-end me-2"
+                                type="submit"
+                                value="Update"
+                                @click.prevent="handleChangeProfile"
+                            />
+                        </div>
 
-                                    <div class="gap mb-4"></div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="gap mb-4"></div>
+                    </v-row>
+                </v-card-text>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-4 text-body">
                     <h3 class="mb-0">Recent photos</h3>
@@ -282,6 +297,10 @@ img {
 }
 
 .btn-outline-dark:hover {
+    color: #fff;
+}
+
+.btn-secondary {
     color: #fff;
 }
 </style>

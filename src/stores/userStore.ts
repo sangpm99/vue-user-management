@@ -43,8 +43,8 @@ export const useUserStore = defineStore('users', () => {
         roles: Array<any> ) => {
             try {
                 const body = { id, email, userName, fullName, address, phoneNumber, department, roles }
-                const request = axios.put('/User/Update', body)
-                return request;
+                const request = await axios.put('/User/Update', body)
+                return request.status;
             } catch (err) {
                 console.log(err);
                 return false;

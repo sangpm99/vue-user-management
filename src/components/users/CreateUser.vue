@@ -35,16 +35,16 @@ const rulesConfirmPassword = [
 
 const department: Array<string> = [
     'CEO',
-    'Assistance',
-    'Sale',
-    'Design',
-    'Design Manager',
-    'Accounting',
-    'Fulfillment',
-    'Customer Service',
-    'Support',
+    'ASSISTANCE',
+    'SALE',
+    'DESIGN',
+    'DESIGN_MANAGER',
+    'ACCOUNTING',
+    'FULFILLMENT',
+    'CUSTOMER_SERVICE',
+    'SUPPORT',
     'IT',
-    'Build Acc'
+    'BUILD_ACC'
 ]
 
 const user: Reactive<any> = reactive({
