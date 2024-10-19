@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, type Ref } from 'vue'
-import { getCookie } from '@/stores/userCookie'
-import getUser from '@/apis/users/getUser'
-import changePassword from '@/apis/admin/changePassword'
+import { useCookieStore, useUserStore } from '@/stores/useStore'
 import Swal from 'sweetalert2'
 
 const userId: Ref<any> = ref(null)
@@ -17,10 +15,13 @@ const newPassword: Ref<string> = ref('')
 
 const confirmNewPassword: Ref<any> = ref('')
 
+const cookiesStore = useCookieStore();
+const userStore = useUserStore();
+
 watch(
     () => user.value,
     () => {
-        const cookieData = getCookie('User Data')
+        const cookieData = cookiesStore.getCookie()
 
         if (cookieData !== null) {
             if (cookieData !== JSON.stringify(user.value)) {
@@ -41,7 +42,7 @@ watch(
     async (id) => {
         if (id !== null) {
             try {
-                const userInfoResponse = await getUser(id)
+                const userInfoResponse = await userStore.getUser(id)
                 if (userInfoResponse !== null) {
                     userInfo.value = userInfoResponse.data
                 }
@@ -63,7 +64,7 @@ const handleUpdate = () => {
         cancelButtonText: 'Cancel'
     }).then(async (result) => {
         if (result.isConfirmed) {
-            const statusCode = await changePassword(
+            const statusCode = await userStore.changePassword(
                 oldPassword.value,
                 newPassword.value,
                 confirmNewPassword.value

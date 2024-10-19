@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useUserStore } from '@/stores/userStore';
+import { useUserStore } from '@/stores/useStore';
 import { ref, type Ref } from 'vue'
 const confirmDialog: Ref<boolean> = ref(false)
 

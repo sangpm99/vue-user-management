@@ -3,8 +3,8 @@ import { ref, type Ref, watch } from 'vue'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { useUserStore } from '@/stores/userStore';
+import { useLocalStorageStore } from '@/stores/localStorageStore';
 import RevokeToken from '@/components/users/RevokeToken.vue';
-import { delCookie } from '@/stores/userCookie';
 
 library.add(faXmark)
 
@@ -54,14 +54,12 @@ const formatDate = (timeStamp: string) => {
 
 const handleRevokeAllTokens = async() => {
     confirmDialog.value = false;
-    const res = await userStore.revokeAllTokens(props.id);
-    if(res) {
-        reMountDialog.value++;
-    }
+    await userStore.revokeAllTokens(props.id);
+    reMountDialog.value++;
 }
 
 const directToSignIn = () => {
-    delCookie('User Data');
+    cookiesStore.delCookie();
 }
 
 </script>

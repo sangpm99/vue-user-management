@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, watch, type Ref } from 'vue'
-import { getCookie } from '@/stores/userCookie'
-import getUser from '@/apis/users/getUser'
-import changeProfile from '@/apis/admin/changeProfile'
+import { useCookieStore, useUserStore } from '@/stores/useStore'
 import Swal from 'sweetalert2'
+
+const cookiesStore = useCookieStore();
+const userStore = useUserStore();
 
 const userId: Ref<string> = ref('')
 
@@ -36,7 +37,7 @@ const department: Array<string> = [
 watch(
     () => user.value,
     () => {
-        const cookieData = getCookie('User Data')
+        const cookieData = cookiesStore.getCookie()
 
         if (cookieData !== null) {
             if (cookieData !== JSON.stringify(user.value)) {
@@ -57,7 +58,7 @@ watch(
     async (id) => {
         if (id !== null) {
             try {
-                const userInfoResponse = await getUser(id)
+                const userInfoResponse = await userStore.getUser(id)
                 if (userInfoResponse !== null) {
                     userInfo.value = userInfoResponse.data
                 }
@@ -70,7 +71,7 @@ watch(
 )
 
 const handleChangeProfile = async () => {
-    const response = await changeProfile(
+    const response = await userStore.changeProfile(
         userInfo.value.userName,
         userInfo.value.email,
         userInfo.value.fullName,

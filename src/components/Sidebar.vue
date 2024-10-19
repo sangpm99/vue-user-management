@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import router from '@/routers'
-import { delCookie } from '@/stores/userCookie'
-import { useUserStore } from '@/stores/userStore'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
+import { useUserStore } from '@/stores/userStore'
+import { useLocalStorageStore } from '@/stores/localStorageStore'
 import {
     faGaugeHigh,
     faLock,
@@ -15,6 +14,8 @@ import {
     faChartSimple
 } from '@fortawesome/free-solid-svg-icons'
 import { faAddressCard } from '@fortawesome/free-regular-svg-icons'
+import { onBeforeMount, type Ref, ref } from 'vue'
+import type { UserData } from '@/types/UserData'
 library.add(
     faGaugeHigh,
     faLock,
@@ -26,9 +27,14 @@ library.add(
     faChartSimple
 )
 
-const routes = router.options.routes
-
+const localStorageStore = useLocalStorageStore();
 const userStore = useUserStore();
+
+const currentUser: Ref<UserData | null> = ref(null);
+
+onBeforeMount(async() => {
+    currentUser.value = userStore.getCurrentUser();
+} )
 
 </script>
 
@@ -109,7 +115,7 @@ const userStore = useUserStore();
                 <li>
                     <a
                         class="capitalize nav-link text-white position-relative"
-                        @click="delCookie('User Data')"
+                        @click="localStorageStore.delUserData()"
                     >
                         <span>Sign Out</span>
                     </a>
@@ -127,7 +133,7 @@ const userStore = useUserStore();
                     height="32"
                     class="rounded-circle me-2"
                 />
-                <strong>{{ userStore.getCurrentUser.data.fullName }}</strong>
+                <strong>{{ currentUser?.fullName }}</strong>
             </a>
         </div>
     </div>

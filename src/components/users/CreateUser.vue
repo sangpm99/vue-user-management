@@ -3,7 +3,7 @@ import { reactive, ref, type Ref, type Reactive, watch, onBeforeMount } from 'vu
 import { faPenToSquare, faTrashCan, faFloppyDisk } from '@fortawesome/free-regular-svg-icons'
 import { faXmark, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import createUser from '@/apis/users/createUser'
+import { useRoleStore } from '@/stores/roleStore'
 import { useUserStore } from '@/stores/userStore'
 library.add(faPenToSquare, faTrashCan, faFloppyDisk, faXmark, faPlus)
 
@@ -12,6 +12,7 @@ const dialog: Ref<boolean> = ref(false)
 const rules = [(value: string) => !!value || 'You must enter this field']
 
 const userStore = useUserStore();
+const roleStore = useRoleStore();
 
 const roles: Ref<any> = ref([]);
 
@@ -19,7 +20,7 @@ watch(
     dialog,
     async(dialogIsOpen) => {
         if(dialogIsOpen) {
-            const getRoles = await userStore.getRolesName();
+            const getRoles = await roleStore.getRolesName();
             roles.value = getRoles
         }
     }
@@ -65,7 +66,7 @@ const user: Reactive<any> = reactive({
 })
 
 const handleSave = async () => {
-    const response = await createUser(
+    await userStore.createUser(
         user.email,
         user.userName,
         user.password,
@@ -76,13 +77,8 @@ const handleSave = async () => {
         user.department,
         user.roles
     )
-    if (response) {
-        console.log('Add New User Successfully')
-        window.location.reload()
-    } else {
-        console.log('Fail to Add New User')
-    }
     dialog.value = false
+    window.location.reload()
 }
 
 </script>

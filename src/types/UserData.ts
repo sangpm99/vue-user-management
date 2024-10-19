@@ -1,19 +1,17 @@
 export interface UserData {
-    data: {
-        id: string
-        fullName: string
-        avatar: null | string
-        department: string
-        address: null | string
-        userName: string
-        email: string
-        emailConfirmed: boolean
-        phoneNumber: null | string
-        phoneNumberConfirmed: boolean
-        twoFactorEnabled: boolean
-        roles: Array<string>
-        permissions: Array<string>
-        token: string
-    }
-    success: boolean
+    id: string | null,
+    fullName: string | null,
+    avatar: string | null,
+    department: string | null,
+    address: string | null
+    userName: string | null,
+    email: string | null,
+    emailConfirmed: boolean,
+    phoneNumber: string | null,
+    phoneNumberConfirmed: false,
+    twoFactorEnabled: false,
+    roles: string[],
+    permissions: string[],
+    token: string | null,
+    expiration: string | null
 }

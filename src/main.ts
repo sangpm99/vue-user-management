@@ -19,6 +19,7 @@ import vuetify from '@/plugins/vuetify'
 import App from './App.vue'
 import router from './routers'
 
+
 const app = createApp(App)
 
 app.use(createPinia())

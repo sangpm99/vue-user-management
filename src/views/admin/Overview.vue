@@ -1,24 +1,33 @@
 <script setup lang="ts">
 import Card from '@/components/Card.vue'
-import Button from '@/components/Button.vue'
 import { useUserStore } from '@/stores/userStore';
+import { onMounted, type Ref, ref } from 'vue';
+import type { UserData } from '@/types/UserData';
+import { RouterLink } from 'vue-router'
 
 const userStore = useUserStore();
+
+const currentUser: Ref<UserData | null> = ref(null)
+
+onMounted(async() => {
+    currentUser.value = userStore.getCurrentUser();
+})
+
 </script>
 
 <template>
     <h1>OverView</h1>
     <div class="row container">
-        <div class="col-8">
+        <div v-if="currentUser" class="col-8">
             <Card>
                 <div class="row">
                     <div class="col-8">
-                        <h3>Congratulations {{ userStore.getCurrentUser.data.fullName }}! 🎉</h3>
+                        <h5>Congratulations {{ currentUser.fullName }}! 🎉</h5>
                         <p>
                             You have done 68% 😎 more sales today.<br />
                             Check your new raising badge in your profile.
                         </p>
-                        <Button path="/admin/myprofile">View Profile</Button>
+                        <RouterLink class="btn btn-primary" to="/admin/myprofile" >View Profile</RouterLink>
                     </div>
 
                     <div class="col-4 position-absolute bottom-0 end-0">
@@ -31,5 +40,6 @@ const userStore = useUserStore();
                 </div>
             </Card>
         </div>
+        <div v-else> Loading ...</div>
     </div>
 </template>

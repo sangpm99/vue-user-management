@@ -1,27 +1,27 @@
 <!-- Note: Can't Delete Myself -->
 <script setup lang="ts">
-import deleteUser from '@/apis/users/deleteUser';
-import { onBeforeMount, ref, type Ref } from 'vue';
 import { useUserStore } from '@/stores/userStore'
+import { onBeforeMount, type Ref, ref } from 'vue';
+import { type UserData } from '@/types/UserData';
+
+const currentUser: Ref<UserData | null> = ref(null);
 
 const userStore = useUserStore()
+
+onBeforeMount(() => {
+    currentUser.value = userStore.getCurrentUser();
+})
 
 const props = defineProps<{id: string}>()
 
 const handleDelete = async() => {
-    if(userStore.getCurrentUser.data.id && userStore.getCurrentUser.data.id !== props.id) {
-        const req = await deleteUser(props.id)
-        if(req) {
-            window.location.reload();
-        } else {
-            console.log('Error request')
-        }
-    } else {
-        alert("Can't delete myself")
-    }  
+    if(currentUser.value?.id !== props.id) {
+        await userStore.deleteUser(props.id)
+        window.location.reload();
+    }
 }
 </script>
 
 <template>
-    <button :class="userStore.getCurrentUser.data.id === id ? 'badge disabled' : 'badge bg-danger'" @click="handleDelete">Delete</button>
+    <button :class="currentUser?.id === id ? 'badge disabled' : 'badge bg-danger'" @click="handleDelete">Delete</button>
 </template>

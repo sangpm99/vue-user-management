@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import signUp from '@/apis/authorize/signUp'
+import { useAuthorizeStore } from '@/stores/useStore';
+
+const authorizeStore = useAuthorizeStore();
 
 const userName = ref<string>('')
 
@@ -43,7 +45,7 @@ const reCaptcha = ref<string>('string')
                     class="mt-2 btn btn-primary float-end"
                     type="submit"
                     value="Sign Up"
-                    @click.prevent="signUp(userName, email, password, confirmPassword, reCaptcha)"
+                    @click.prevent="authorizeStore.signUp(userName, email, password, confirmPassword, reCaptcha)"
                 />
             </div>
         </div>

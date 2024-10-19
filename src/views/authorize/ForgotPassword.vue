@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import forgotPassword from '@/apis/authorize/forgotPassword'
+import { useAuthorizeStore } from '@/stores/useStore';
+
+const authorizeStore = useAuthorizeStore();
 
 const email = ref<string>('')
 const reCaptcha = ref<string>('string')
@@ -21,7 +23,7 @@ const reCaptcha = ref<string>('string')
                     class="mt-2 btn btn-primary float-end"
                     type="submit"
                     value="Reset Password"
-                    @click.prevent="forgotPassword(email, reCaptcha)"
+                    @click.prevent="authorizeStore.forgotPassword(email, reCaptcha)"
                 />
             </div>
         </div>

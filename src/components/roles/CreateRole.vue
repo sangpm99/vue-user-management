@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useRoleStore } from '@/stores/userStore';
+import { useRoleStore } from '@/stores/roleStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {faFloppyDisk } from '@fortawesome/free-regular-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -23,13 +23,8 @@ const rules = [
 ]
 
 const handleSave = async () => {
-    const res = await roleStore.createRole(roleName.value, permissionsSelected.value);
-    console.log(res);
-    if(res) {
-        dialog.value = false;
-        return true;
-    }
-    return false;
+    await roleStore.createRole(roleName.value, permissionsSelected.value);
+    return true;
 }
 
 const handleClose = () => {

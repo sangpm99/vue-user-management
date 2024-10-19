@@ -3,8 +3,7 @@ import { watch, reactive, ref, type Ref, type Reactive } from 'vue'
 import { faPenToSquare, faTrashCan, faFloppyDisk } from '@fortawesome/free-regular-svg-icons'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import getUser from '@/apis/users/getUser'
-import { useUserStore } from '@/stores/userStore';
+import { useUserStore, useRoleStore } from '@/stores/useStore';
 library.add(faPenToSquare, faTrashCan, faFloppyDisk, faXmark)
 import Swal from 'sweetalert2'
 
@@ -15,6 +14,7 @@ const rules = [(value: string) => !!value || 'You must enter this field']
 const props = defineProps<{id: string}>();
 
 const userStore = useUserStore();
+const roleStore = useRoleStore();
 
 const roles: Ref<any> = ref([]);
 
@@ -33,10 +33,10 @@ watch(
     dialog,
     async (dialogIsOpen) => {
     if(dialogIsOpen) {
-        const getRoles = await userStore.getRolesName();
+        const getRoles = await roleStore.getRolesName();
         roles.value = getRoles;
 
-        const getUserById = await getUser(props.id)
+        const getUserById = await userStore.getUser(props.id)
         if(getUserById) {
             user.id = getUserById.data.id;
             user.email = getUserById.data.email;

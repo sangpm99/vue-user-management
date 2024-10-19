@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import recoverPassword from '@/apis/authorize/recoverPassword'
+import { useAuthorizeStore } from '@/stores/useStore';
+
+const authorizeStore = useAuthorizeStore();
 
 const route = useRoute()
 
@@ -21,7 +23,7 @@ const notifyPasswordNotMatch = ref<boolean>(false)
 
 const handleRecoverPassword = async () => {
     if (
-        await recoverPassword(
+        await authorizeStore.recoverPassword(
             email.value,
             newPassword.value,
             confirmNewPassword.value,

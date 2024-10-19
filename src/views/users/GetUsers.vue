@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { useUserStore } from '@/stores/userStore'
+import { useUserStore } from '@/stores/useStore'
 import CreateUser from '@/components/users/CreateUser.vue'
 import UpdateUser from '@/components/users/UpdateUser.vue';
 import DeleteUser from '@/components/users/DeleteUser.vue';
@@ -82,15 +82,9 @@ watch(
                         {{ user.fullName }}
                         <br>
                         <div class="my-nav">
-                            <div class="d-inline first">
-                                <UpdateUser :id="user.id" />
-                            </div> | 
-                            <div class="d-inline second">
-                                <GetActivityUser :id="user.id"/>
-                            </div> |
-                            <div class="d-inline third">
+                                <UpdateUser :id="user.id" /> |
+                                <GetActivityUser :id="user.id"/> |
                                 <DeleteUser :id="user.id"/>
-                            </div>
                         </div>
                     </td>
                     <td>{{ user.department }}</td>

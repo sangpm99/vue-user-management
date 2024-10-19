@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import signIn from '@/apis/authorize/signIn'
+import { useAuthorizeStore } from '@/stores/authorizeStore';
+
+const authorizeStore = useAuthorizeStore();
 
 const email = ref<string>('')
 
@@ -39,7 +41,7 @@ const rememberMe = ref<boolean>(false)
                     class="btn btn-primary float-end"
                     type="submit"
                     value="Sign In"
-                    @click.prevent="signIn(email, password, reCaptcha, rememberMe)"
+                    @click.prevent="authorizeStore.signIn(email, password, reCaptcha, rememberMe)"
                 />
                 <br />
                 <p class="text-center mt-5">
