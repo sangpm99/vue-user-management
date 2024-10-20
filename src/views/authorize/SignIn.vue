@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useAuthorizeStore } from '@/stores/authorizeStore';
+import { useAuthorizeStore } from '@/stores/authorizeStore'
 
-const authorizeStore = useAuthorizeStore();
+const authorizeStore = useAuthorizeStore()
 
 const email = ref<string>('')
 
@@ -43,11 +43,8 @@ const rememberMe = ref<boolean>(false)
                     value="Sign In"
                     @click.prevent="authorizeStore.signIn(email, password, reCaptcha, rememberMe)"
                 />
+                <div class="clearfix"></div>
                 <br />
-                <p class="text-center mt-5">
-                    Don't have an account?
-                    <RouterLink to="/authorize/signup">Sign Up</RouterLink>
-                </p>
                 <p class="text-center mt-2">
                     <RouterLink to="/authorize/forgotpassword">Forgot password?</RouterLink>
                 </p>

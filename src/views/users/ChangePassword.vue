@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, type Ref } from 'vue'
-import { useCookieStore, useUserStore } from '@/stores/useStore'
+import { useUserStore } from '@/stores/userStore'
+import { useLocalStorageStore } from '@/stores/localStorageStore'
 import Swal from 'sweetalert2'
 
 const userId: Ref<any> = ref(null)
@@ -15,21 +16,21 @@ const newPassword: Ref<string> = ref('')
 
 const confirmNewPassword: Ref<any> = ref('')
 
-const cookiesStore = useCookieStore();
-const userStore = useUserStore();
+const localStorageStore = useLocalStorageStore()
+const userStore = useUserStore()
 
 watch(
     () => user.value,
     () => {
-        const cookieData = cookiesStore.getCookie()
+        const userData = localStorageStore.getUserData()
 
-        if (cookieData !== null) {
-            if (cookieData !== JSON.stringify(user.value)) {
+        if (userData !== null) {
+            if (userData !== JSON.stringify(user.value)) {
                 try {
-                    user.value = JSON.parse(cookieData)
+                    user.value = JSON.parse(userData)
                     userId.value = user?.value?.data?.id || ''
                 } catch (error) {
-                    console.error('Cookie data is not valid JSON:', error)
+                    console.error('User data is not valid JSON:', error)
                 }
             }
         }
@@ -69,7 +70,6 @@ const handleUpdate = () => {
                 newPassword.value,
                 confirmNewPassword.value
             )
-            console.log(statusCode)
             switch (Number(statusCode)) {
                 case 200: {
                     Swal.fire({

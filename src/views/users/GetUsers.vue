@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { useUserStore } from '@/stores/useStore'
+import { useUserStore } from '@/stores/userStore'
 import CreateUser from '@/components/users/CreateUser.vue'
-import UpdateUser from '@/components/users/UpdateUser.vue';
-import DeleteUser from '@/components/users/DeleteUser.vue';
-import GetActivityUser from '@/components/users/GetActivity.vue';
+import UpdateUser from '@/components/users/UpdateUser.vue'
+import DeleteUser from '@/components/users/DeleteUser.vue'
+import GetActivityUser from '@/components/users/GetActivity.vue'
 
 const totals = ref<number>(0)
 const userList = ref<Array<any>>([])
@@ -24,20 +24,24 @@ watch(
     }
 )
 
+const getUsers = async() => {
+    const data = await userStore.getUsers(currentPage.value, itemsPerPage.value)
+
+    if (data.data.data.items) {
+        totals.value = data.data.data.itemsCount
+        userList.value = data.data.data.items
+
+        pagination.value =
+            totals.value % itemsPerPage.value === 0
+                ? Math.floor(totals.value / itemsPerPage.value)
+                : Math.floor(totals.value / itemsPerPage.value) + 1
+    }
+}
+
 watch(
     [() => itemsPerPage.value, () => currentPage.value],
     async () => {
-        const data = await userStore.getUsers(currentPage.value, itemsPerPage.value)
-
-        if (data) {
-            totals.value = data.data.itemsCount
-            userList.value = data.data.items
-
-            pagination.value =
-                totals.value % itemsPerPage.value === 0
-                    ? Math.floor(totals.value / itemsPerPage.value)
-                    : Math.floor(totals.value / itemsPerPage.value) + 1
-        }
+        getUsers();
     },
     { immediate: true }
 )
@@ -63,7 +67,7 @@ watch(
             </div>
 
             <div class="col-2 d-flex justify-content-end">
-                <CreateUser />
+                <CreateUser @isDone="getUsers"/>
             </div>
         </div>
 
@@ -80,11 +84,11 @@ watch(
                 <tr v-for="(user, index) in userList" :key="index">
                     <td class="my-user">
                         {{ user.fullName }}
-                        <br>
+                        <br />
                         <div class="my-nav">
-                                <UpdateUser :id="user.id" /> |
-                                <GetActivityUser :id="user.id"/> |
-                                <DeleteUser :id="user.id"/>
+                            <UpdateUser :id="user.id" @isDone="getUsers" /> | 
+                            <GetActivityUser :id="user.id"/> | 
+                            <DeleteUser :id="user.id" @isDone="getUsers"/>
                         </div>
                     </td>
                     <td>{{ user.department }}</td>
@@ -168,6 +172,6 @@ input.item-per-page {
 
 .my-user:hover .my-nav {
     opacity: 1;
-    transform: translateY(0)
+    transform: translateY(0);
 }
 </style>

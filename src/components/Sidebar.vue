@@ -27,15 +27,14 @@ library.add(
     faChartSimple
 )
 
-const localStorageStore = useLocalStorageStore();
-const userStore = useUserStore();
+const localStorageStore = useLocalStorageStore()
+const userStore = useUserStore()
 
-const currentUser: Ref<UserData | null> = ref(null);
+const currentUser: Ref<UserData | null> = ref(null)
 
-onBeforeMount(async() => {
-    currentUser.value = userStore.getCurrentUser();
-} )
-
+onBeforeMount(async () => {
+    currentUser.value = userStore.getCurrentUser()
+})
 </script>
 
 <template>

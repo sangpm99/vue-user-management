@@ -1,22 +1,28 @@
 <script setup lang="ts">
-import { watch, reactive, ref, type Ref, type Reactive } from 'vue'
+import { watch, reactive, ref, type Ref, type Reactive, onBeforeMount } from 'vue'
 import { faPenToSquare, faTrashCan, faFloppyDisk } from '@fortawesome/free-regular-svg-icons'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { useUserStore, useRoleStore } from '@/stores/useStore';
+import { useUserStore } from '@/stores/userStore'
+import { useRoleStore } from '@/stores/roleStore'
+import { type UserData } from '@/types/UserData'
+import { useDepartmentStore } from '@/stores/departmentStore'
+
 library.add(faPenToSquare, faTrashCan, faFloppyDisk, faXmark)
-import Swal from 'sweetalert2'
 
 const dialog: Ref<boolean> = ref(false)
 
 const rules = [(value: string) => !!value || 'You must enter this field']
 
-const props = defineProps<{id: string}>();
+const props = defineProps<{ id: string }>()
 
-const userStore = useUserStore();
-const roleStore = useRoleStore();
+const userStore = useUserStore()
+const roleStore = useRoleStore()
+const departmentStore = useDepartmentStore()
 
-const roles: Ref<any> = ref([]);
+const department: string[] = departmentStore.getDepartment()
+
+const roles: Ref<any> = ref([])
 
 const user: Reactive<any> = reactive({
     id: '',
@@ -29,43 +35,33 @@ const user: Reactive<any> = reactive({
     roles: []
 })
 
-watch(
-    dialog,
-    async (dialogIsOpen) => {
-    if(dialogIsOpen) {
-        const getRoles = await roleStore.getRolesName();
-        roles.value = getRoles;
+const currentUser: Ref<UserData | null> = ref(null)
+
+watch(dialog, async (dialogIsOpen) => {
+    if (dialogIsOpen) {
+        const getRoles = await roleStore.getRolesName()
+        roles.value = getRoles
 
         const getUserById = await userStore.getUser(props.id)
-        if(getUserById) {
-            user.id = getUserById.data.id;
-            user.email = getUserById.data.email;
-            user.userName = getUserById.data.userName;
-            user.phoneNumber = getUserById.data.phoneNumber;
-            user.fullName = getUserById.data.fullName;
-            user.address = getUserById.data.address;
-            user.department = getUserById.data.department;
-            user.roles = getUserById.data.roles;
+        if (getUserById.data.data) {
+            user.id = getUserById.data.data.id
+            user.email = getUserById.data.data.email
+            user.userName = getUserById.data.data.userName
+            user.phoneNumber = getUserById.data.data.phoneNumber
+            user.fullName = getUserById.data.data.fullName
+            user.address = getUserById.data.data.address
+            user.department = getUserById.data.data.department
+            user.roles = getUserById.data.data.roles
         }
     }
 })
 
-const department: Array<string> = [
-    'CEO',
-    'ASSISTANCE',
-    'SALE',
-    'DESIGN',
-    'DESIGN_MANAGER',
-    'ACCOUNTING',
-    'FULFILLMENT',
-    'CUSTOMER_SERVICE',
-    'SUPPORT',
-    'IT',
-    'BUILD_ACC'
-]
+onBeforeMount(() => {
+    currentUser.value = userStore.getCurrentUser()
+})
 
 const handleSave = async () => {
-    const response = await userStore.updateUser(
+    await userStore.updateUser(
         user.id,
         user.email,
         user.userName,
@@ -75,27 +71,20 @@ const handleSave = async () => {
         user.department,
         user.roles
     )
-    if (response) {
-        window.location.reload()
-        dialog.value = false
-    } else {
-        dialog.value = false
-        Swal.fire({
-        title: 'Fail',
-        text: 'Username Or Email is Exist, please try another',
-        icon: 'error'})
-    }
+    dialog.value = false;
 }
 </script>
 
 <template>
     <v-dialog v-model="dialog" max-width="800">
         <template v-slot:activator="{ props: activatorProps }">
-            <button :class="userStore.getCurrentUser?.data?.id === id ? 'badge disabled' : 'badge bg-primary'" v-bind="activatorProps">
+            <button
+                :class="currentUser?.id === id ? 'badge disabled' : 'badge bg-primary'"
+                v-bind="activatorProps"
+            >
                 Edit
             </button>
         </template>
-
 
         <v-card title="Edit User">
             <v-card-text>
@@ -171,7 +160,7 @@ const handleSave = async () => {
             <v-card-actions>
                 <v-spacer></v-spacer>
 
-                <button class="btn btn-success" @click="handleSave">
+                <button class="btn btn-success" @click="async() => $emit('is-done', await handleSave())">
                     <font-awesome-icon :icon="['far', 'floppy-disk']" />
                 </button>
                 <button class="btn btn-secondary" @click="dialog = false">

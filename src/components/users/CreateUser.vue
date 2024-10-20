@@ -6,25 +6,26 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { useRoleStore } from '@/stores/roleStore'
 import { useUserStore } from '@/stores/userStore'
 library.add(faPenToSquare, faTrashCan, faFloppyDisk, faXmark, faPlus)
+import { useDepartmentStore } from '@/stores/departmentStore'
 
 const dialog: Ref<boolean> = ref(false)
 
 const rules = [(value: string) => !!value || 'You must enter this field']
 
-const userStore = useUserStore();
-const roleStore = useRoleStore();
+const userStore = useUserStore()
+const roleStore = useRoleStore()
+const departmentStore = useDepartmentStore()
 
-const roles: Ref<any> = ref([]);
+const department: string[] = departmentStore.getDepartment()
 
-watch(
-    dialog,
-    async(dialogIsOpen) => {
-        if(dialogIsOpen) {
-            const getRoles = await roleStore.getRolesName();
-            roles.value = getRoles
-        }
+const roles: Ref<any> = ref([])
+
+watch(dialog, async (dialogIsOpen) => {
+    if (dialogIsOpen) {
+        const getRoles = await roleStore.getRolesName()
+        roles.value = getRoles
     }
-)
+})
 
 const rulesPassword = [
     (value: string) => !!value || 'You must enter this field',
@@ -37,20 +38,6 @@ const rulesPassword = [
 const rulesConfirmPassword = [
     (value: string) => !!value || 'You must enter this field',
     (value: string) => value === user.password || 'Confirm Password and New Password must be match'
-]
-
-const department: Array<string> = [
-    'CEO',
-    'ASSISTANCE',
-    'SALE',
-    'DESIGN',
-    'DESIGN_MANAGER',
-    'ACCOUNTING',
-    'FULFILLMENT',
-    'CUSTOMER_SERVICE',
-    'SUPPORT',
-    'IT',
-    'BUILD_ACC'
 ]
 
 const user: Reactive<any> = reactive({
@@ -78,7 +65,6 @@ const handleSave = async () => {
         user.roles
     )
     dialog.value = false
-    window.location.reload()
 }
 
 </script>
@@ -92,7 +78,6 @@ const handleSave = async () => {
                 </button>
             </span>
         </template>
-
 
         <v-card title="Add New User">
             <v-card-text>
@@ -188,7 +173,7 @@ const handleSave = async () => {
             <v-card-actions>
                 <v-spacer></v-spacer>
 
-                <button class="btn btn-success" @click="handleSave">
+                <button class="btn btn-success" @click="async() => $emit('is-done', await handleSave())">
                     <font-awesome-icon :icon="['far', 'floppy-disk']" />
                 </button>
                 <button class="btn btn-secondary" @click="dialog = false">

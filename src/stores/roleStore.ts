@@ -1,6 +1,6 @@
 import axios from '@/plugins/axios'
 import { defineStore } from 'pinia'
-import { AxiosError } from 'axios';
+import { AxiosError } from 'axios'
 
 export const useRoleStore = defineStore('role', () => {
     const getRoles = async (
@@ -10,14 +10,14 @@ export const useRoleStore = defineStore('role', () => {
         searchValue?: string
     ): Promise<any> => {
         const slug = '/Role/GetRoles'
-    
+
         const params = {
             limitUsersPerRole: limitUsersPerRole || 10,
             pageIndex: pageIndex || 1,
             pageSize: pageSize || 100,
             searchValue: searchValue || null
         }
-    
+
         try {
             const response = await axios.get(slug, { params })
             return Promise.resolve(response)
@@ -26,17 +26,26 @@ export const useRoleStore = defineStore('role', () => {
         }
     }
 
-    const getRolesName = async(pageIndex?: number, pageSize?: number): Promise<any> => {
+    const getRole = async(id: string): Promise<any> => {
+        try {
+            const res = await axios.get(`/Role/GetRole/${id}`)
+            return res;
+        } catch (err) {
+            return Promise.reject(err as AxiosError);
+        }
+    }
+
+    const getRolesName = async (pageIndex?: number, pageSize?: number): Promise<any> => {
         const params = {
             pageIndex,
             pageSize
         }
 
         try {
-            const res = await axios.get('/Role/GetRoles',{params})
-            const arr = [];
-            for(let i = 0; i < res.data.data?.items.length; i++) {
-                arr.push(res.data.data?.items[i]?.name);
+            const res = await axios.get('/Role/GetRoles', { params })
+            const arr = []
+            for (let i = 0; i < res.data.data?.items.length; i++) {
+                arr.push(res.data.data?.items[i]?.name)
             }
             return Promise.resolve(arr)
         } catch (err) {
@@ -44,34 +53,47 @@ export const useRoleStore = defineStore('role', () => {
         }
     }
 
-    const getPermissions = async(): Promise<any> => {
+    const getPermissions = async (): Promise<any> => {
         try {
-            const res = await axios.get('/Role/GetPermissions');
+            const res = await axios.get('/Role/GetPermissions')
             return Promise.resolve(res)
         } catch (err) {
             return Promise.reject(err as AxiosError)
         }
     }
 
-    const createRole = async(name: string, permissions: Array<string>): Promise<void> => {
+    const createRole = async (name: string, permissions: Array<string>): Promise<void> => {
         const body = {
             name,
             permissions
         }
         try {
-            await axios.post('/Role/Create', body);
+            await axios.post('/Role/Create', body)
         } catch (err) {
             return Promise.reject(err as AxiosError)
         }
     }
 
-    const deleteRole = async(id: string): Promise<void> => {
+    const updateRole = async(id: string, name: string, permissions: string[]): Promise<void> => {
+        const body = {
+            id,
+            name,
+            permissions
+        }
         try {
-            await axios.delete(`/Role/Delete/${id}`);
+            await axios.put('/Role/Update', body);
+        } catch (err) {
+            return Promise.reject(err as AxiosError);
+        }
+    }
+
+    const deleteRole = async (id: string): Promise<void> => {
+        try {
+            await axios.delete(`/Role/Delete/${id}`)
         } catch (err) {
             return Promise.reject(err as AxiosError)
         }
     }
 
-    return { getRoles, getPermissions, createRole, deleteRole, getRolesName }
+    return { getRoles, getRole, getPermissions, createRole, deleteRole, getRolesName, updateRole }
 })

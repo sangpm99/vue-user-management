@@ -1,40 +1,34 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onBeforeMount, reactive, ref, type Reactive } from 'vue'
 import { useRoute } from 'vue-router'
-import { useAuthorizeStore } from '@/stores/useStore';
+import { useAuthorizeStore } from '@/stores/authorizeStore'
 
-const authorizeStore = useAuthorizeStore();
-
+const authorizeStore = useAuthorizeStore()
 const route = useRoute()
 
-const email = ref<string>(route.query.email as string)
+const userData: Reactive<any> = reactive({
+    email: '',
+    token: '',
+    newPassword: '',
+    confirmNewPassword: '',
+    reCaptcha: 'string'
+})
 
-const token = ref<string>(
-    'Q2ZESjhENXFLOTZ0UDlWTXJ3a2NRZVE1MGxWaGdRalZKdSt0RytTRFFobDNiVk1qY3AzS0Npc1RHSXJSZDkxVDRMbmNYc0k2TlJPVEFNT2I3bElIZDZMRjI3Z2FUZjZkMlJYRlZwbHB5MzJpZFJ1YWcrbUlxeGxsY2xKUWFyK2paVDZIQnEwZjk5UytVb0g0cGNkYjBWR1kwUmdORkZmTnVveUJMMjR1SnIxeWFEQUtUWjY1NnRRNmFGNTJIQmtmaXAwR0ZHcDZhM0xpWGp0M3gvMVNhQWM4ejJ3c2dvQkpNVWgwNmQwUGlHcXNDL3Qz'
-)
-
-const newPassword = ref<string>('')
-
-const confirmNewPassword = ref<string>('')
-
-const reCaptcha = ref<string>('string')
+onBeforeMount(() => {
+    userData.email = route.query.email as string;
+    userData.token = route.query.token as string;
+})
 
 const notifyPasswordNotMatch = ref<boolean>(false)
 
 const handleRecoverPassword = async () => {
-    if (
-        await authorizeStore.recoverPassword(
-            email.value,
-            newPassword.value,
-            confirmNewPassword.value,
-            token.value,
-            reCaptcha.value
-        )
-    ) {
-        notifyPasswordNotMatch.value = true
-    } else {
-        notifyPasswordNotMatch.value = false
-    }
+    await authorizeStore.recoverPassword(
+        userData.email,
+        userData.newPassword,
+        userData.confirmNewPassword,
+        userData.token,
+        userData.reCaptcha
+    )
 }
 </script>
 
@@ -45,13 +39,8 @@ const handleRecoverPassword = async () => {
         <div class="col-12">
             <div data-mdb-input-init class="form-outline">
                 <label for="" class="w-100 mb-2">
-                    Email
-                    <input disabled type="email" class="form-control not-allow" v-model="email" />
-                </label>
-                <br />
-                <label for="" class="w-100 mb-2">
                     New Password
-                    <input type="password" class="form-control" v-model="newPassword" />
+                    <input type="password" class="form-control" v-model="userData.newPassword" />
                 </label>
                 <br />
                 <label
@@ -64,7 +53,7 @@ const handleRecoverPassword = async () => {
                         :class="
                             notifyPasswordNotMatch ? 'form-control border-danger' : 'form-control'
                         "
-                        v-model="confirmNewPassword"
+                        v-model="userData.confirmNewPassword"
                     />
                 </label>
                 <br />

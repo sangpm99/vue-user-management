@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import Card from '@/components/Card.vue'
-import { useUserStore } from '@/stores/userStore';
-import { onMounted, type Ref, ref } from 'vue';
-import type { UserData } from '@/types/UserData';
+import { useUserStore } from '@/stores/userStore'
+import { onMounted, type Ref, ref } from 'vue'
+import type { UserData } from '@/types/UserData'
 import { RouterLink } from 'vue-router'
 
-const userStore = useUserStore();
+const userStore = useUserStore()
 
 const currentUser: Ref<UserData | null> = ref(null)
 
-onMounted(async() => {
-    currentUser.value = userStore.getCurrentUser();
+onMounted(async () => {
+    currentUser.value = userStore.getCurrentUser()
 })
-
 </script>
 
 <template>
@@ -27,7 +26,9 @@ onMounted(async() => {
                             You have done 68% 😎 more sales today.<br />
                             Check your new raising badge in your profile.
                         </p>
-                        <RouterLink class="btn btn-primary" to="/admin/myprofile" >View Profile</RouterLink>
+                        <RouterLink class="btn btn-primary" to="/admin/myprofile"
+                            >View Profile</RouterLink
+                        >
                     </div>
 
                     <div class="col-4 position-absolute bottom-0 end-0">
@@ -40,6 +41,6 @@ onMounted(async() => {
                 </div>
             </Card>
         </div>
-        <div v-else> Loading ...</div>
+        <div v-else>Loading ...</div>
     </div>
 </template>

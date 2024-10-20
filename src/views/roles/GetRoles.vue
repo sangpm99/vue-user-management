@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, type Ref, type Reactive, reactive } from 'vue'
+import { ref, onBeforeMount, type Ref, type Reactive, reactive, watch } from 'vue'
 import Card from '@/components/Card.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import CreateRole from '@/components/roles/CreateRole.vue'
-import { useRoleStore } from '@/stores/useStore'
+import { useRoleStore } from '@/stores/roleStore'
+import UpdateRoles from '@/components/roles/UpdateRoles.vue'
 
 library.add(faPenToSquare, faTrashCan, faXmark)
 
@@ -15,39 +16,34 @@ const roles: Ref<any> = ref()
 const roleStore = useRoleStore();
 
 const dialog: Ref<boolean> = ref(false);
-
+    
 const currentRole: Reactive<any> = reactive({
     roleId: '',
     roleName: '',
 });
 
-onBeforeMount(async () => {
+const getRoles = async() => {
     roles.value = await roleStore.getRoles()
-})
+}
 
-const reMount: Ref<number> = ref(0)
+onBeforeMount(getRoles);
 
 const handleRemount = (value: boolean) => {
     if(value) {
-        reMount.value++;
+        getRoles();
     }
 }
 
-const showDialog = (roleId: string, roleName: string) => {
+const showDeleteRoleDialog = (roleId: string, roleName: string) => {
     currentRole.roleId = roleId;
     currentRole.roleName = roleName;
-    console.log(currentRole.roleId)
-    console.log(currentRole.roleName)
     dialog.value = true;
 }
 
 const handleDelete = async(id: string) => {
-    if(id.length !== 0) {
-        const res = await roleStore.deleteRole(id);
-        if(res) {
-            window.location.reload();
-        }
-    }
+    await roleStore.deleteRole(id);
+    dialog.value = false;
+    getRoles();
 }
 
 </script>
@@ -60,9 +56,9 @@ const handleDelete = async(id: string) => {
                 <h3>
                     Total:
                     {{
-                        roles.data?.itemsCount > 1
-                            ? `${roles.data?.itemsCount} Roles`
-                            : `${roles.data?.itemsCount} Role`
+                        roles.data.data?.itemsCount > 1
+                            ? `${roles.data.data?.itemsCount} Roles`
+                            : `${roles.data.data?.itemsCount} Role`
                     }}
                 </h3>
             </div>
@@ -72,7 +68,7 @@ const handleDelete = async(id: string) => {
         </div>
 
         <div class="row gy-3 mt-2">
-            <div class="col-4" v-for="(role, index) in roles.data.items" :key="index">
+            <div class="col-4" v-for="(role, index) in roles.data.data.items" :key="index">
                 <Card>
                     <div class="row my-card">
                         <div class="col-10">
@@ -83,14 +79,10 @@ const handleDelete = async(id: string) => {
                         </div>
 
                         <div class="col-2 my-nav">
-                            <button
-                                class="btn btn-primary w-100 d-flex justify-content-center align-items-center p-2"
-                            >
-                                <font-awesome-icon :icon="['far', 'pen-to-square']" />
-                            </button>
+                            <UpdateRoles :id="role.id" @isDone="handleRemount"/>
                             <button
                                 class="btn btn-danger w-100 d-flex justify-content-center align-items-center p-2 mt-2"
-                                @click="showDialog(role.id, role.name)"
+                                @click="showDeleteRoleDialog(role.id, role.name)"
                             >
                                 <font-awesome-icon :icon="['far', 'trash-can']" />
                             </button>
