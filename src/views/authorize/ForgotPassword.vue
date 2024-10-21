@@ -1,79 +1,132 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue'
+import { ref, type Ref, reactive, type Reactive } from 'vue'
 import { useAuthorizeStore } from '@/stores/authorizeStore'
-import router from '@/routers';
+import router from '@/routers'
 
 const authorizeStore = useAuthorizeStore()
 
 const email = ref<string>('')
 const reCaptcha = ref<string>('string')
 
-const isGetLink: Ref<boolean> = ref(false);
+const isGetLink: Ref<boolean> = ref(false)
 
-const link: Ref<string> = ref('');
-const token: Ref<string> = ref('');
+const link: Ref<string> = ref('')
+const token: Ref<string> = ref('')
 
-const handleGetLink = async() => {
-    await authorizeStore.forgotPassword(email.value, reCaptcha.value)
-    isGetLink.value = true;
+const invalid: Reactive<any> = reactive({
+    isInvalid: false,
+    status: null,
+    message: ''
+});
+
+const handleGetLink = async () => {
+    const res = await authorizeStore.forgotPassword(email.value, reCaptcha.value)
+    if(res) {
+        switch (true) {
+        case (res.status >= 200 && res.status <= 299):
+            invalid.isInvalid = false;
+            break;
+        case (res.status === 400):
+            invalid.isInvalid = true;
+            invalid.message = "The Email field is not a valid e-mail address."
+            break;
+        case (res.status === 401 || res.status === 404):
+            invalid.isInvalid = true;
+            invalid.message = "The Email doesn't exist."
+            break;
+        default:
+            invalid.isInvalid = true;
+            invalid.message = "An error occurred, please try again later."
+        }
+    } else {
+        invalid.isInvalid = true;
+        invalid.message = "An error occurred, please try again later."
+    }
+    isGetLink.value = true
 }
 
-const handleSend = async() => {
-    const arr = link.value.split('token=');
-    token.value = arr[1];
+const handleSend = async () => {
+    const arr = link.value.split('token=')
+    token.value = arr[1]
     router.push({
         path: '/authorize/recoverpassword',
         query: { email: email.value, token: token.value }
     })
 }
+
+const rules = [
+    (value: string) => !!value || 'Please enter this field'
+]
+
 </script>
 
 <template>
     <form class="row mb-4 pb-2 form-inline">
         <h4 class="text-center my-3 pb-3">Forgot Password</h4>
-        <div class="col-9">
+        <div class="col-12">
             <div data-mdb-input-init class="form-outline">
-                <label for="" class="w-100">
-                    Email
-                    <input type="email" :class="isGetLink ? 'form-control disabled' : 'form-control'" v-model="email" />
-                </label>
+                <v-row dense>
+                    <v-col cols="12">
+                        <v-text-field
+                            v-model="email"
+                            :rules="rules"
+                            variant="outlined"
+                            label="Email"
+                            :disabled="isGetLink && !invalid.isInvalid"
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12">
+                        <v-alert
+                            v-if="invalid.isInvalid"
+                            border="start"
+                            close-label="Close Alert"
+                            color="red"
+                            variant="tonal"
+                            closable
+                            class="my-2"
+                            >
+                            {{ invalid.message }}
+                        </v-alert>
+                    </v-col>
+
+                    <v-col cols="12" v-if="!(isGetLink && !invalid.isInvalid)">
+                        <v-btn
+                            class="float-end"
+                            color="primary"
+                            @click.prevent="handleGetLink"
+                        >Submit</v-btn>
+                    </v-col>
+                </v-row>
             </div>
         </div>
 
-        <div class="col-2 d-flex align-items-end">
-            <div data-mdb-input-init class="form-outline">
-                <input
-                    :class="isGetLink ? 'btn disabled' : 'btn btn-primary'"
-                    type="submit"
-                    value="Get Link"
-                    @click.prevent="handleGetLink"
-                />
-            </div>
-        </div>
-
-        <div class="fade-in-up" v-if="isGetLink">
-            <div class="col-12 mt-2 ">
+        <div class="fade-in-up" v-if="isGetLink && !invalid.isInvalid">
+            <div class="col-12 mt-2">
                 <div data-mdb-input-init class="form-outline">
-                    <label for="" class="w-100">
-                        Enter link email
-                        <input type="text" class="form-control" v-model="link" />
-                    </label>
+                    <v-row dense>
+                        <v-col cols="12">
+                            <v-text-field
+                                v-model="link"
+                                :rules="rules"
+                                variant="outlined"
+                                label="Enter link email"
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
                 </div>
             </div>
 
             <div class="col-12 d-flex justify-content-end mt-4">
                 <div data-mdb-input-init class="form-outline">
-                    <input
-                        class="btn btn-primary"
-                        type="submit"
-                        value="Send"
+                    <v-btn
+                        color="primary"
                         @click.prevent="handleSend"
-                    />
+                    >Send</v-btn>
                 </div>
             </div>
         </div>
     </form>
-
 </template>
 
 <style scoped>
@@ -97,5 +150,4 @@ form {
         opacity: 1;
     }
 }
-
 </style>

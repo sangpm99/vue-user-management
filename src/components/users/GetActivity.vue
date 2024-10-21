@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { ref, type Ref, watch } from 'vue'
-import { faXmark } from '@fortawesome/free-solid-svg-icons'
-import { library } from '@fortawesome/fontawesome-svg-core'
 import { useUserStore } from '@/stores/userStore'
 import RevokeToken from '@/components/users/RevokeToken.vue'
-
-library.add(faXmark)
 
 const dialog: Ref<boolean> = ref(false)
 
@@ -54,7 +50,7 @@ const handleRevokeAllTokens = async () => {
 <template>
     <v-dialog v-model="dialog" max-width="90%">
         <template v-slot:activator="{ props: activatorProps }">
-            <button class="badge bg-info" v-bind="activatorProps">Activities</button>
+            <v-btn size="x-small" variant="elevated" color="info" v-bind="activatorProps">Activities</v-btn>
         </template>
 
         <v-card title="Activities">
@@ -76,19 +72,21 @@ const handleRevokeAllTokens = async () => {
                             <td class="expiresAt">{{ formatDate(item.ExpiresAt) }}</td>
                             <td>{{ item.IpAddress }}</td>
                             <td>
-                                <span
-                                    :class="item.Blocked ? 'badge bg-danger' : 'badge bg-success'"
+                                <v-btn
+                                    size="x-small"
+                                    variant="tonal"
+                                    :color="item.Blocked ? 'error' : 'success'"
                                 >
                                     {{ item.Blocked ? 'Blocked' : 'Active' }}
-                                </span>
+                                </v-btn>
                             </td>
                             <td>{{ item.UserAgent }}</td>
                             <td class="revoke">
                                 <RevokeToken
                                     v-if="id !== undefined && item.SignedInAt !== undefined"
-                                    :class="item.Blocked ? 'badge disabled' : 'badge bg-warning'"
                                     :id="id"
                                     :signInAt="item.SignedInAt"
+                                    :blocked="item.Blocked"
                                     @isDone="
                                         (value) => {
                                             if (value) reMountDialog++
@@ -106,10 +104,10 @@ const handleRevokeAllTokens = async () => {
             <v-card-actions>
                 <v-spacer></v-spacer>
 
-                <button class="btn btn-danger" @click="confirmDialog = true">Revoke All</button>
-                <button class="btn btn-secondary" @click="dialog = false">
-                    <font-awesome-icon :icon="['fas', 'xmark']" />
-                </button>
+                <v-btn color="error" variant="elevated"@click="confirmDialog = true">Revoke All</v-btn>
+                <v-btn color="grey" variant="elevated" @click="dialog = false">
+                    Cancel
+                </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -123,9 +121,9 @@ const handleRevokeAllTokens = async () => {
             <template v-slot:actions>
                 <v-spacer></v-spacer>
 
-                <button class="btn btn-danger" @click="handleRevokeAllTokens">Yes</button>
+                <v-btn variant="elevated" color="error" @click="handleRevokeAllTokens">Yes</v-btn>
 
-                <button class="btn btn-secondary" @click="confirmDialog = false">Cancel</button>
+                <v-btn variant="elevated" color="grey" @click="confirmDialog = false">Cancel</v-btn>
             </template>
         </v-card>
     </v-dialog>

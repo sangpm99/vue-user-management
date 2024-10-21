@@ -75,17 +75,6 @@ onBeforeMount(async () => {
 
             <li class="nav-item">
                 <RouterLink
-                    to="/admin/changepassword"
-                    class="capitalize nav-link text-white position-relative mb-2"
-                    aria-current="page"
-                >
-                    <font-awesome-icon :icon="['fas', 'lock']" />
-                    <span class="position-absolute space-icon">Change Password</span>
-                </RouterLink>
-            </li>
-
-            <li class="nav-item">
-                <RouterLink
                     to="/users/GetUsers"
                     class="capitalize nav-link text-white position-relative mb-2"
                     aria-current="page"

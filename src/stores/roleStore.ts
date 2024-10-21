@@ -22,16 +22,16 @@ export const useRoleStore = defineStore('role', () => {
             const response = await axios.get(slug, { params })
             return Promise.resolve(response)
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
-    const getRole = async(id: string): Promise<any> => {
+    const getRole = async (id: string): Promise<any> => {
         try {
             const res = await axios.get(`/Role/GetRole/${id}`)
-            return res;
+            return res
         } catch (err) {
-            return Promise.reject(err as AxiosError);
+            return err
         }
     }
 
@@ -49,7 +49,7 @@ export const useRoleStore = defineStore('role', () => {
             }
             return Promise.resolve(arr)
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
@@ -58,11 +58,11 @@ export const useRoleStore = defineStore('role', () => {
             const res = await axios.get('/Role/GetPermissions')
             return Promise.resolve(res)
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
-    const createRole = async (name: string, permissions: Array<string>): Promise<void> => {
+    const createRole = async (name: string, permissions: Array<string>): Promise<any> => {
         const body = {
             name,
             permissions
@@ -70,28 +70,28 @@ export const useRoleStore = defineStore('role', () => {
         try {
             await axios.post('/Role/Create', body)
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
-    const updateRole = async(id: string, name: string, permissions: string[]): Promise<void> => {
+    const updateRole = async (id: string, name: string, permissions: string[]): Promise<any> => {
         const body = {
             id,
             name,
             permissions
         }
         try {
-            await axios.put('/Role/Update', body);
+            await axios.put('/Role/Update', body)
         } catch (err) {
-            return Promise.reject(err as AxiosError);
+            return err
         }
     }
 
-    const deleteRole = async (id: string): Promise<void> => {
+    const deleteRole = async (id: string): Promise<any> => {
         try {
             await axios.delete(`/Role/Delete/${id}`)
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 

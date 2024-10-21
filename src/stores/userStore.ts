@@ -19,7 +19,7 @@ export const useUserStore = defineStore('users', () => {
         phoneNumber?: string,
         address?: string,
         department?: string
-    ): Promise<void> => {
+    ): Promise<any> => {
         try {
             await axios.put('User/ChangeProfile', {
                 fullName,
@@ -38,7 +38,7 @@ export const useUserStore = defineStore('users', () => {
         oldPassword: string,
         newPassword: string,
         confirmNewPassword: string
-    ): Promise<void> => {
+    ): Promise<any> => {
         const slug = '/User/ChangePassword'
 
         try {
@@ -48,7 +48,7 @@ export const useUserStore = defineStore('users', () => {
                 confirmNewPassword
             })
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
@@ -67,7 +67,7 @@ export const useUserStore = defineStore('users', () => {
             const response: UserData = await axios.get(`${slug}/?id=${id}`)
             return response
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
@@ -81,7 +81,7 @@ export const useUserStore = defineStore('users', () => {
             const response = await axios.get(`/User/GetUsers`, { params })
             return response
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
@@ -94,12 +94,12 @@ export const useUserStore = defineStore('users', () => {
         phoneNumber: string,
         department: string,
         roles: Array<any>
-    ): Promise<void> => {
+    ): Promise<any> => {
         try {
             const body = { id, email, userName, fullName, address, phoneNumber, department, roles }
             await axios.put('/User/Update', body)
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
@@ -116,23 +116,23 @@ export const useUserStore = defineStore('users', () => {
             const request = await axios.get(`/User/GetActivity/${id}`, { params })
             return Promise.resolve(request)
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
-    const revokeAllTokens = async (signInAt: string): Promise<void> => {
+    const revokeAllTokens = async (signInAt: string): Promise<any> => {
         try {
             await axios.put(`/User/RevokeAllTokens/${signInAt}`)
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
-    const revokeToken = async (id: string, signInAt: string): Promise<void> => {
+    const revokeToken = async (id: string, signInAt: string): Promise<any> => {
         try {
             await axios.put(`/User/RevokeToken/${id}/${signInAt}`)
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
@@ -146,7 +146,7 @@ export const useUserStore = defineStore('users', () => {
         address?: string,
         department?: string,
         roles?: Array<any>
-    ): Promise<void> => {
+    ): Promise<any> => {
         try {
             const body = {
                 email,
@@ -162,15 +162,15 @@ export const useUserStore = defineStore('users', () => {
 
             await axios.post(`/User/Create`, body)
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
-    const deleteUser = async (id: string): Promise<void> => {
+    const deleteUser = async (id: string): Promise<any> => {
         try {
             await axios.delete(`/User/Delete/${id}`)
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
@@ -184,7 +184,23 @@ export const useUserStore = defineStore('users', () => {
             const response = await axios.get(`/User/GetUsers`, { params })
             return Promise.resolve(response)
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
+        }
+    }
+
+    const toggleTwoFactor = async() => {
+        try {
+            await axios.get('/User/ChangeTwoFactor');
+        } catch (err) {
+            return err;
+        }
+    }
+
+    const changeTwoFactor = async(verifyCode: string): Promise<any> => {
+        try {
+            await axios.put(`/User/ChangeTwoFactor/${verifyCode}`)
+        } catch (err) {
+            return err
         }
     }
 
@@ -201,6 +217,8 @@ export const useUserStore = defineStore('users', () => {
         createUser,
         deleteUser,
         getAllUser,
-        getUser
+        getUser,
+        toggleTwoFactor,
+        changeTwoFactor
     }
 })

@@ -1,11 +1,6 @@
 <script lang="ts" setup>
 import { useRoleStore } from '@/stores/roleStore'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faFloppyDisk } from '@fortawesome/free-regular-svg-icons'
-import { library } from '@fortawesome/fontawesome-svg-core'
 import { ref, onBeforeMount, type Ref } from 'vue'
-
-library.add(faFloppyDisk)
 
 const roleStore = useRoleStore()
 
@@ -42,7 +37,7 @@ onBeforeMount(async () => {
 <template>
     <v-dialog v-model="dialog" max-width="800" max-height="500">
         <template v-slot:activator="{ props: activatorProps }">
-            <button class="btn btn-success" v-bind="activatorProps">Add New Roles</button>
+            <v-btn color="success" v-bind="activatorProps">Add New Roles</v-btn>
         </template>
 
         <v-card title="Add New Role">
@@ -76,15 +71,16 @@ onBeforeMount(async () => {
             <v-card-actions>
                 <v-spacer></v-spacer>
 
-                <button
-                    class="btn btn-success"
+                <v-btn
+                    color="success"
                     @click="async () => $emit('is-done', await handleSave())"
+                    variant="elevated"
                 >
-                    <font-awesome-icon :icon="['far', 'floppy-disk']" />
-                </button>
-                <button class="btn btn-secondary" @click="handleClose">
-                    <font-awesome-icon :icon="['fas', 'xmark']" />
-                </button>
+                    Save
+                </v-btn>
+                <v-btn color="grey" @click="handleClose" variant="elevated">
+                    Cancel
+                </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

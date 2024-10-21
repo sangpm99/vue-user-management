@@ -1,14 +1,9 @@
 <script setup lang="ts">
 import { watch, reactive, ref, type Ref, type Reactive, onBeforeMount } from 'vue'
-import { faPenToSquare, faTrashCan, faFloppyDisk } from '@fortawesome/free-regular-svg-icons'
-import { faXmark } from '@fortawesome/free-solid-svg-icons'
-import { library } from '@fortawesome/fontawesome-svg-core'
 import { useUserStore } from '@/stores/userStore'
 import { useRoleStore } from '@/stores/roleStore'
 import { type UserData } from '@/types/UserData'
 import { useDepartmentStore } from '@/stores/departmentStore'
-
-library.add(faPenToSquare, faTrashCan, faFloppyDisk, faXmark)
 
 const dialog: Ref<boolean> = ref(false)
 
@@ -71,19 +66,21 @@ const handleSave = async () => {
         user.department,
         user.roles
     )
-    dialog.value = false;
+    dialog.value = false
 }
 </script>
 
 <template>
     <v-dialog v-model="dialog" max-width="800">
         <template v-slot:activator="{ props: activatorProps }">
-            <button
-                :class="currentUser?.id === id ? 'badge disabled' : 'badge bg-primary'"
+            <v-btn
+                color="primary"
+                size="x-small"
                 v-bind="activatorProps"
+                :disabled="currentUser?.id === id ? true : false"
             >
                 Edit
-            </button>
+            </v-btn>
         </template>
 
         <v-card title="Edit User">
@@ -160,12 +157,16 @@ const handleSave = async () => {
             <v-card-actions>
                 <v-spacer></v-spacer>
 
-                <button class="btn btn-success" @click="async() => $emit('is-done', await handleSave())">
-                    <font-awesome-icon :icon="['far', 'floppy-disk']" />
-                </button>
-                <button class="btn btn-secondary" @click="dialog = false">
-                    <font-awesome-icon :icon="['fas', 'xmark']" />
-                </button>
+                <v-btn
+                    color="success"
+                    variant="elevated"
+                    @click="async () => $emit('is-done', await handleSave())"
+                >
+                    Save
+                </v-btn>
+                <v-btn color="grey" @click="dialog = false" variant="elevated">
+                    Cancel
+                </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

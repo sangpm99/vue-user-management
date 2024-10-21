@@ -1,18 +1,13 @@
 import { defineStore } from 'pinia'
 import axios, { ejectInterceptors, registerInterceptors } from '@/plugins/axios'
-import { AxiosError } from 'axios'
-import router from '@/routers'
-import { useLocalStorageStore } from './localStorageStore'
 
 export const useAuthorizeStore = defineStore('authorize', () => {
-    const localStorageStore = useLocalStorageStore()
-
     const signIn = async (
         email: string,
         password: string,
         reCaptcha: string,
         rememberMe: boolean
-    ): Promise<void> => {
+    ): Promise<any> => {
         const slug = '/Authorize/SignIn'
         try {
             ejectInterceptors()
@@ -23,11 +18,10 @@ export const useAuthorizeStore = defineStore('authorize', () => {
                 rememberMe
             })
 
-            localStorageStore.setUserData(response.data.data)
             registerInterceptors()
-            window.location.href = '/admin/overview'
+            return response;
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
@@ -37,7 +31,7 @@ export const useAuthorizeStore = defineStore('authorize', () => {
         confirmNewPassword: string,
         token: string,
         reCaptcha: string
-    ): Promise<void> => {
+    ): Promise<any> => {
         if (newPassword === confirmNewPassword) {
             const slug = '/Authorize/RecoverPassword'
             try {
@@ -50,25 +44,38 @@ export const useAuthorizeStore = defineStore('authorize', () => {
                 })
                 window.location.href = '/authorize/signin'
             } catch (err) {
-                return Promise.reject(err as AxiosError)
+                return err
             }
         } else {
             return Promise.reject()
         }
     }
 
-    const forgotPassword = async (email: string, reCaptcha: string) => {
+    const forgotPassword = async (email: string, reCaptcha: string): Promise<any> => {
         const slug = '/Authorize/ForgotPassword'
         try {
-            await axios.post(slug, {
+            return await axios.post(slug, {
                 email,
                 reCaptcha
             })
-
         } catch (err) {
-            return Promise.reject(err as AxiosError)
+            return err
         }
     }
 
-    return { signIn, recoverPassword, forgotPassword }
+    const twoFactor = async(email: string, token: string, twoFactorCode: string, rememberMe?: boolean): Promise<any> => {
+        const body = {
+            email,
+            token,
+            twoFactorCode,
+            rememberMe: rememberMe || false
+        }
+        try {
+            return await axios.post('/Authorize/TwoFactor', body);
+        } catch(err) {
+            return err;
+        }
+    }
+
+    return { signIn, recoverPassword, forgotPassword, twoFactor }
 })

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { reactive, ref, type Reactive, type Ref } from 'vue';
-import { useRoleStore } from '@/stores/roleStore';
+import { reactive, ref, type Reactive, type Ref } from 'vue'
+import { useRoleStore } from '@/stores/roleStore'
 
-const props = defineProps<{id: string}>();
-const editRoleDialog: Ref<boolean> = ref(false);
+const props = defineProps<{ id: string }>()
+const editRoleDialog: Ref<boolean> = ref(false)
 const permissions: Ref<any> = ref()
-const roleStore = useRoleStore();
+const roleStore = useRoleStore()
 
 const rules = [
     (value: string) => !!value || 'You must enter a role name',
@@ -18,38 +18,38 @@ const role: Reactive<any> = reactive({
     permissions: []
 })
 
-const showEditDialog = async() => {
-    const getPermissions = await roleStore.getPermissions();
-    permissions.value = getPermissions?.data?.data;
-    const getRole = await roleStore.getRole(props.id);
-    role.id = getRole?.data?.data?.id;
-    role.name = getRole?.data?.data?.name;
-    role.permissions = getRole?.data?.data?.permissions;
+const showEditDialog = async () => {
+    const getPermissions = await roleStore.getPermissions()
+    permissions.value = getPermissions?.data?.data
+    const getRole = await roleStore.getRole(props.id)
+    role.id = getRole?.data?.data?.id
+    role.name = getRole?.data?.data?.name
+    role.permissions = getRole?.data?.data?.permissions
 }
 
-const handleSave = async() => {
-    await roleStore.updateRole(role.id, role.name, role.permissions);
-    editRoleDialog.value = false;
-    return true;
+const handleSave = async () => {
+    await roleStore.updateRole(role.id, role.name, role.permissions)
+    editRoleDialog.value = false
+    return true
 }
 
 const handleClose = () => {
-    editRoleDialog.value = false;
+    editRoleDialog.value = false
 }
-
 </script>
 
 <template>
     <v-dialog v-model="editRoleDialog" max-width="800" max-height="500">
         <template v-slot:activator="{ props: activatorProps }">
-
-            <button
-                class="btn btn-primary w-100 d-flex justify-content-center align-items-center p-2"
+            <v-btn
+                color="primary"
                 v-bind="activatorProps"
                 @click="showEditDialog"
+                icon="mdi-pencil"
+                variant="text"
+                density="comfortable"
             >
-                <font-awesome-icon :icon="['far', 'pen-to-square']" />
-            </button>
+            </v-btn>
         </template>
 
         <v-card title="Edit Role" v-if="role.id !== ''">
@@ -83,15 +83,16 @@ const handleClose = () => {
             <v-card-actions>
                 <v-spacer></v-spacer>
 
-                <button
-                    class="btn btn-success"
+                <v-btn
+                    variant="elevated"
+                    color="primary"
                     @click="async () => $emit('is-done', await handleSave())"
                 >
-                    <font-awesome-icon :icon="['far', 'floppy-disk']" />
-                </button>
-                <button class="btn btn-secondary" @click="handleClose">
-                    <font-awesome-icon :icon="['fas', 'xmark']" />
-                </button>
+                    Update
+                </v-btn>
+                <v-btn variant="elevated" color="grey" @click="handleClose">
+                    Cancel
+                </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

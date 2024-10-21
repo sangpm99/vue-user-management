@@ -15,11 +15,28 @@ const userData: Reactive<any> = reactive({
 })
 
 onBeforeMount(() => {
-    userData.email = route.query.email as string;
-    userData.token = route.query.token as string;
+    userData.email = route.query.email as string
+    userData.token = route.query.token as string
 })
 
-const notifyPasswordNotMatch = ref<boolean>(false)
+const rulesPassword = [
+    (value: string) => !!value || 'You must enter this field',
+    (value: string) => /[A-Z]/.test(value) || 'Password must contain a capital letter',
+    (value: string) => /[0-9]/.test(value) || 'Password must contain a number',
+    (value: string) => /[!@#$%^&*(),.?":{}|<>]/.test(value) || 'Password must contain a symbol',
+    (value: string) => value.length >= 8 || 'You must enter at least 8 characters'
+]
+
+const rulesConfirmPassword = [
+    (value: string) => !!value || 'You must enter this field',
+    (value: string) => value === userData.newPassword || 'Confirm Password and New Password must be match'
+]
+
+const invalid: Reactive<any> = reactive({
+    isInvalid: false,
+    status: null,
+    message: ''
+});
 
 const handleRecoverPassword = async () => {
     await authorizeStore.recoverPassword(
@@ -30,6 +47,7 @@ const handleRecoverPassword = async () => {
         userData.reCaptcha
     )
 }
+
 </script>
 
 <template>
@@ -38,35 +56,46 @@ const handleRecoverPassword = async () => {
     <form action="" method="POST" class="row mb-4 pb-2">
         <div class="col-12">
             <div data-mdb-input-init class="form-outline">
-                <label for="" class="w-100 mb-2">
-                    New Password
-                    <input type="password" class="form-control" v-model="userData.newPassword" />
-                </label>
-                <br />
-                <label
-                    for=""
-                    :class="notifyPasswordNotMatch ? 'w-100 mb-2 text-danger' : 'w-100 mb-2'"
-                >
-                    Confirm New Password
-                    <input
-                        type="password"
-                        :class="
-                            notifyPasswordNotMatch ? 'form-control border-danger' : 'form-control'
-                        "
-                        v-model="userData.confirmNewPassword"
-                    />
-                </label>
-                <br />
-                <label v-if="notifyPasswordNotMatch" for="" class="text-danger small">
-                    Confirm new password must match new password
-                </label>
-                <br />
-                <input
-                    class="mt-2 btn btn-primary float-end"
-                    type="submit"
-                    value="Recover Password"
+                <v-row dense>
+                    <v-col cols="12">
+                        <v-text-field
+                            v-model="userData.newPassword"
+                            :rules="rulesPassword"
+                            variant="outlined"
+                            label="New Password"
+                            type="password"
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12">
+                        <v-text-field
+                            v-model="userData.confirmNewPassword"
+                            :rules="rulesConfirmPassword"
+                            variant="outlined"
+                            label="Confirm New Password"
+                            type="password"
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12">
+                        <v-alert
+                            v-if="invalid.isInvalid"
+                            border="start"
+                            close-label="Close Alert"
+                            color="red"
+                            variant="tonal"
+                            closable
+                            class="mt-2 mb-5"
+                            >
+                            {{ invalid.message }}
+                        </v-alert>
+                    </v-col>
+                </v-row>
+                <v-btn
+                    class="float-end"
+                    color="primary"
                     @click.prevent="handleRecoverPassword"
-                />
+                >Reset Password</v-btn>
             </div>
         </div>
     </form>

@@ -3,7 +3,6 @@ import Card from '@/components/Card.vue'
 import { useUserStore } from '@/stores/userStore'
 import { onMounted, type Ref, ref } from 'vue'
 import type { UserData } from '@/types/UserData'
-import { RouterLink } from 'vue-router'
 
 const userStore = useUserStore()
 
@@ -26,9 +25,12 @@ onMounted(async () => {
                             You have done 68% 😎 more sales today.<br />
                             Check your new raising badge in your profile.
                         </p>
-                        <RouterLink class="btn btn-primary" to="/admin/myprofile"
-                            >View Profile</RouterLink
+                        <v-btn
+                            to="/admin/myprofile"
+                            color="primary"
                         >
+                            View Profile
+                        </v-btn>
                     </div>
 
                     <div class="col-4 position-absolute bottom-0 end-0">

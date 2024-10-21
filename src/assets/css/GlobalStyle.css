@@ -81,7 +81,3 @@ ul {
 .sidebar a.router-link-exact-active {
     background-color: #2271b1;
 }
-
-.btn-primary {
-    color: #fff !important;
-}

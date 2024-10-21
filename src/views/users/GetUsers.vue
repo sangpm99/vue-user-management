@@ -24,7 +24,7 @@ watch(
     }
 )
 
-const getUsers = async() => {
+const getUsers = async () => {
     const data = await userStore.getUsers(currentPage.value, itemsPerPage.value)
 
     if (data.data.data.items) {
@@ -41,11 +41,10 @@ const getUsers = async() => {
 watch(
     [() => itemsPerPage.value, () => currentPage.value],
     async () => {
-        getUsers();
+        getUsers()
     },
     { immediate: true }
 )
-
 </script>
 
 <template>
@@ -67,7 +66,7 @@ watch(
             </div>
 
             <div class="col-2 d-flex justify-content-end">
-                <CreateUser @isDone="getUsers"/>
+                <CreateUser @isDone="getUsers" />
             </div>
         </div>
 
@@ -86,9 +85,9 @@ watch(
                         {{ user.fullName }}
                         <br />
                         <div class="my-nav">
-                            <UpdateUser :id="user.id" @isDone="getUsers" /> | 
-                            <GetActivityUser :id="user.id"/> | 
-                            <DeleteUser :id="user.id" @isDone="getUsers"/>
+                            <UpdateUser :id="user.id" @isDone="getUsers" /> |
+                            <GetActivityUser :id="user.id" /> |
+                            <DeleteUser :id="user.id" @isDone="getUsers" />
                         </div>
                     </td>
                     <td>{{ user.department }}</td>

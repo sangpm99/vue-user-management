@@ -4,6 +4,8 @@ import { useUserStore } from '@/stores/userStore'
 import Swal from 'sweetalert2'
 import { useDepartmentStore } from '@/stores/departmentStore'
 import type { UserData } from '@/types/UserData'
+import TwoFactor from '@/components/users/TwoFactor.vue'
+import ChangePassword from '@/components/users/ChangePassword.vue'
 
 const userStore = useUserStore()
 const departmentStore = useDepartmentStore()
@@ -39,7 +41,7 @@ const handleChangeProfile = async () => {
     })
 }
 
-onBeforeMount(async () => {
+const getData = async() => {
     const getUserStorage: UserData | null = userStore.getCurrentUser()
     const userId = getUserStorage?.id
     if (userId) {
@@ -49,7 +51,12 @@ onBeforeMount(async () => {
             userChanged.value = user.value
         }
     }
+}
+
+onBeforeMount(async () => {
+    getData();
 })
+
 </script>
 
 <template>
@@ -65,34 +72,47 @@ onBeforeMount(async () => {
                         class="img-fluid img-thumbnail mt-4 mb-2"
                         style="width: 150px; z-index: 1"
                     />
-                    <button
-                        type="button"
-                        :class="isEdit ? 'btn btn-outline-dark disabled' : 'btn btn-outline-dark'"
-                        style="z-index: 1"
-                        @click="isEdit = true"
-                    >
-                        Edit profile
-                    </button>
+
+                    
+                    
                 </div>
                 <div class="ms-3" style="margin-top: 130px">
                     <h5>{{ user.fullName }}</h5>
                     <p>{{ user.department }}</p>
-                    <p></p>
                 </div>
+
+                
             </div>
             <div class="p-4 text-black bg-body-tertiary">
-                <div class="d-flex justify-content-end text-center py-1 text-body">
+                <div class="d-flex justify-content-between text-center py-1 text-body">
                     <div>
-                        <p class="mb-1 h5">253</p>
-                        <p class="small text-muted mb-0">Photos</p>
+                        <v-btn 
+                            color="primary" 
+                            variant="elevated"
+                            :disabled="isEdit ? true : false"
+                            @click="isEdit = true"
+                            prepend-icon="mdi-pencil"
+                        >
+                            Edit Profile
+                        </v-btn>
+
+                        <ChangePassword :userId="user.id" @isDone="getData"/>
+
+                        <TwoFactor :user="user" @isDone="getData"/>
                     </div>
-                    <div class="px-3">
-                        <p class="mb-1 h5">1026</p>
-                        <p class="small text-muted mb-0">Followers</p>
-                    </div>
-                    <div>
-                        <p class="mb-1 h5">478</p>
-                        <p class="small text-muted mb-0">Following</p>
+                    <div class="d-flex">
+                        <div>
+                            <p class="mb-1 h5">253</p>
+                            <p class="small text-muted mb-0">Photos</p>
+                        </div>
+                        <div class="px-3">
+                            <p class="mb-1 h5">1026</p>
+                            <p class="small text-muted mb-0">Followers</p>
+                        </div>
+                        <div>
+                            <p class="mb-1 h5">478</p>
+                            <p class="small text-muted mb-0">Following</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -169,23 +189,26 @@ onBeforeMount(async () => {
                             </v-col>
 
                             <div class="w-100" v-if="isEdit">
-                                <input
-                                    class="btn btn-secondary float-end"
-                                    type="submit"
-                                    value="Cancel"
+                                <v-btn
+                                    class="float-end"
+                                    color="grey"
                                     @click.prevent="isEdit = false"
-                                />
-                                <input
-                                    class="btn btn-primary float-end me-2"
-                                    type="submit"
-                                    value="Update"
+                                >
+                                    Cancel
+                                </v-btn>
+                                <v-btn
+                                    class="float-end me-2"
                                     @click.prevent="handleChangeProfile"
-                                />
+                                    color="primary"
+                                >
+                                    Update
+                                </v-btn>
                             </div>
 
                             <div class="gap mb-4"></div>
                         </v-row>
                     </v-card-text>
+                    
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-4 text-body">
                     <h3 class="mb-0">Recent photos</h3>

@@ -27,7 +27,7 @@
     "vue-axios": "^3.5.2",
     "vue-router": "^4.3.3",
     "vue-sweetalert2": "^5.0.11",
-    "vuetify": "^3.7.2"
+    "vuetify": "^3.7.3"
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",

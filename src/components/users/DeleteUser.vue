@@ -6,7 +6,7 @@ import { type UserData } from '@/types/UserData'
 
 const currentUser: Ref<UserData | null> = ref(null)
 
-const dialog: Ref<boolean> = ref(false);
+const dialog: Ref<boolean> = ref(false)
 
 const userStore = useUserStore()
 
@@ -20,37 +20,41 @@ const handleDelete = async () => {
     if (currentUser.value?.id !== props.id) {
         await userStore.deleteUser(props.id)
     }
-    dialog.value = false;
+    dialog.value = false
 }
 </script>
 
 <template>
-    <v-dialog
-        v-model="dialog"
-        max-width="400"
-        >
+    <v-dialog v-model="dialog" max-width="400">
         <template v-slot:activator="{ props: activatorProps }">
-            <button
-                :class="currentUser?.id === id ? 'badge disabled' : 'badge bg-danger'"
+            <v-btn
+                color="error"
+                size="x-small"
+                :disabled="currentUser?.id === id ? true : false"
                 v-bind="activatorProps"
-                >Delete</button>
+            >
+                Delete
+            </v-btn>
         </template>
 
-        <v-card
-            prepend-icon="mdi-help-circle-outline"
-            title="Are you sure?"
-        >
+        <v-card prepend-icon="mdi-help-circle-outline" title="Are you sure?">
             <p class="ms-5">Sure about delete this user ?</p>
             <template v-slot:actions>
                 <v-spacer></v-spacer>
 
-                <button class="btn btn-danger" @click="async() => $emit('is-done', await handleDelete())">
+                <v-btn
+                    color="error"
+                    variant="elevated"
+                    @click="async () => $emit('is-done', await handleDelete())"
+                >
                     Yes
-                </button>
+                </v-btn>
 
-                <button class="btn btn-secondary" @click="dialog = false">
-                    Cancel
-                </button>
+                <v-btn
+                    color="grey"
+                    @click="dialog = false"
+                    variant="elevated"
+                    >Cancel</v-btn>
             </template>
         </v-card>
     </v-dialog>
