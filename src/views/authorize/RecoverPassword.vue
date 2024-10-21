@@ -29,14 +29,15 @@ const rulesPassword = [
 
 const rulesConfirmPassword = [
     (value: string) => !!value || 'You must enter this field',
-    (value: string) => value === userData.newPassword || 'Confirm Password and New Password must be match'
+    (value: string) =>
+        value === userData.newPassword || 'Confirm Password and New Password must be match'
 ]
 
 const invalid: Reactive<any> = reactive({
     isInvalid: false,
     status: null,
     message: ''
-});
+})
 
 const handleRecoverPassword = async () => {
     await authorizeStore.recoverPassword(
@@ -47,7 +48,6 @@ const handleRecoverPassword = async () => {
         userData.reCaptcha
     )
 }
-
 </script>
 
 <template>
@@ -86,16 +86,14 @@ const handleRecoverPassword = async () => {
                             variant="tonal"
                             closable
                             class="mt-2 mb-5"
-                            >
+                        >
                             {{ invalid.message }}
                         </v-alert>
                     </v-col>
                 </v-row>
-                <v-btn
-                    class="float-end"
-                    color="primary"
-                    @click.prevent="handleRecoverPassword"
-                >Reset Password</v-btn>
+                <v-btn class="float-end" color="primary" @click.prevent="handleRecoverPassword"
+                    >Reset Password</v-btn
+                >
             </div>
         </div>
     </form>

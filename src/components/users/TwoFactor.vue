@@ -1,32 +1,29 @@
 <script lang="ts" setup>
-import {type Ref, ref } from 'vue';
-import { useUserStore } from '@/stores/userStore';
+import { type Ref, ref } from 'vue'
+import { useUserStore } from '@/stores/userStore'
 
 const dialog: Ref<boolean> = ref(false)
 
-const props = defineProps<{user: any}>();
+const props = defineProps<{ user: any }>()
 
-const verifyCode: Ref<string> = ref('');
+const verifyCode: Ref<string> = ref('')
 
-defineEmits(['isDone']);
+defineEmits(['isDone'])
 
-const rules = [
-    (value: string) => !!value || 'Enter this field'
-]
+const rules = [(value: string) => !!value || 'Enter this field']
 
-const userStore = useUserStore();
+const userStore = useUserStore()
 
-const handleOpenDialog = async() => {
-    dialog.value = true;
-    verifyCode.value = '';
-    await userStore.toggleTwoFactor();
+const handleOpenDialog = async () => {
+    dialog.value = true
+    verifyCode.value = ''
+    await userStore.toggleTwoFactor()
 }
 
 const handleConfirm = async () => {
-    dialog.value = false;
-    await userStore.changeTwoFactor(verifyCode.value);
+    dialog.value = false
+    await userStore.changeTwoFactor(verifyCode.value)
 }
-
 </script>
 
 <template>
@@ -34,7 +31,9 @@ const handleConfirm = async () => {
         class="ms-5"
         @click="handleOpenDialog"
         :prepend-icon="user.twoFactorEnabled ? 'mdi-lock' : 'mdi-lock-open'"
-        :color="user.twoFactorEnabled ? 'success' : 'grey'" variant="elevated">
+        :color="user.twoFactorEnabled ? 'success' : 'grey'"
+        variant="elevated"
+    >
         {{ user.twoFactorEnabled ? '2FA: On' : '2FA: Off' }}
     </v-btn>
 
@@ -57,13 +56,13 @@ const handleConfirm = async () => {
 
             <v-card-actions>
                 <v-spacer></v-spacer>
-                    <v-btn
-                        color="primary"
-                        variant="elevated"
-                        @click="async () => $emit('isDone', await handleConfirm())"
-                    >
-                        Confirm
-                    </v-btn>
+                <v-btn
+                    color="primary"
+                    variant="elevated"
+                    @click="async () => $emit('isDone', await handleConfirm())"
+                >
+                    Confirm
+                </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

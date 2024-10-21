@@ -90,9 +90,7 @@ const handleClose = () => {
                 >
                     Update
                 </v-btn>
-                <v-btn variant="elevated" color="grey" @click="handleClose">
-                    Cancel
-                </v-btn>
+                <v-btn variant="elevated" color="grey" @click="handleClose"> Cancel </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

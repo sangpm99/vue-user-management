@@ -50,7 +50,9 @@ const handleRevokeAllTokens = async () => {
 <template>
     <v-dialog v-model="dialog" max-width="90%">
         <template v-slot:activator="{ props: activatorProps }">
-            <v-btn size="x-small" variant="elevated" color="info" v-bind="activatorProps">Activities</v-btn>
+            <v-btn size="x-small" variant="elevated" color="info" v-bind="activatorProps"
+                >Activities</v-btn
+            >
         </template>
 
         <v-card title="Activities">
@@ -104,10 +106,10 @@ const handleRevokeAllTokens = async () => {
             <v-card-actions>
                 <v-spacer></v-spacer>
 
-                <v-btn color="error" variant="elevated"@click="confirmDialog = true">Revoke All</v-btn>
-                <v-btn color="grey" variant="elevated" @click="dialog = false">
-                    Cancel
-                </v-btn>
+                <v-btn color="error" variant="elevated" @click="confirmDialog = true"
+                    >Revoke All</v-btn
+                >
+                <v-btn color="grey" variant="elevated" @click="dialog = false"> Cancel </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

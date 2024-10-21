@@ -1,20 +1,18 @@
 <script lang="ts" setup>
-import {type Ref, ref } from 'vue';
-import { useUserStore } from '@/stores/userStore';
+import { type Ref, ref } from 'vue'
+import { useUserStore } from '@/stores/userStore'
 
 const dialog: Ref<boolean> = ref(false)
 
-const props = defineProps<{userId: string | null}>();
+const props = defineProps<{ userId: string | null }>()
 
-defineEmits(['isDone']);
+defineEmits(['isDone'])
 
-const oldPassword: Ref<string> = ref('');
-const newPassword: Ref<string> = ref('');
-const confirmNewPassword: Ref<string> = ref('');
+const oldPassword: Ref<string> = ref('')
+const newPassword: Ref<string> = ref('')
+const confirmNewPassword: Ref<string> = ref('')
 
-const rules = [
-    (value: string) => !!value || 'Enter this field'
-]
+const rules = [(value: string) => !!value || 'Enter this field']
 
 const rulesPassword = [
     (value: string) => !!value || 'You must enter this field',
@@ -26,25 +24,43 @@ const rulesPassword = [
 
 const rulesConfirmPassword = [
     (value: string) => !!value || 'You must enter this field',
-    (value: string) => value === newPassword.value || 'Confirm Password and New Password must be match'
+    (value: string) =>
+        value === newPassword.value || 'Confirm Password and New Password must be match'
 ]
 
-const userStore = useUserStore();
+const userStore = useUserStore()
 
-const handleOpenDialog = async() => {
-    dialog.value = true;
-    oldPassword.value = '';
-    newPassword.value = '';
-    confirmNewPassword.value = '';
+const handleOpenDialog = async () => {
+    dialog.value = true
+    oldPassword.value = ''
+    newPassword.value = ''
+    confirmNewPassword.value = ''
 }
 
 const handleConfirm = async () => {
-    dialog.value = false;
-    if((props.userId !== null) && (oldPassword.value.length !== 0) && (newPassword.value.length !== 0) && (newPassword.value === confirmNewPassword.value)) {
-        await userStore.changePassword(oldPassword.value, newPassword.value, confirmNewPassword.value);
+    if (
+        props.userId !== null &&
+        oldPassword.value.length !== 0 &&
+        newPassword.value.length !== 0 &&
+        newPassword.value === confirmNewPassword.value
+    ) {
+        await userStore.changePassword(
+            oldPassword.value,
+            newPassword.value,
+            confirmNewPassword.value
+        )
+        dialog.value = false
+        return true;
     }
+    return false;
 }
 
+const handleCancel = () => {
+    oldPassword.value = '';
+    newPassword.value = '';
+    confirmNewPassword.value = '';
+    dialog.value = false;
+}
 </script>
 
 <template>
@@ -53,7 +69,8 @@ const handleConfirm = async () => {
         @click="handleOpenDialog"
         prepend-icon="mdi-key-variant"
         color="primary"
-        variant="elevated">
+        variant="elevated"
+    >
         Change Password
     </v-btn>
 
@@ -67,6 +84,7 @@ const handleConfirm = async () => {
                             :rules="rules"
                             variant="solo"
                             label="Old Password"
+                            type="password"
                         ></v-text-field>
                     </v-col>
 
@@ -76,6 +94,7 @@ const handleConfirm = async () => {
                             :rules="rulesPassword"
                             variant="solo"
                             label="New Password"
+                            type="password"
                         ></v-text-field>
                     </v-col>
 
@@ -85,6 +104,7 @@ const handleConfirm = async () => {
                             :rules="rulesConfirmPassword"
                             variant="solo"
                             label="Confirm New Password"
+                            type="password"
                         ></v-text-field>
                     </v-col>
                 </v-row>
@@ -94,13 +114,21 @@ const handleConfirm = async () => {
 
             <v-card-actions>
                 <v-spacer></v-spacer>
-                    <v-btn
-                        color="primary"
-                        variant="elevated"
-                        @click="async () => $emit('isDone', await handleConfirm())"
-                    >
-                        Confirm
-                    </v-btn>
+                <v-btn
+                    color="success"
+                    variant="elevated"
+                    @click="async () => $emit('isDone', await handleConfirm())"
+                >
+                    Confirm
+                </v-btn>
+
+                <v-btn
+                    color="grey"
+                    variant="elevated"
+                    @click="handleCancel"
+                >
+                    Cancel
+                </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

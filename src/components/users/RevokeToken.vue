@@ -5,7 +5,7 @@ const confirmDialog: Ref<boolean> = ref(false)
 
 const useStore = useUserStore()
 
-const props = defineProps<{ id: string; signInAt: string, blocked: boolean }>()
+const props = defineProps<{ id: string; signInAt: string; blocked: boolean }>()
 
 const handleRevokeToken = async () => {
     confirmDialog.value = false
@@ -14,7 +14,13 @@ const handleRevokeToken = async () => {
 }
 </script>
 <template>
-    <v-btn size="x-small" color="warning" :disabled="blocked ? true : false" @click="confirmDialog = true">Revoke</v-btn>
+    <v-btn
+        size="x-small"
+        color="warning"
+        :disabled="blocked ? true : false"
+        @click="confirmDialog = true"
+        >Revoke</v-btn
+    >
 
     <v-dialog v-model="confirmDialog" max-width="400" persistent>
         <v-card

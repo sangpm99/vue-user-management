@@ -16,76 +16,84 @@ const reCaptcha: Ref<string> = ref<string>('string')
 
 const rememberMe: Ref<boolean> = ref<boolean>(false)
 
-const isTwoFactor: Ref<boolean> = ref<boolean>(false);
+const isTwoFactor: Ref<boolean> = ref<boolean>(false)
 
-const verifyCode: Ref<string> = ref<string>('');
+const verifyCode: Ref<string> = ref<string>('')
 
 const invalid: Reactive<any> = reactive({
     isInvalid: false,
     status: null,
     message: ''
-});
+})
 
-const user: Ref<any> = ref({});
+const user: Ref<any> = ref({})
 
-const rules = [
-    (value: string) => !!value || 'Please enter this field'
-]
+const rules = [(value: string) => !!value || 'Please enter this field']
 
-const handleSignIn = async() => {
-    const res = await authorizeStore.signIn(email.value, password.value, reCaptcha.value, rememberMe.value)
-    user.value = res;
-    if(res !== undefined) {
+const handleSignIn = async () => {
+    const res = await authorizeStore.signIn(
+        email.value,
+        password.value,
+        reCaptcha.value,
+        rememberMe.value
+    )
+    user.value = res
+    if (res !== undefined) {
         switch (true) {
-        case (res.status >= 200 && res.status <= 299):
-            invalid.isInvalid = false;
-            if(user.value.data.data.twoFactorEnabled) {
-                isTwoFactor.value = true;
-            } else {
-                localStorageStore.setUserData(user.value.data.data)
-                window.location.href = '/admin/overview'
-            }
-            break;
-        case (res.status === 400):
-            invalid.isInvalid = true;
-            invalid.message = "The Email field is not a valid e-mail address."
-            break;
-        case (res.status === 401):
-            invalid.isInvalid = true;
-            invalid.message = "Email or password is incorrect."
-            break;
-        default:
-            invalid.isInvalid = true;
-            invalid.message = "An error occurred, please try again later."
+            case res.status >= 200 && res.status <= 299:
+                invalid.isInvalid = false
+                if (user.value.data.data.twoFactorEnabled) {
+                    isTwoFactor.value = true
+                } else {
+                    localStorageStore.setUserData(user.value.data.data)
+                    window.location.href = '/admin/overview'
+                }
+                break
+            case res.status === 400:
+                invalid.isInvalid = true
+                invalid.message = 'The Email field is not a valid e-mail address.'
+                break
+            case res.status === 401:
+                invalid.isInvalid = true
+                invalid.message = 'Email or password is incorrect.'
+                break
+            default:
+                invalid.isInvalid = true
+                invalid.message = 'An error occurred, please try again later.'
         }
     } else {
-        invalid.isInvalid = true;
-        invalid.message = "An error occurred, please try again later."
+        invalid.isInvalid = true
+        invalid.message = 'An error occurred, please try again later.'
     }
 }
 
-const handleVerifyCode = async() => {
-    if(verifyCode.value.length !== 0) {
-        const res = await authorizeStore.twoFactor(email.value, user.value.data.data.token, verifyCode.value, rememberMe.value);
-        if(res !== undefined) {
+const handleVerifyCode = async () => {
+    if (verifyCode.value.length !== 0) {
+        const res = await authorizeStore.twoFactor(
+            email.value,
+            user.value.data.data.token,
+            verifyCode.value,
+            rememberMe.value
+        )
+        if (res !== undefined) {
             switch (true) {
-            case (res.status >= 200 && res.status <= 299):
-                invalid.isInvalid = false;
-                localStorageStore.setUserData(res.data.data);
-                window.location.href = '/admin/overview';
-                break;
-            case (res.status === 401):
-                invalid.isInvalid = true;
-                invalid.message = "Verification failed. Please enter the correct code."
-                break;
-            default:
-                invalid.isInvalid = true;
-                invalid.message = "Verification failed. Please enter the correct code."
-                break;
+                case res.status >= 200 && res.status <= 299:
+                    invalid.isInvalid = false
+                    localStorageStore.setUserData(res.data.data)
+                    window.location.href = '/admin/overview'
+                    break
+                case res.status === 401:
+                    invalid.isInvalid = true
+                    invalid.message = 'Verification failed. Please enter the correct code.'
+                    break
+                default:
+                    invalid.isInvalid = true
+                    invalid.message = 'Verification failed. Please enter the correct code.'
+                    break
             }
         } else {
-            invalid.isInvalid = true;
-            invalid.message = "Verification failed. Please enter the correct code."
+            invalid.isInvalid = true
+            invalid.message = 'Verification failed. Please enter the correct code.'
         }
     }
 }
@@ -115,7 +123,6 @@ const handleVerifyCode = async() => {
                             label="Password"
                         ></v-text-field>
                     </v-col>
-
                 </v-row>
                 <input
                     type="checkbox"
@@ -133,14 +140,12 @@ const handleVerifyCode = async() => {
                     variant="tonal"
                     closable
                     class="my-2"
-                    >
+                >
                     {{ invalid.message }}
                 </v-alert>
-                <v-btn
-                    class="float-end"
-                    color="primary"
-                    @click.prevent="handleSignIn"
-                    >Sign In</v-btn>
+                <v-btn class="float-end" color="primary" @click.prevent="handleSignIn"
+                    >Sign In</v-btn
+                >
                 <div class="clearfix"></div>
                 <br />
                 <p class="text-center">
@@ -168,16 +173,14 @@ const handleVerifyCode = async() => {
                         variant="tonal"
                         closable
                         class="my-2"
-                        >
+                    >
                         {{ invalid.message }}
                     </v-alert>
                 </v-row>
                 <br />
-                <v-btn
-                    class="float-end"
-                    color="primary"
-                    @click.prevent="handleVerifyCode"
-                >Submit</v-btn>
+                <v-btn class="float-end" color="primary" @click.prevent="handleVerifyCode"
+                    >Submit</v-btn
+                >
             </div>
         </div>
     </form>

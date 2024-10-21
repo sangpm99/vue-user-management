@@ -25,12 +25,7 @@ onMounted(async () => {
                             You have done 68% 😎 more sales today.<br />
                             Check your new raising badge in your profile.
                         </p>
-                        <v-btn
-                            to="/admin/myprofile"
-                            color="primary"
-                        >
-                            View Profile
-                        </v-btn>
+                        <v-btn to="/admin/myprofile" color="primary"> View Profile </v-btn>
                     </div>
 
                     <div class="col-4 position-absolute bottom-0 end-0">

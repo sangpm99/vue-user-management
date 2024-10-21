@@ -17,30 +17,30 @@ const invalid: Reactive<any> = reactive({
     isInvalid: false,
     status: null,
     message: ''
-});
+})
 
 const handleGetLink = async () => {
     const res = await authorizeStore.forgotPassword(email.value, reCaptcha.value)
-    if(res) {
+    if (res) {
         switch (true) {
-        case (res.status >= 200 && res.status <= 299):
-            invalid.isInvalid = false;
-            break;
-        case (res.status === 400):
-            invalid.isInvalid = true;
-            invalid.message = "The Email field is not a valid e-mail address."
-            break;
-        case (res.status === 401 || res.status === 404):
-            invalid.isInvalid = true;
-            invalid.message = "The Email doesn't exist."
-            break;
-        default:
-            invalid.isInvalid = true;
-            invalid.message = "An error occurred, please try again later."
+            case res.status >= 200 && res.status <= 299:
+                invalid.isInvalid = false
+                break
+            case res.status === 400:
+                invalid.isInvalid = true
+                invalid.message = 'The Email field is not a valid e-mail address.'
+                break
+            case res.status === 401 || res.status === 404:
+                invalid.isInvalid = true
+                invalid.message = "The Email doesn't exist."
+                break
+            default:
+                invalid.isInvalid = true
+                invalid.message = 'An error occurred, please try again later.'
         }
     } else {
-        invalid.isInvalid = true;
-        invalid.message = "An error occurred, please try again later."
+        invalid.isInvalid = true
+        invalid.message = 'An error occurred, please try again later.'
     }
     isGetLink.value = true
 }
@@ -54,10 +54,7 @@ const handleSend = async () => {
     })
 }
 
-const rules = [
-    (value: string) => !!value || 'Please enter this field'
-]
-
+const rules = [(value: string) => !!value || 'Please enter this field']
 </script>
 
 <template>
@@ -85,17 +82,15 @@ const rules = [
                             variant="tonal"
                             closable
                             class="my-2"
-                            >
+                        >
                             {{ invalid.message }}
                         </v-alert>
                     </v-col>
 
                     <v-col cols="12" v-if="!(isGetLink && !invalid.isInvalid)">
-                        <v-btn
-                            class="float-end"
-                            color="primary"
-                            @click.prevent="handleGetLink"
-                        >Submit</v-btn>
+                        <v-btn class="float-end" color="primary" @click.prevent="handleGetLink"
+                            >Submit</v-btn
+                        >
                     </v-col>
                 </v-row>
             </div>
@@ -119,10 +114,7 @@ const rules = [
 
             <div class="col-12 d-flex justify-content-end mt-4">
                 <div data-mdb-input-init class="form-outline">
-                    <v-btn
-                        color="primary"
-                        @click.prevent="handleSend"
-                    >Send</v-btn>
+                    <v-btn color="primary" @click.prevent="handleSend">Send</v-btn>
                 </div>
             </div>
         </div>

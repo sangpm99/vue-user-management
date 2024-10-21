@@ -50,11 +50,7 @@ const handleDelete = async () => {
                     Yes
                 </v-btn>
 
-                <v-btn
-                    color="grey"
-                    @click="dialog = false"
-                    variant="elevated"
-                    >Cancel</v-btn>
+                <v-btn color="grey" @click="dialog = false" variant="elevated">Cancel</v-btn>
             </template>
         </v-card>
     </v-dialog>

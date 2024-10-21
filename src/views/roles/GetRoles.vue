@@ -95,7 +95,11 @@ const handleDelete = async (id: string) => {
                 <template v-slot:actions>
                     <v-spacer></v-spacer>
 
-                    <v-btn color="error" variant="elevated" @click="handleDelete(currentRole.roleId)">
+                    <v-btn
+                        color="error"
+                        variant="elevated"
+                        @click="handleDelete(currentRole.roleId)"
+                    >
                         Yes
                     </v-btn>
 

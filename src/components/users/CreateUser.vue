@@ -72,9 +72,7 @@ const handleSave = async () => {
     <v-dialog v-model="dialog" max-width="800">
         <template v-slot:activator="{ props: activatorProps }">
             <!-- <span v-tooltip="'Add New User'"></span> -->
-            <v-btn color="success" v-bind="activatorProps">
-                Add New User
-            </v-btn>
+            <v-btn color="success" v-bind="activatorProps"> Add New User </v-btn>
         </template>
 
         <v-card title="Add New User">
@@ -178,12 +176,7 @@ const handleSave = async () => {
                 >
                     Save
                 </v-btn>
-                <v-btn 
-                    color="grey"
-                    variant="elevated"
-                    @click="dialog = false">
-                    Trash
-                </v-btn>
+                <v-btn color="grey" variant="elevated" @click="dialog = false"> Cancel </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

@@ -18,12 +18,24 @@ const reMount: Ref<number> = ref(0)
 
 const user: Ref<UserData | null> = ref(null)
 
-const rules = [(value: string) => !!value || 'Field is required']
+const isUserNameTaken: Ref<boolean> = ref(false);
+
+const formRef = ref();
+
+const rulesUserName = [
+    (value: string) => !!value || 'Field is required',
+    () => !(isUserNameTaken.value) || 'User name is already taken, please choose another one'
+]
+
+const rulesEmail = [
+    (value: string) => !!value || 'Field is required',
+    (value: string) => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(value) || 'The Email field is not a valid e-mail address.'
+]
 
 const department = departmentStore.getDepartment()
 
 const handleChangeProfile = async () => {
-    await userStore.changeProfile(
+    const res = await userStore.changeProfile(
         userChanged.value.userName,
         userChanged.value.email,
         userChanged.value.fullName,
@@ -31,17 +43,29 @@ const handleChangeProfile = async () => {
         userChanged.value.address,
         userChanged.value.department
     )
-
-    reMount.value++
-    isEdit.value = false
-    Swal.fire({
-        title: 'Success',
-        text: 'Your Profile Update Successfully',
-        icon: 'success'
-    })
+    if(res) {
+        switch(true) {
+            case (res.status === 406):
+                isUserNameTaken.value = true;
+                const isValid = await formRef.value?.validate();
+                if (!isValid) return;
+                break;
+            default:
+            break
+        }
+    } else {
+        isUserNameTaken.value = false;
+        reMount.value++
+        isEdit.value = false
+        Swal.fire({
+            title: 'Success',
+            text: 'Your Profile Update Successfully',
+            icon: 'success'
+        })
+    }
 }
 
-const getData = async() => {
+const getData = async () => {
     const getUserStorage: UserData | null = userStore.getCurrentUser()
     const userId = getUserStorage?.id
     if (userId) {
@@ -54,9 +78,8 @@ const getData = async() => {
 }
 
 onBeforeMount(async () => {
-    getData();
+    getData()
 })
-
 </script>
 
 <template>
@@ -72,22 +95,17 @@ onBeforeMount(async () => {
                         class="img-fluid img-thumbnail mt-4 mb-2"
                         style="width: 150px; z-index: 1"
                     />
-
-                    
-                    
                 </div>
                 <div class="ms-3" style="margin-top: 130px">
                     <h5>{{ user.fullName }}</h5>
                     <p>{{ user.department }}</p>
                 </div>
-
-                
             </div>
             <div class="p-4 text-black bg-body-tertiary">
                 <div class="d-flex justify-content-between text-center py-1 text-body">
                     <div>
-                        <v-btn 
-                            color="primary" 
+                        <v-btn
+                            color="primary"
                             variant="elevated"
                             :disabled="isEdit ? true : false"
                             @click="isEdit = true"
@@ -96,9 +114,9 @@ onBeforeMount(async () => {
                             Edit Profile
                         </v-btn>
 
-                        <ChangePassword :userId="user.id" @isDone="getData"/>
+                        <ChangePassword :userId="user.id" @isDone="(value: boolean) => {if(value) {getData}}" />
 
-                        <TwoFactor :user="user" @isDone="getData"/>
+                        <TwoFactor :user="user" @isDone="getData" />
                     </div>
                     <div class="d-flex">
                         <div>
@@ -119,6 +137,7 @@ onBeforeMount(async () => {
             <div class="card-body p-4 text-black">
                 <div class="mb-5 text-body">
                     <h3 class="mb-1">About</h3>
+                    <v-form ref="formRef">
                     <v-card-text>
                         <v-row dense>
                             <v-col cols="6">
@@ -136,7 +155,7 @@ onBeforeMount(async () => {
                                     label="User Name"
                                     v-model.lazy="userChanged.userName"
                                     :readonly="!isEdit"
-                                    :rules="rules"
+                                    :rules="rulesUserName"
                                 ></v-text-field>
                             </v-col>
 
@@ -146,7 +165,7 @@ onBeforeMount(async () => {
                                     label="Email"
                                     v-model.lazy="userChanged.email"
                                     :readonly="!isEdit"
-                                    :rules="rules"
+                                    :rules="rulesEmail"
                                 ></v-text-field>
                             </v-col>
 
@@ -198,17 +217,17 @@ onBeforeMount(async () => {
                                 </v-btn>
                                 <v-btn
                                     class="float-end me-2"
+                                    color="success"
+                                    type="submit"
                                     @click.prevent="handleChangeProfile"
-                                    color="primary"
                                 >
                                     Update
                                 </v-btn>
                             </div>
-
                             <div class="gap mb-4"></div>
                         </v-row>
                     </v-card-text>
-                    
+                    </v-form>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-4 text-body">
                     <h3 class="mb-0">Recent photos</h3>

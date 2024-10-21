@@ -30,7 +30,7 @@ export const useUserStore = defineStore('users', () => {
                 department
             })
         } catch (err) {
-            return Promise.reject(err)
+            return err
         }
     }
 
@@ -188,15 +188,15 @@ export const useUserStore = defineStore('users', () => {
         }
     }
 
-    const toggleTwoFactor = async() => {
+    const toggleTwoFactor = async () => {
         try {
-            await axios.get('/User/ChangeTwoFactor');
+            await axios.get('/User/ChangeTwoFactor')
         } catch (err) {
-            return err;
+            return err
         }
     }
 
-    const changeTwoFactor = async(verifyCode: string): Promise<any> => {
+    const changeTwoFactor = async (verifyCode: string): Promise<any> => {
         try {
             await axios.put(`/User/ChangeTwoFactor/${verifyCode}`)
         } catch (err) {

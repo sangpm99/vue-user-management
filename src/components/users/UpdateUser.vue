@@ -164,9 +164,7 @@ const handleSave = async () => {
                 >
                     Save
                 </v-btn>
-                <v-btn color="grey" @click="dialog = false" variant="elevated">
-                    Cancel
-                </v-btn>
+                <v-btn color="grey" @click="dialog = false" variant="elevated"> Cancel </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

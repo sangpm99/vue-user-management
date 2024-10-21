@@ -19,7 +19,7 @@ export const useAuthorizeStore = defineStore('authorize', () => {
             })
 
             registerInterceptors()
-            return response;
+            return response
         } catch (err) {
             return err
         }
@@ -63,7 +63,12 @@ export const useAuthorizeStore = defineStore('authorize', () => {
         }
     }
 
-    const twoFactor = async(email: string, token: string, twoFactorCode: string, rememberMe?: boolean): Promise<any> => {
+    const twoFactor = async (
+        email: string,
+        token: string,
+        twoFactorCode: string,
+        rememberMe?: boolean
+    ): Promise<any> => {
         const body = {
             email,
             token,
@@ -71,9 +76,9 @@ export const useAuthorizeStore = defineStore('authorize', () => {
             rememberMe: rememberMe || false
         }
         try {
-            return await axios.post('/Authorize/TwoFactor', body);
-        } catch(err) {
-            return err;
+            return await axios.post('/Authorize/TwoFactor', body)
+        } catch (err) {
+            return err
         }
     }
 
