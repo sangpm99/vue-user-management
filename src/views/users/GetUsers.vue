@@ -25,16 +25,26 @@ watch(
 )
 
 const getUsers = async () => {
-    const data = await userStore.getUsers(currentPage.value, itemsPerPage.value)
+    const res = await userStore.getUsers(currentPage.value, itemsPerPage.value)
+    if(res) {
+        switch (true) {
+            case res.status === 401:
+                window.location.href = '/authorize/signin';
+                return;
+                break;
+            default:
+                break;
+        }
 
-    if (data.data.data.items) {
-        totals.value = data.data.data.itemsCount
-        userList.value = data.data.data.items
+        if (res.data.data.items) {
+        totals.value = res.data.data.itemsCount
+        userList.value = res.data.data.items
 
         pagination.value =
             totals.value % itemsPerPage.value === 0
                 ? Math.floor(totals.value / itemsPerPage.value)
                 : Math.floor(totals.value / itemsPerPage.value) + 1
+    }
     }
 }
 
@@ -66,7 +76,7 @@ watch(
             </div>
 
             <div class="col-2 d-flex justify-content-end">
-                <CreateUser @isDone="getUsers" />
+                <CreateUser @is-done="async(value) => {if(value) {await getUsers()}}" />
             </div>
         </div>
 
@@ -85,9 +95,9 @@ watch(
                         {{ user.fullName }}
                         <br />
                         <div class="my-nav">
-                            <UpdateUser :id="user.id" @isDone="getUsers" /> |
+                            <UpdateUser :id="user.id" @is-done="getUsers" /> |
                             <GetActivityUser :id="user.id" /> |
-                            <DeleteUser :id="user.id" @isDone="getUsers" />
+                            <DeleteUser :id="user.id" @is-done="getUsers" />
                         </div>
                     </td>
                     <td>{{ user.department }}</td>

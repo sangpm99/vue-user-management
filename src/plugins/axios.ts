@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useUserStore } from '@/stores/userStore'
 
-axios.defaults.baseURL = 'https://api.cyberonegate.com/id'
+axios.defaults.baseURL = 'https://api.cyberonegate.com'
 let requestInterceptorId: number | null = null
 
 export const registerInterceptors = () => {

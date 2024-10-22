@@ -6,7 +6,7 @@ const dialog: Ref<boolean> = ref(false)
 
 const props = defineProps<{ userId: string | null }>()
 
-defineEmits(['isDone'])
+defineEmits(['is-done'])
 
 const oldPassword: Ref<string> = ref('')
 const newPassword: Ref<string> = ref('')
@@ -50,16 +50,16 @@ const handleConfirm = async () => {
             confirmNewPassword.value
         )
         dialog.value = false
-        return true;
+        return true
     }
-    return false;
+    return false
 }
 
 const handleCancel = () => {
-    oldPassword.value = '';
-    newPassword.value = '';
-    confirmNewPassword.value = '';
-    dialog.value = false;
+    oldPassword.value = ''
+    newPassword.value = ''
+    confirmNewPassword.value = ''
+    dialog.value = false
 }
 </script>
 
@@ -117,18 +117,12 @@ const handleCancel = () => {
                 <v-btn
                     color="success"
                     variant="elevated"
-                    @click="async () => $emit('isDone', await handleConfirm())"
+                    @click="async () => $emit('is-done', await handleConfirm())"
                 >
                     Confirm
                 </v-btn>
 
-                <v-btn
-                    color="grey"
-                    variant="elevated"
-                    @click="handleCancel"
-                >
-                    Cancel
-                </v-btn>
+                <v-btn color="grey" variant="elevated" @click="handleCancel"> Cancel </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, type Ref, watch } from 'vue'
+import { ref, type Ref, watch, watchEffect } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import RevokeToken from '@/components/users/RevokeToken.vue'
 
@@ -15,17 +15,31 @@ const activities: Ref<any> = ref([])
 
 const reMountDialog: Ref<number> = ref(0)
 
-watch([() => dialog.value, () => reMountDialog.value], async (newValue) => {
-    if (newValue) {
-        const res = await userStore.getActivities(props.id)
-        if (!res) {
-            dialog.value = false
-        } else {
-            const items = JSON.parse(res.data.data)
-            activities.value = [...items]
+const isRevoke = () => {
+    reMountDialog.value += 1;
+}
+
+watch(
+  [() => dialog.value, () => reMountDialog.value], 
+  async (newValue, oldValue) => {
+    const res = await userStore.getActivities(props.id)
+
+    if(res) {
+        if(res.status) {
+            switch(true) {
+                case res.status === 401:
+                    window.location.href="/authorize/signin";
+                    break;
+                default:
+                    break;
+            }
         }
+        const items = JSON.parse(res.data.data);
+        activities.value = [...items];
     }
-})
+  }
+);
+
 
 const formatDate = (timeStamp: string) => {
     const date = new Date(Number(timeStamp) * 1000)
@@ -89,11 +103,7 @@ const handleRevokeAllTokens = async () => {
                                     :id="id"
                                     :signInAt="item.SignedInAt"
                                     :blocked="item.Blocked"
-                                    @isDone="
-                                        (value) => {
-                                            if (value) reMountDialog++
-                                        }
-                                    "
+                                    @is-done="isRevoke"
                                 />
                             </td>
                         </tr>

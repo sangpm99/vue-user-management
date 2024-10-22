@@ -1,6 +1,5 @@
 import axios from '@/plugins/axios'
 import { defineStore } from 'pinia'
-import { AxiosError } from 'axios'
 
 export const useRoleStore = defineStore('role', () => {
     const getRoles = async (
@@ -9,7 +8,7 @@ export const useRoleStore = defineStore('role', () => {
         pageSize?: Number,
         searchValue?: string
     ): Promise<any> => {
-        const slug = '/Role/GetRoles'
+        const slug = '/id/Role/GetRoles'
 
         const params = {
             limitUsersPerRole: limitUsersPerRole || 10,
@@ -28,7 +27,7 @@ export const useRoleStore = defineStore('role', () => {
 
     const getRole = async (id: string): Promise<any> => {
         try {
-            const res = await axios.get(`/Role/GetRole/${id}`)
+            const res = await axios.get(`/id/Role/GetRole/${id}`)
             return res
         } catch (err) {
             return err
@@ -42,7 +41,7 @@ export const useRoleStore = defineStore('role', () => {
         }
 
         try {
-            const res = await axios.get('/Role/GetRoles', { params })
+            const res = await axios.get('/id/Role/GetRoles', { params })
             const arr = []
             for (let i = 0; i < res.data.data?.items.length; i++) {
                 arr.push(res.data.data?.items[i]?.name)
@@ -55,7 +54,7 @@ export const useRoleStore = defineStore('role', () => {
 
     const getPermissions = async (): Promise<any> => {
         try {
-            const res = await axios.get('/Role/GetPermissions')
+            const res = await axios.get('/id/Role/GetPermissions')
             return Promise.resolve(res)
         } catch (err) {
             return err
@@ -68,7 +67,7 @@ export const useRoleStore = defineStore('role', () => {
             permissions
         }
         try {
-            await axios.post('/Role/Create', body)
+            await axios.post('/id/Role/Create', body)
         } catch (err) {
             return err
         }
@@ -81,7 +80,7 @@ export const useRoleStore = defineStore('role', () => {
             permissions
         }
         try {
-            await axios.put('/Role/Update', body)
+            await axios.put('/id/Role/Update', body)
         } catch (err) {
             return err
         }
@@ -89,7 +88,7 @@ export const useRoleStore = defineStore('role', () => {
 
     const deleteRole = async (id: string): Promise<any> => {
         try {
-            await axios.delete(`/Role/Delete/${id}`)
+            await axios.delete(`/id/Role/Delete/${id}`)
         } catch (err) {
             return err
         }

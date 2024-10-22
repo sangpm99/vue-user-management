@@ -8,7 +8,7 @@ export const useAuthorizeStore = defineStore('authorize', () => {
         reCaptcha: string,
         rememberMe: boolean
     ): Promise<any> => {
-        const slug = '/Authorize/SignIn'
+        const slug = '/id/Authorize/SignIn'
         try {
             ejectInterceptors()
             const response = await axios.post(slug, {
@@ -33,7 +33,7 @@ export const useAuthorizeStore = defineStore('authorize', () => {
         reCaptcha: string
     ): Promise<any> => {
         if (newPassword === confirmNewPassword) {
-            const slug = '/Authorize/RecoverPassword'
+            const slug = '/id/Authorize/RecoverPassword'
             try {
                 await axios.post(slug, {
                     email,
@@ -52,7 +52,7 @@ export const useAuthorizeStore = defineStore('authorize', () => {
     }
 
     const forgotPassword = async (email: string, reCaptcha: string): Promise<any> => {
-        const slug = '/Authorize/ForgotPassword'
+        const slug = '/id/Authorize/ForgotPassword'
         try {
             return await axios.post(slug, {
                 email,
@@ -76,11 +76,19 @@ export const useAuthorizeStore = defineStore('authorize', () => {
             rememberMe: rememberMe || false
         }
         try {
-            return await axios.post('/Authorize/TwoFactor', body)
+            return await axios.post('/id/Authorize/TwoFactor', body)
         } catch (err) {
             return err
         }
     }
 
-    return { signIn, recoverPassword, forgotPassword, twoFactor }
+    const signOut = async(): Promise<any> => {
+        try {
+            await axios.post('/id/Authorize/SignOut');
+        } catch (err) {
+            return err;
+        }
+    }
+
+    return { signIn, recoverPassword, forgotPassword, twoFactor, signOut }
 })

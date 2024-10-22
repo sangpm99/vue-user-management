@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { useUserStore } from '@/stores/userStore'
 import { useLocalStorageStore } from '@/stores/localStorageStore'
+import { useAuthorizeStore } from '@/stores/authorizeStore'
 import {
     faGaugeHigh,
     faLock,
@@ -29,12 +30,18 @@ library.add(
 
 const localStorageStore = useLocalStorageStore()
 const userStore = useUserStore()
+const authorizeStore = useAuthorizeStore()
 
 const currentUser: Ref<UserData | null> = ref(null)
 
 onBeforeMount(async () => {
     currentUser.value = userStore.getCurrentUser()
 })
+
+const signOut = async() => {
+    await authorizeStore.signOut();
+    localStorageStore.delUserData();
+}
 </script>
 
 <template>
@@ -103,7 +110,7 @@ onBeforeMount(async () => {
                 <li>
                     <a
                         class="capitalize nav-link text-white position-relative"
-                        @click="localStorageStore.delUserData()"
+                        @click="signOut"
                     >
                         <span>Sign Out</span>
                     </a>

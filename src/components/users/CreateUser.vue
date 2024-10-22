@@ -6,17 +6,22 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { useRoleStore } from '@/stores/roleStore'
 import { useUserStore } from '@/stores/userStore'
 library.add(faPenToSquare, faTrashCan, faFloppyDisk, faXmark)
-import { useDepartmentStore } from '@/stores/departmentStore'
+import { getDepartment } from '@/stores/departmentStore'
 
 const dialog: Ref<boolean> = ref(false)
+const dialogInvalid: Ref<boolean> = ref(false)
+const dialogInvalidContent: Ref<string> = ref('')
 
 const rules = [(value: string) => !!value || 'You must enter this field']
 
 const userStore = useUserStore()
 const roleStore = useRoleStore()
-const departmentStore = useDepartmentStore()
 
-const department: string[] = departmentStore.getDepartment()
+const department: string[] = getDepartment();
+
+const formRef: Ref<any> = ref()
+
+defineEmits(['is-done'])
 
 const roles: Ref<any> = ref([])
 
@@ -26,19 +31,6 @@ watch(dialog, async (dialogIsOpen) => {
         roles.value = getRoles
     }
 })
-
-const rulesPassword = [
-    (value: string) => !!value || 'You must enter this field',
-    (value: string) => /[A-Z]/.test(value) || 'Password must contain a capital letter',
-    (value: string) => /[0-9]/.test(value) || 'Password must contain a number',
-    (value: string) => /[!@#$%^&*(),.?":{}|<>]/.test(value) || 'Password must contain a symbol',
-    (value: string) => value.length >= 8 || 'You must enter at least 8 characters'
-]
-
-const rulesConfirmPassword = [
-    (value: string) => !!value || 'You must enter this field',
-    (value: string) => value === user.password || 'Confirm Password and New Password must be match'
-]
 
 const user: Reactive<any> = reactive({
     email: '',
@@ -52,8 +44,26 @@ const user: Reactive<any> = reactive({
     roles: []
 })
 
+const invalid: Reactive<any> = reactive({
+    email: [],
+    userName: [],
+    password: [],
+    confirmPassword: []
+});
+
+const checkValidate = async() => {
+    await formRef.value?.validate()
+}
+
+const resetValidate = () => {
+    invalid.email = [],
+    invalid.userName = [],
+    invalid.password = [],
+    invalid.confirmPassword = []
+}
+
 const handleSave = async () => {
-    await userStore.createUser(
+    const res = await userStore.createUser(
         user.email,
         user.userName,
         user.password,
@@ -64,17 +74,69 @@ const handleSave = async () => {
         user.department,
         user.roles
     )
-    dialog.value = false
+    if(res) {
+        if(res.response.data.errors !== undefined) {
+            invalid.email = res.response.data.errors.Email ?? [];
+            invalid.userName = res.response.data.errors.UserName ?? [];
+            invalid.password = res.response.data.errors.Password ?? [];
+            invalid.confirmPassword = res.response.data.errors.ConfirmPassword ?? [];
+            await checkValidate()
+        } else {
+            resetValidate();
+            dialogInvalidContent.value = res.response.data.message;
+            dialogInvalid.value = true;
+        }
+    } else {
+        dialog.value = false;
+        user.email = '',
+        user.userName = '',
+        user.password = '',
+        user.confirmPassword = '',
+        user.fullName = '',
+        user.address = '',
+        user.phoneNumber = '',
+        user.department = '',
+        user.roles = []
+        return true;
+    }
 }
+
+const rulesEmail = [
+    (value: string) => !!value || 'You must enter this field',
+    (value: string) => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(value) || 'The Email field is not a valid e-mail address.',
+    () => invalid.email.length === 0 || invalid.email[0]
+]
+
+const rulesUserName = [
+    (value: string) => !!value || 'You must enter this field',
+    () => invalid.userName.length === 0 || invalid.userName[0]
+]
+
+const rulesPassword = [
+    (value: string) => !!value || 'You must enter this field',
+    (value: string) => /[A-Z]/.test(value) || 'Password must contain a capital letter',
+    (value: string) => /[0-9]/.test(value) || 'Password must contain a number',
+    (value: string) => /[!@#$%^&*(),.?":{}|<>]/.test(value) || 'Password must contain a symbol',
+    (value: string) => value.length >= 8 || 'You must enter at least 8 characters',
+    () => invalid.password.length === 0 || invalid.password[0]
+]
+
+const rulesConfirmPassword = [
+    (value: string) => !!value || 'You must enter this field',
+    (value: string) => value === user.password || 'Confirm Password and New Password must be match',
+    () => invalid.confirmPassword.length === 0 || invalid.confirmPassword[0]
+]
 </script>
 
 <template>
-    <v-dialog v-model="dialog" max-width="800">
+    <div>
+        <v-dialog v-model="dialog" max-width="800">
         <template v-slot:activator="{ props: activatorProps }">
             <!-- <span v-tooltip="'Add New User'"></span> -->
             <v-btn color="success" v-bind="activatorProps"> Add New User </v-btn>
         </template>
 
+        <v-form ref="formRef">
         <v-card title="Add New User">
             <v-card-text>
                 <v-row dense>
@@ -82,7 +144,7 @@ const handleSave = async () => {
                         <v-text-field
                             variant="solo"
                             label="Email Address*"
-                            :rules="rules"
+                            :rules="rulesEmail"
                             v-model="user.email"
                         ></v-text-field>
                     </v-col>
@@ -91,7 +153,7 @@ const handleSave = async () => {
                         <v-text-field
                             variant="solo"
                             label="User Name*"
-                            :rules="rules"
+                            :rules="rulesUserName"
                             v-model="user.userName"
                         ></v-text-field>
                     </v-col>
@@ -119,8 +181,7 @@ const handleSave = async () => {
                     <v-col cols="6">
                         <v-text-field
                             variant="solo"
-                            label="Full Name*"
-                            :rules="rules"
+                            label="Full Name"
                             v-model="user.fullName"
                         ></v-text-field>
                     </v-col>
@@ -173,11 +234,29 @@ const handleSave = async () => {
                     color="success"
                     variant="elevated"
                     @click="async () => $emit('is-done', await handleSave())"
+                    append-icon="mdi-content-save"
                 >
                     Save
                 </v-btn>
                 <v-btn color="grey" variant="elevated" @click="dialog = false"> Cancel </v-btn>
             </v-card-actions>
         </v-card>
+    </v-form>
     </v-dialog>
+
+    <v-dialog v-model="dialogInvalid" max-width="700">
+        <v-card>
+            <v-alert
+                icon="mdi-alert"
+                color="error"
+                title="Fail To Create User"
+                variant="tonal"
+            >
+            <p class="m-0" v-for="(item, index) in dialogInvalidContent.split(',')" :key="index">
+                {{ item }}
+            </p>
+            </v-alert>
+        </v-card>
+    </v-dialog>
+    </div>
 </template>

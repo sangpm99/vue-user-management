@@ -3,9 +3,13 @@ import { reactive, ref, type Reactive, type Ref } from 'vue'
 import { useRoleStore } from '@/stores/roleStore'
 
 const props = defineProps<{ id: string }>()
-const editRoleDialog: Ref<boolean> = ref(false)
+const dialog: Ref<boolean> = ref(false)
+const dialogInvalid: Ref<boolean> = ref(false)
+const dialogInvalidContent: Ref<string> = ref('')
 const permissions: Ref<any> = ref()
 const roleStore = useRoleStore()
+
+defineEmits(['is-done'])
 
 const rules = [
     (value: string) => !!value || 'You must enter a role name',
@@ -28,18 +32,31 @@ const showEditDialog = async () => {
 }
 
 const handleSave = async () => {
-    await roleStore.updateRole(role.id, role.name, role.permissions)
-    editRoleDialog.value = false
-    return true
+    const res = await roleStore.updateRole(role.id, role.name, role.permissions)
+    if(res) {
+        if(res.response.data.errors !== undefined) {
+            const getErrors = res.response.data.errors;
+            dialogInvalidContent.value = Object.values(getErrors).flat().join(',');
+            dialogInvalid.value = true;
+        } else {
+            dialogInvalidContent.value = res.response.data.message;
+            dialogInvalid.value = true;
+        }
+        return false;
+    } else {
+        dialog.value = false
+        return true;
+    }
 }
 
 const handleClose = () => {
-    editRoleDialog.value = false
+    dialog.value = false
 }
 </script>
 
 <template>
-    <v-dialog v-model="editRoleDialog" max-width="800" max-height="500">
+<div class="d-inline">
+    <v-dialog v-model="dialog" max-width="800" max-height="500">
         <template v-slot:activator="{ props: activatorProps }">
             <v-btn
                 color="primary"
@@ -94,4 +111,20 @@ const handleClose = () => {
             </v-card-actions>
         </v-card>
     </v-dialog>
+
+    <v-dialog v-model="dialogInvalid" max-width="700">
+    <v-card>
+        <v-alert
+            icon="mdi-alert"
+            color="error"
+            title="Fail To Update Role"
+            variant="tonal"
+        >
+        <p class="m-0" v-for="(item, index) in dialogInvalidContent.split(',')" :key="index">
+            {{ item }}
+        </p>
+        </v-alert>
+    </v-card>
+</v-dialog>
+</div>
 </template>

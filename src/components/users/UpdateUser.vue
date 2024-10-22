@@ -3,19 +3,20 @@ import { watch, reactive, ref, type Ref, type Reactive, onBeforeMount } from 'vu
 import { useUserStore } from '@/stores/userStore'
 import { useRoleStore } from '@/stores/roleStore'
 import { type UserData } from '@/types/UserData'
-import { useDepartmentStore } from '@/stores/departmentStore'
+import { getDepartment } from '@/stores/departmentStore'
 
 const dialog: Ref<boolean> = ref(false)
-
-const rules = [(value: string) => !!value || 'You must enter this field']
+const dialogInvalid: Ref<boolean> = ref(false)
+const dialogInvalidContent: Ref<string> = ref('')
 
 const props = defineProps<{ id: string }>()
 
 const userStore = useUserStore()
 const roleStore = useRoleStore()
-const departmentStore = useDepartmentStore()
 
-const department: string[] = departmentStore.getDepartment()
+const department: string[] = getDepartment();
+
+defineEmits(['is-done'])
 
 const roles: Ref<any> = ref([])
 
@@ -56,7 +57,7 @@ onBeforeMount(() => {
 })
 
 const handleSave = async () => {
-    await userStore.updateUser(
+    const res = await userStore.updateUser(
         user.id,
         user.email,
         user.userName,
@@ -66,106 +67,142 @@ const handleSave = async () => {
         user.department,
         user.roles
     )
-    dialog.value = false
+    if(res) {
+        if(res.response.data.errors !== undefined) {
+            const getErrors = res.response.data.errors;
+            dialogInvalidContent.value = Object.values(getErrors).flat().join(',');
+            dialogInvalid.value = true;
+        } else {
+            dialogInvalidContent.value = res.response.data.message;
+            dialogInvalid.value = true;
+        }
+    } else {
+        dialog.value = false
+    }
 }
+
+const rules = [(value: string) => !!value || 'You must enter this field']
+
+const rulesEmail = [
+    (value: string) => !!value || 'You must enter this field',
+    (value: string) => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(value) || 'The Email field is not a valid e-mail address.',
+]
+
 </script>
 
 <template>
-    <v-dialog v-model="dialog" max-width="800">
-        <template v-slot:activator="{ props: activatorProps }">
-            <v-btn
-                color="primary"
-                size="x-small"
-                v-bind="activatorProps"
-                :disabled="currentUser?.id === id ? true : false"
-            >
-                Edit
-            </v-btn>
-        </template>
-
-        <v-card title="Edit User">
-            <v-card-text>
-                <v-row dense>
-                    <v-col cols="6">
-                        <v-text-field
-                            variant="solo"
-                            label="Email Address*"
-                            :rules="rules"
-                            v-model="user.email"
-                        ></v-text-field>
-                    </v-col>
-
-                    <v-col cols="6">
-                        <v-text-field
-                            variant="solo"
-                            label="User Name*"
-                            :rules="rules"
-                            v-model="user.userName"
-                        ></v-text-field>
-                    </v-col>
-
-                    <v-col cols="6">
-                        <v-text-field
-                            variant="solo"
-                            label="Full Name*"
-                            :rules="rules"
-                            v-model="user.fullName"
-                        ></v-text-field>
-                    </v-col>
-
-                    <v-col cols="6">
-                        <v-text-field
-                            variant="solo"
-                            label="Address"
-                            v-model="user.address"
-                        ></v-text-field>
-                    </v-col>
-
-                    <v-col cols="6">
-                        <v-text-field
-                            variant="solo"
-                            label="Phone Number"
-                            v-model="user.phoneNumber"
-                        ></v-text-field>
-                    </v-col>
-
-                    <v-col cols="6">
-                        <v-autocomplete
-                            label="Department"
-                            auto-select-first
-                            variant="solo"
-                            :items="department"
-                            v-model="user.department"
-                        ></v-autocomplete>
-                    </v-col>
-
-                    <v-col cols="12" v-if="JSON.stringify(roles) !== '{}'">
-                        <v-autocomplete
-                            label="Roles"
-                            auto-select-first
-                            multiple
-                            variant="solo"
-                            :items="roles"
-                            v-model="user.roles"
-                        ></v-autocomplete>
-                    </v-col>
-                </v-row>
-            </v-card-text>
-
-            <v-divider></v-divider>
-
-            <v-card-actions>
-                <v-spacer></v-spacer>
-
+    <div class="d-inline">
+        <v-dialog v-model="dialog" max-width="800">
+            <template v-slot:activator="{ props: activatorProps }">
                 <v-btn
-                    color="success"
-                    variant="elevated"
-                    @click="async () => $emit('is-done', await handleSave())"
+                    color="primary"
+                    size="x-small"
+                    v-bind="activatorProps"
+                    :disabled="currentUser?.id === id ? true : false"
                 >
-                    Save
+                    Edit
                 </v-btn>
-                <v-btn color="grey" @click="dialog = false" variant="elevated"> Cancel </v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+            </template>
+
+    <v-card title="Edit User">
+        <v-card-text>
+            <v-row dense>
+                <v-col cols="6">
+                    <v-text-field
+                        variant="solo"
+                        label="Email Address*"
+                        :rules="rulesEmail"
+                        v-model="user.email"
+                    ></v-text-field>
+                </v-col>
+
+                <v-col cols="6">
+                    <v-text-field
+                        variant="solo"
+                        label="User Name*"
+                        :rules="rules"
+                        v-model="user.userName"
+                    ></v-text-field>
+                </v-col>
+
+                <v-col cols="6">
+                    <v-text-field
+                        variant="solo"
+                        label="Full Name"
+                        v-model="user.fullName"
+                    ></v-text-field>
+                </v-col>
+
+                <v-col cols="6">
+                    <v-text-field
+                        variant="solo"
+                        label="Address"
+                        v-model="user.address"
+                    ></v-text-field>
+                </v-col>
+
+                <v-col cols="6">
+                    <v-text-field
+                        variant="solo"
+                        label="Phone Number"
+                        v-model="user.phoneNumber"
+                    ></v-text-field>
+                </v-col>
+
+                <v-col cols="6">
+                    <v-autocomplete
+                        label="Department"
+                        auto-select-first
+                        variant="solo"
+                        :items="department"
+                        v-model="user.department"
+                    ></v-autocomplete>
+                </v-col>
+
+                <v-col cols="12" v-if="JSON.stringify(roles) !== '{}'">
+                    <v-autocomplete
+                        label="Roles"
+                        auto-select-first
+                        multiple
+                        variant="solo"
+                        :items="roles"
+                        v-model="user.roles"
+                    ></v-autocomplete>
+                </v-col>
+            </v-row>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+                color="success"
+                variant="elevated"
+                @click="async () => $emit('is-done', await handleSave())"
+                append-icon="mdi-content-save"
+            >
+                Save
+            </v-btn>
+            <v-btn color="grey" @click="dialog = false" variant="elevated"> Cancel </v-btn>
+        </v-card-actions>
+    </v-card>
+</v-dialog>
+
+<v-dialog v-model="dialogInvalid" max-width="700">
+    <v-card>
+        <v-alert
+            icon="mdi-alert"
+            color="error"
+            title="Fail To Update User"
+            variant="tonal"
+        >
+        <p class="m-0" v-for="(item, index) in dialogInvalidContent.split(',')" :key="index">
+            {{ item }}
+        </p>
+        </v-alert>
+    </v-card>
+</v-dialog>
+    </div>
 </template>

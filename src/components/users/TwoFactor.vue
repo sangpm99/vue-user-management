@@ -8,7 +8,7 @@ const props = defineProps<{ user: any }>()
 
 const verifyCode: Ref<string> = ref('')
 
-defineEmits(['isDone'])
+defineEmits(['is-done'])
 
 const rules = [(value: string) => !!value || 'Enter this field']
 
@@ -59,7 +59,7 @@ const handleConfirm = async () => {
                 <v-btn
                     color="primary"
                     variant="elevated"
-                    @click="async () => $emit('isDone', await handleConfirm())"
+                    @click="async () => $emit('is-done', await handleConfirm())"
                 >
                     Confirm
                 </v-btn>

@@ -2,13 +2,12 @@
 import { onBeforeMount, ref, watch, type Ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import Swal from 'sweetalert2'
-import { useDepartmentStore } from '@/stores/departmentStore'
+import { getDepartment } from '@/stores/departmentStore'
 import type { UserData } from '@/types/UserData'
 import TwoFactor from '@/components/users/TwoFactor.vue'
 import ChangePassword from '@/components/users/ChangePassword.vue'
 
 const userStore = useUserStore()
-const departmentStore = useDepartmentStore()
 
 const userChanged: Ref<any> = ref(null)
 
@@ -18,21 +17,23 @@ const reMount: Ref<number> = ref(0)
 
 const user: Ref<UserData | null> = ref(null)
 
-const isUserNameTaken: Ref<boolean> = ref(false);
+const isUserNameTaken: Ref<boolean> = ref(false)
 
-const formRef = ref();
+const formRef = ref()
 
 const rulesUserName = [
     (value: string) => !!value || 'Field is required',
-    () => !(isUserNameTaken.value) || 'User name is already taken, please choose another one'
+    () => !isUserNameTaken.value || 'User name is already taken, please choose another one'
 ]
 
 const rulesEmail = [
     (value: string) => !!value || 'Field is required',
-    (value: string) => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(value) || 'The Email field is not a valid e-mail address.'
+    (value: string) =>
+        /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(value) ||
+        'The Email field is not a valid e-mail address.'
 ]
 
-const department = departmentStore.getDepartment()
+const department: string[] = getDepartment();
 
 const handleChangeProfile = async () => {
     const res = await userStore.changeProfile(
@@ -43,18 +44,18 @@ const handleChangeProfile = async () => {
         userChanged.value.address,
         userChanged.value.department
     )
-    if(res) {
-        switch(true) {
-            case (res.status === 406):
-                isUserNameTaken.value = true;
-                const isValid = await formRef.value?.validate();
-                if (!isValid) return;
-                break;
+    if (res) {
+        switch (true) {
+            case res.status === 406:
+                isUserNameTaken.value = true
+                const isValid = await formRef.value?.validate()
+                if (!isValid) return
+                break
             default:
-            break
+                break
         }
     } else {
-        isUserNameTaken.value = false;
+        isUserNameTaken.value = false
         reMount.value++
         isEdit.value = false
         Swal.fire({
@@ -114,9 +115,18 @@ onBeforeMount(async () => {
                             Edit Profile
                         </v-btn>
 
-                        <ChangePassword :userId="user.id" @isDone="(value: boolean) => {if(value) {getData}}" />
+                        <ChangePassword
+                            :userId="user.id"
+                            @is-done="
+                                (value: boolean) => {
+                                    if (value) {
+                                        getData
+                                    }
+                                }
+                            "
+                        />
 
-                        <TwoFactor :user="user" @isDone="getData" />
+                        <TwoFactor :user="user" @is-done="getData" />
                     </div>
                     <div class="d-flex">
                         <div>
@@ -138,95 +148,95 @@ onBeforeMount(async () => {
                 <div class="mb-5 text-body">
                     <h3 class="mb-1">About</h3>
                     <v-form ref="formRef">
-                    <v-card-text>
-                        <v-row dense>
-                            <v-col cols="6">
-                                <v-text-field
-                                    variant="solo"
-                                    label="Full Name"
-                                    v-model.lazy="userChanged.fullName"
-                                    :readonly="!isEdit"
-                                ></v-text-field>
-                            </v-col>
+                        <v-card-text>
+                            <v-row dense>
+                                <v-col cols="6">
+                                    <v-text-field
+                                        variant="solo"
+                                        label="Full Name"
+                                        v-model.lazy="userChanged.fullName"
+                                        :readonly="!isEdit"
+                                    ></v-text-field>
+                                </v-col>
 
-                            <v-col cols="6">
-                                <v-text-field
-                                    variant="solo"
-                                    label="User Name"
-                                    v-model.lazy="userChanged.userName"
-                                    :readonly="!isEdit"
-                                    :rules="rulesUserName"
-                                ></v-text-field>
-                            </v-col>
+                                <v-col cols="6">
+                                    <v-text-field
+                                        variant="solo"
+                                        label="User Name"
+                                        v-model.lazy="userChanged.userName"
+                                        :readonly="!isEdit"
+                                        :rules="rulesUserName"
+                                    ></v-text-field>
+                                </v-col>
 
-                            <v-col cols="6">
-                                <v-text-field
-                                    variant="solo"
-                                    label="Email"
-                                    v-model.lazy="userChanged.email"
-                                    :readonly="!isEdit"
-                                    :rules="rulesEmail"
-                                ></v-text-field>
-                            </v-col>
+                                <v-col cols="6">
+                                    <v-text-field
+                                        variant="solo"
+                                        label="Email"
+                                        v-model.lazy="userChanged.email"
+                                        :readonly="!isEdit"
+                                        :rules="rulesEmail"
+                                    ></v-text-field>
+                                </v-col>
 
-                            <v-col cols="6">
-                                <v-text-field
-                                    variant="solo"
-                                    label="Phone Number"
-                                    v-model.lazy="userChanged.phoneNumber"
-                                    :readonly="!isEdit"
-                                ></v-text-field>
-                            </v-col>
+                                <v-col cols="6">
+                                    <v-text-field
+                                        variant="solo"
+                                        label="Phone Number"
+                                        v-model.lazy="userChanged.phoneNumber"
+                                        :readonly="!isEdit"
+                                    ></v-text-field>
+                                </v-col>
 
-                            <v-col cols="6">
-                                <v-text-field
-                                    variant="solo"
-                                    label="Address"
-                                    v-model.lazy="userChanged.address"
-                                    :readonly="!isEdit"
-                                ></v-text-field>
-                            </v-col>
+                                <v-col cols="6">
+                                    <v-text-field
+                                        variant="solo"
+                                        label="Address"
+                                        v-model.lazy="userChanged.address"
+                                        :readonly="!isEdit"
+                                    ></v-text-field>
+                                </v-col>
 
-                            <v-col cols="6">
-                                <v-autocomplete
-                                    label="Department"
-                                    auto-select-first
-                                    variant="solo"
-                                    :items="department"
-                                    v-model.lazy="userChanged.department"
-                                    :readonly="!isEdit"
-                                ></v-autocomplete>
-                            </v-col>
+                                <v-col cols="6">
+                                    <v-autocomplete
+                                        label="Department"
+                                        auto-select-first
+                                        variant="solo"
+                                        :items="department"
+                                        v-model.lazy="userChanged.department"
+                                        :readonly="!isEdit"
+                                    ></v-autocomplete>
+                                </v-col>
 
-                            <v-col cols="6">
-                                <v-text-field
-                                    variant="solo"
-                                    label="Roles"
-                                    v-model.lazy="userChanged.roles"
-                                    readonly
-                                ></v-text-field>
-                            </v-col>
+                                <v-col cols="6">
+                                    <v-text-field
+                                        variant="solo"
+                                        label="Roles"
+                                        v-model.lazy="userChanged.roles"
+                                        readonly
+                                    ></v-text-field>
+                                </v-col>
 
-                            <div class="w-100" v-if="isEdit">
-                                <v-btn
-                                    class="float-end"
-                                    color="grey"
-                                    @click.prevent="isEdit = false"
-                                >
-                                    Cancel
-                                </v-btn>
-                                <v-btn
-                                    class="float-end me-2"
-                                    color="success"
-                                    type="submit"
-                                    @click.prevent="handleChangeProfile"
-                                >
-                                    Update
-                                </v-btn>
-                            </div>
-                            <div class="gap mb-4"></div>
-                        </v-row>
-                    </v-card-text>
+                                <div class="w-100" v-if="isEdit">
+                                    <v-btn
+                                        class="float-end"
+                                        color="grey"
+                                        @click.prevent="isEdit = false"
+                                    >
+                                        Cancel
+                                    </v-btn>
+                                    <v-btn
+                                        class="float-end me-2"
+                                        color="success"
+                                        type="submit"
+                                        @click.prevent="handleChangeProfile"
+                                    >
+                                        Update
+                                    </v-btn>
+                                </div>
+                                <div class="gap mb-4"></div>
+                            </v-row>
+                        </v-card-text>
                     </v-form>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-4 text-body">

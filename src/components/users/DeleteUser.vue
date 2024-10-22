@@ -10,6 +10,8 @@ const dialog: Ref<boolean> = ref(false)
 
 const userStore = useUserStore()
 
+defineEmits(['is-done'])
+
 onBeforeMount(() => {
     currentUser.value = userStore.getCurrentUser()
 })

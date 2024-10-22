@@ -56,7 +56,7 @@ const handleDelete = async (id: string) => {
                 </h3>
             </div>
             <div class="col-2 d-flex justify-content-end">
-                <CreateRole @isDone="handleRemount" />
+                <CreateRole @is-done="handleRemount" />
             </div>
         </div>
 
@@ -72,7 +72,7 @@ const handleDelete = async (id: string) => {
                         </div>
 
                         <div class="col-2 my-nav">
-                            <UpdateRoles :id="role.id" @isDone="handleRemount" />
+                            <UpdateRoles :id="role.id" @is-done="handleRemount" />
                             <v-btn
                                 color="error"
                                 icon="mdi-delete"
