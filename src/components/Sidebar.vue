@@ -38,9 +38,9 @@ onBeforeMount(async () => {
     currentUser.value = userStore.getCurrentUser()
 })
 
-const signOut = async() => {
-    await authorizeStore.signOut();
-    localStorageStore.delUserData();
+const signOut = async () => {
+    await authorizeStore.signOut()
+    localStorageStore.delUserData()
 }
 </script>
 
@@ -108,10 +108,7 @@ const signOut = async() => {
                 aria-labelledby="dropdownUser1"
             >
                 <li>
-                    <a
-                        class="capitalize nav-link text-white position-relative"
-                        @click="signOut"
-                    >
+                    <a class="capitalize nav-link text-white position-relative" @click="signOut">
                         <span>Sign Out</span>
                     </a>
                 </li>

@@ -82,11 +82,11 @@ export const useAuthorizeStore = defineStore('authorize', () => {
         }
     }
 
-    const signOut = async(): Promise<any> => {
+    const signOut = async (): Promise<any> => {
         try {
-            await axios.post('/id/Authorize/SignOut');
+            await axios.post('/id/Authorize/SignOut')
         } catch (err) {
-            return err;
+            return err
         }
     }
 

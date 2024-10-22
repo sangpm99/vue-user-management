@@ -33,7 +33,7 @@ const rulesEmail = [
         'The Email field is not a valid e-mail address.'
 ]
 
-const department: string[] = getDepartment();
+const department: string[] = getDepartment()
 
 const handleChangeProfile = async () => {
     const res = await userStore.changeProfile(

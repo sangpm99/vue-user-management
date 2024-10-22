@@ -77,7 +77,7 @@ export const useUserStore = defineStore('users', () => {
             }
 
             const response = await axios.get(`/id/User/GetUsers`, { params })
-            return response;
+            return response
         } catch (err) {
             return err
         }
@@ -112,9 +112,9 @@ export const useUserStore = defineStore('users', () => {
         }
         try {
             const request = await axios.get(`/id/User/GetActivity/${id}`, { params })
-            return request;
+            return request
         } catch (err) {
-            return err;
+            return err
         }
     }
 

@@ -26,25 +26,25 @@ watch(
 
 const getUsers = async () => {
     const res = await userStore.getUsers(currentPage.value, itemsPerPage.value)
-    if(res) {
+    if (res) {
         switch (true) {
             case res.status === 401:
-                window.location.href = '/authorize/signin';
-                return;
-                break;
+                window.location.href = '/authorize/signin'
+                return
+                break
             default:
-                break;
+                break
         }
 
         if (res.data.data.items) {
-        totals.value = res.data.data.itemsCount
-        userList.value = res.data.data.items
+            totals.value = res.data.data.itemsCount
+            userList.value = res.data.data.items
 
-        pagination.value =
-            totals.value % itemsPerPage.value === 0
-                ? Math.floor(totals.value / itemsPerPage.value)
-                : Math.floor(totals.value / itemsPerPage.value) + 1
-    }
+            pagination.value =
+                totals.value % itemsPerPage.value === 0
+                    ? Math.floor(totals.value / itemsPerPage.value)
+                    : Math.floor(totals.value / itemsPerPage.value) + 1
+        }
     }
 }
 
@@ -76,7 +76,15 @@ watch(
             </div>
 
             <div class="col-2 d-flex justify-content-end">
-                <CreateUser @is-done="async(value) => {if(value) {await getUsers()}}" />
+                <CreateUser
+                    @is-done="
+                        async (value) => {
+                            if (value) {
+                                await getUsers()
+                            }
+                        }
+                    "
+                />
             </div>
         </div>
 

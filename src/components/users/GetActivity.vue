@@ -16,30 +16,26 @@ const activities: Ref<any> = ref([])
 const reMountDialog: Ref<number> = ref(0)
 
 const isRevoke = () => {
-    reMountDialog.value += 1;
+    reMountDialog.value += 1
 }
 
-watch(
-  [() => dialog.value, () => reMountDialog.value], 
-  async (newValue, oldValue) => {
+watch([() => dialog.value, () => reMountDialog.value], async (newValue, oldValue) => {
     const res = await userStore.getActivities(props.id)
 
-    if(res) {
-        if(res.status) {
-            switch(true) {
+    if (res) {
+        if (res.status) {
+            switch (true) {
                 case res.status === 401:
-                    window.location.href="/authorize/signin";
-                    break;
+                    window.location.href = '/authorize/signin'
+                    break
                 default:
-                    break;
+                    break
             }
         }
-        const items = JSON.parse(res.data.data);
-        activities.value = [...items];
+        const items = JSON.parse(res.data.data)
+        activities.value = [...items]
     }
-  }
-);
-
+})
 
 const formatDate = (timeStamp: string) => {
     const date = new Date(Number(timeStamp) * 1000)

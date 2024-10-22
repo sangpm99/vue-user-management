@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import { type Ref, ref, onBeforeMount } from 'vue'
-const tree = ref([])
+import { useRoleStore } from '@/stores/roleStore';
+
+const props = defineProps<{ permissionsUnChanged?: string[] }>()
+
+const roleStore = useRoleStore();
+
+const permissionsSelected: Ref<any> = ref([])
 
 const items: Ref<any> = ref([])
 
-const data = [
-    'Permission.Identity.User.Read',
-    'Permission.Identity.User.Create',
-    'Permission.Identity.User.Update',
-    'Permission.Identity.User.Delete',
-    'Permission.Identity.Role.Read',
-    'Permission.Identity.Role.Create',
-    'Permission.Identity.Role.Update',
-    'Permission.Identity.Role.Delete'
-]
+const data: Ref<any> = ref([])
 
 interface PermissionNode {
     label: string
@@ -23,7 +20,7 @@ interface PermissionNode {
 
 const result: { [key: string]: PermissionNode[] } = {}
 
-function addPermission(permission: string) {
+const addPermission = async (permission: string) => {
     const parts = permission.split('.')
     const [, category, subCategory, action] = parts
 
@@ -45,39 +42,42 @@ function addPermission(permission: string) {
     }
 }
 
-data.forEach(addPermission)
 
-const transformedResult: PermissionNode[] = Object.entries(result).map(
-    ([categoryName, children]) => ({
-        label: categoryName,
-        name: categoryName,
-        children
-    })
-)
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
+    const res = await roleStore.getPermissions();
+    data.value = res.data.data;
+
+    await Promise.all(data.value.map(addPermission));
+
+    const transformedResult: PermissionNode[] = Object.entries(result).map(
+        ([categoryName, children]) => ({
+            label: categoryName,
+            name: categoryName,
+            children
+        })
+    );
+
     items.value = [
         {
             id: 1,
             name: 'All Permission',
             label: 'All Permission',
-            children: [
-                {
-                    ...transformedResult[0]
-                }
-            ]
+            children: [...transformedResult]
         }
     ]
+
+    permissionsSelected.value = props.permissionsUnChanged ?? [];
 })
 </script>
 
 <template>
     <v-card>
         <v-row>
-            <v-col>
+            <v-col cols="4">
                 <v-card-text>
                     <v-treeview
-                        v-model:selected="tree"
+                        v-model:selected="permissionsSelected"
                         :items="items"
                         true-icon="mdi-checkbox-marked"
                         false-icon="mdi-checkbox-blank-outline"
@@ -93,10 +93,10 @@ onBeforeMount(() => {
 
             <v-divider vertical></v-divider>
 
-            <v-col cols="12" md="6">
+            <v-col cols="8">
                 <v-card-text>
                     <div
-                        v-if="tree.length === 0"
+                        v-if="permissionsSelected.length === 0"
                         key="title"
                         class="text-h6 font-weight-light text-grey pa-4 text-center"
                     >
@@ -105,12 +105,12 @@ onBeforeMount(() => {
 
                     <v-scroll-x-transition group hide-on-leave>
                         <v-chip
-                            v-for="(selection, i) in tree"
+                            v-for="(selection, i) in permissionsSelected"
                             :key="i"
                             :text="selection.name"
                             class="ma-1"
                             color="grey"
-                            prepend-icon="mdi-beer"
+                            prepend-icon="mdi-check"
                             size="small"
                         ></v-chip>
                     </v-scroll-x-transition>

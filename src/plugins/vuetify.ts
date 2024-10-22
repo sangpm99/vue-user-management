@@ -9,6 +9,6 @@ export default createVuetify({
         defaultSet: 'mdi'
     },
     components: {
-        VTreeview,
-    },
+        VTreeview
+    }
 })
