@@ -160,6 +160,14 @@ const handleVerifyCode = async () => {
                 >
                     {{ invalid.message }}
                 </v-alert>
+
+                <RecaptchaV2
+                    @widget-id="handleWidgetId"
+                    @error-callback="handleErrorCalback"
+                    @expired-callback="handleExpiredCallback"
+                    @load-callback="handleLoadCallback"
+                />
+
                 <v-btn class="float-end" color="primary" @click.prevent="handleSignIn"
                     >Sign In</v-btn
                 >
@@ -195,12 +203,7 @@ const handleVerifyCode = async () => {
                     </v-alert>
                 </v-row>
                 <br />
-                <RecaptchaV2
-                    @widget-id="handleWidgetId"
-                    @error-callback="handleErrorCalback"
-                    @expired-callback="handleExpiredCallback"
-                    @load-callback="handleLoadCallback"
-                />
+                
                 <v-btn class="float-end" color="primary" @click.prevent="handleVerifyCode"
                     >Submit</v-btn
                 >
@@ -208,3 +211,6 @@ const handleVerifyCode = async () => {
         </div>
     </form>
 </template>
+
+<style>
+</style>
