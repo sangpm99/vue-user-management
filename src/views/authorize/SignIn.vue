@@ -193,7 +193,7 @@ const handleVerifyCode = async () => {
                 </v-row>
                 <br />
                 <RecaptchaV2
-                    @widget-id="handleWidgetId"
+                    @widget-id="handleWidgetId(1)"
                     @error-callback="handleErrorCalback"
                     @expired-callback="handleExpiredCallback"
                     @load-callback="handleLoadCallback"

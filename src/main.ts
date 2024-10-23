@@ -32,6 +32,6 @@ app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(install, {
     sitekey: '6Lf1uWkqAAAAADu_ZKUCBEDfimxOWYMvG-OrXOv0',
     cnDomains: false, // Optional, If you use in China, set this value true
-  })
+})
 
 app.mount('#app')
