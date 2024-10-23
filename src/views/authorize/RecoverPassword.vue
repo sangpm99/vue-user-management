@@ -16,11 +16,11 @@ const userData: Reactive<any> = reactive({
 })
 
 onBeforeMount(() => {
-    try {
-        invalidLink.value = false;
+    if(route.query.email && route.query.token) {
         userData.email = route.query.email as string
         userData.token = route.query.token as string
-    } catch (err) {
+        invalidLink.value = false;
+    } else {
         invalidLink.value = true;
     }
 })
@@ -62,7 +62,7 @@ const handleRecoverPassword = async () => {
     <form action="" method="POST" class="row mb-4 pb-2">
         <div class="col-12">
             <div data-mdb-input-init class="form-outline">
-                <v-row dense v-if="invalidLink = false">
+                <v-row dense v-if="invalidLink === false">
                     <v-col cols="12">
                         <v-text-field
                             v-model="userData.newPassword"
@@ -97,9 +97,11 @@ const handleRecoverPassword = async () => {
                         </v-alert>
                     </v-col>
 
-                    <v-btn class="float-end" color="primary" @click.prevent="handleRecoverPassword"
-                    >Reset Password</v-btn
-                    >
+                    <v-col cols="12">
+                        <v-btn class="float-end" color="primary" @click.prevent="handleRecoverPassword"
+                        >Change Password</v-btn
+                        >
+                    </v-col>
                 </v-row>
                 
 
@@ -110,7 +112,7 @@ const handleRecoverPassword = async () => {
                     variant="tonal"
                     closable
                     class="my-2"
-                    v-if="invalidLink = true"
+                    v-if="invalidLink"
                 >
                     Please confirm your forgotten password email then click link received before using this function.
                 </v-alert>

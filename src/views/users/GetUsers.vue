@@ -95,6 +95,7 @@ watch(
                     <th scope="col">Department</th>
                     <th scope="col">Email</th>
                     <th scope="col">Roles</th>
+                    <th scope="col">Lock Out</th>
                 </tr>
             </thead>
             <tbody>
@@ -111,6 +112,7 @@ watch(
                     <td>{{ user.department }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.roles.join(", ") }}</td>
+                    <td>{{ user.lockedOut ? 'Locked' : 'Unlocked' }}</td>
                 </tr>
             </tbody>
         </table>
