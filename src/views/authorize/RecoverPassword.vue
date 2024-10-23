@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { onBeforeMount, reactive, ref, type Reactive } from 'vue'
+import { onBeforeMount, reactive, ref, type Reactive, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthorizeStore } from '@/stores/authorizeStore'
 
 const authorizeStore = useAuthorizeStore()
 const route = useRoute()
+const invalidLink: Ref<boolean> = ref(false);
 
 const userData: Reactive<any> = reactive({
     email: '',
@@ -15,8 +16,13 @@ const userData: Reactive<any> = reactive({
 })
 
 onBeforeMount(() => {
-    userData.email = route.query.email as string
-    userData.token = route.query.token as string
+    if((route.query.email as string) && (route.query.token as string)) {
+        invalid.value = false;
+        userData.email = route.query.email as string
+        userData.token = route.query.token as string
+    } else {
+        invalidLink.value = true;
+    }
 })
 
 const rulesPassword = [
@@ -56,7 +62,7 @@ const handleRecoverPassword = async () => {
     <form action="" method="POST" class="row mb-4 pb-2">
         <div class="col-12">
             <div data-mdb-input-init class="form-outline">
-                <v-row dense>
+                <v-row dense v-if="invalidLink = false">
                     <v-col cols="12">
                         <v-text-field
                             v-model="userData.newPassword"
@@ -90,10 +96,24 @@ const handleRecoverPassword = async () => {
                             {{ invalid.message }}
                         </v-alert>
                     </v-col>
-                </v-row>
-                <v-btn class="float-end" color="primary" @click.prevent="handleRecoverPassword"
+
+                    <v-btn class="float-end" color="primary" @click.prevent="handleRecoverPassword"
                     >Reset Password</v-btn
+                    >
+                </v-row>
+                
+
+                <v-alert
+                    border="start"
+                    close-label="Close Alert"
+                    color="error"
+                    variant="tonal"
+                    closable
+                    class="my-2"
+                    v-if="invalidLink = true"
                 >
+                    Please confirm your forgotten password email then click link received before using this function.
+                </v-alert>
             </div>
         </div>
     </form>
