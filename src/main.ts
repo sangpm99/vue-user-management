@@ -30,7 +30,7 @@ app.use(vuetify)
 app.use(VueSweetalert2)
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(install, {
-    sitekey: import.meta.env.VITE_RECAPTCHA_KEY,
+    sitekey: "6Lf1uWkqAAAAADu_ZKUCBEDfimxOWYMvG-OrXOv0",
     cnDomains: false // Optional, If you use in China, set this value true
 })
 
