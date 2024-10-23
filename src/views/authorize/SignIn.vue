@@ -3,12 +3,10 @@ import { ref, type Ref, reactive, type Reactive } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useAuthorizeStore } from '@/stores/authorizeStore'
 import { useLocalStorageStore } from '@/stores/localStorageStore'
-import { RecaptchaV2, useRecaptcha } from 'vue3-recaptcha-v2'
+import { RecaptchaV2 } from 'vue3-recaptcha-v2'
 
-const { handleReset } = useRecaptcha()
 
 const handleWidgetId = (widgetId: number) => {
-    handleReset(widgetId)
     console.log('Widget ID: ', widgetId)
 }
 const handleErrorCalback = () => {
