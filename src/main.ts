@@ -16,6 +16,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 // Vuetify
 import vuetify from '@/plugins/vuetify'
 
+// reCaptcha
+import { install } from "vue3-recaptcha-v2";
+
 import App from './App.vue'
 import router from './routers'
 
@@ -26,5 +29,9 @@ app.use(router)
 app.use(vuetify)
 app.use(VueSweetalert2)
 app.component('font-awesome-icon', FontAwesomeIcon)
+.use(install, {
+    sitekey: '6Lf1uWkqAAAAADu_ZKUCBEDfimxOWYMvG-OrXOv0',
+    cnDomains: false, // Optional, If you use in China, set this value true
+  })
 
 app.mount('#app')

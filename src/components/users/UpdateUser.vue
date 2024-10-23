@@ -57,7 +57,7 @@ onBeforeMount(() => {
 })
 
 const handleSave = async () => {
-    const res = await userStore.updateUser(
+    const res = await userStore.updateUserFull(
         user.id,
         user.email,
         user.userName,

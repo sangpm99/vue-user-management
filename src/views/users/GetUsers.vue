@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref, watch, type Ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import CreateUser from '@/components/users/CreateUser.vue'
 import UpdateUser from '@/components/users/UpdateUser.vue'
 import DeleteUser from '@/components/users/DeleteUser.vue'
 import GetActivityUser from '@/components/users/GetActivity.vue'
+import type { UserData } from '@/types/UserData'
 
 const totals = ref<number>(0)
 const userList = ref<Array<any>>([])
@@ -17,6 +18,8 @@ const userStore = useUserStore()
 
 const pagination = ref<Number>(1)
 
+const currentUser: Ref<UserData | null> = ref(null);
+
 watch(
     () => itemsPerPage.value,
     () => {
@@ -25,6 +28,7 @@ watch(
 )
 
 const getUsers = async () => {
+    currentUser.value = userStore.getCurrentUser();
     const res = await userStore.getUsers(currentPage.value, itemsPerPage.value)
     if (res) {
         switch (true) {
@@ -55,6 +59,12 @@ watch(
     },
     { immediate: true }
 )
+
+const changeLockedOut = async(id: string, lockedOut: boolean) => {
+    await userStore.updateUserLockedOut(id, lockedOut)
+    getUsers();
+}
+
 </script>
 
 <template>
@@ -112,7 +122,20 @@ watch(
                     <td>{{ user.department }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.roles.join(", ") }}</td>
-                    <td>{{ user.lockedOut ? 'Locked' : 'Unlocked' }}</td>
+                    <td class="text-center">
+                        <v-btn 
+                        :color="user.lockedOut ? 'error' : 'success'"
+                        size="x-small"
+                        :class="user.lockedOut ? 'px-4' : ''"
+                        :disabled="
+                            currentUser !== null ? (currentUser.id === user.id ? true : false) : false
+                        "
+                        @click="changeLockedOut(user.id, !user.lockedOut)"
+                        >
+                            
+                            {{ user.lockedOut ? 'Locked' : 'Unlocked' }}
+                        </v-btn>
+                    </td>
                 </tr>
             </tbody>
         </table>

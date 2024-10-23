@@ -83,7 +83,7 @@ export const useUserStore = defineStore('users', () => {
         }
     }
 
-    const updateUser = async (
+    const updateUserFull = async (
         id: string,
         email: string,
         userName: string,
@@ -98,6 +98,19 @@ export const useUserStore = defineStore('users', () => {
             await axios.put('/id/User/Update', body)
         } catch (err) {
             return err
+        }
+    }
+
+    const updateUserLockedOut = async (id: string, lockedOut: boolean) => {
+        const body = {
+            path: '/lockedOut',
+            op: 'replace',
+            value: lockedOut
+        }
+        try {
+            await axios.patch(`/id/User/Update/${id}`, [body]);
+        } catch (err) {
+            return err;
         }
     }
 
@@ -208,7 +221,8 @@ export const useUserStore = defineStore('users', () => {
         changeProfile,
         getCurrentUser,
         isLoading,
-        updateUser,
+        updateUserFull,
+        updateUserLockedOut,
         getActivities,
         revokeAllTokens,
         revokeToken,
