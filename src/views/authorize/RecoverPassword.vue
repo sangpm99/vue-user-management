@@ -16,13 +16,11 @@ const userData: Reactive<any> = reactive({
 })
 
 onBeforeMount(() => {
-    console.log(route.query.email)
-    console.log(route.query.token)
-    if((route.query.email !== undefined) && (route.query.token !== undefined)) {
+    try {
         invalidLink.value = false;
         userData.email = route.query.email as string
         userData.token = route.query.token as string
-    } else {
+    } catch (err) {
         invalidLink.value = true;
     }
 })
