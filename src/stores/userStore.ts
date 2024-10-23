@@ -108,9 +108,9 @@ export const useUserStore = defineStore('users', () => {
             value: lockedOut
         }
         try {
-            await axios.patch(`/id/User/Update/${id}`, [body]);
+            await axios.patch(`/id/User/Update/${id}`, [body])
         } catch (err) {
-            return err;
+            return err
         }
     }
 

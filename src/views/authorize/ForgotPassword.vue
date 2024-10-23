@@ -86,10 +86,13 @@ const rules = [(value: string) => !!value || 'Please enter this field']
                             {{ invalid.message }}
                         </v-alert>
                     </v-col>
-                    
 
                     <v-col cols="12">
-                        <v-btn class="float-end" color="primary" @click.prevent="handleGetLink" v-if="!(isGetLink && !invalid.isInvalid)"
+                        <v-btn
+                            class="float-end"
+                            color="primary"
+                            @click.prevent="handleGetLink"
+                            v-if="!(isGetLink && !invalid.isInvalid)"
                             >Submit</v-btn
                         >
                     </v-col>
@@ -103,7 +106,8 @@ const rules = [(value: string) => !!value || 'Please enter this field']
                             closable
                             class="my-2"
                         >
-                            Password reset link has been sent to your email, please reset your password soon.
+                            Password reset link has been sent to your email, please reset your
+                            password soon.
                         </v-alert>
                     </v-col>
                 </v-row>

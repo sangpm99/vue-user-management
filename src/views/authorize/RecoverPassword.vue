@@ -5,8 +5,10 @@ import { useAuthorizeStore } from '@/stores/authorizeStore'
 
 const authorizeStore = useAuthorizeStore()
 const route = useRoute()
-const invalidLink: Ref<boolean> = ref(false);
-const invalidContent: Ref<string> = ref('Please confirm your forgotten password email then click link received before using this function.');
+const invalidLink: Ref<boolean> = ref(false)
+const invalidContent: Ref<string> = ref(
+    'Please confirm your forgotten password email then click link received before using this function.'
+)
 
 const userData: Reactive<any> = reactive({
     email: '',
@@ -17,12 +19,12 @@ const userData: Reactive<any> = reactive({
 })
 
 onBeforeMount(() => {
-    if(route.query.email && route.query.token) {
+    if (route.query.email && route.query.token) {
         userData.email = route.query.email as string
         userData.token = route.query.token as string
-        invalidLink.value = false;
+        invalidLink.value = false
     } else {
-        invalidLink.value = true;
+        invalidLink.value = true
     }
 })
 
@@ -57,20 +59,20 @@ const handleRecoverPassword = async () => {
     if (res) {
         switch (true) {
             case res.status === 417 || res.status === 406:
-                invalidLink.value = true;
+                invalidLink.value = true
                 invalidContent.value = 'The token has expired or is invalid.'
-                break;
+                break
             case res.status === 404:
-                invalidLink.value = true;
+                invalidLink.value = true
                 invalidContent.value = 'The Email is Incorrect'
-                break;
+                break
 
             default:
-                invalidLink.value = true;
+                invalidLink.value = true
                 invalidContent.value = 'An error occurred, please try again.'
         }
     } else {
-        invalidLink.value = false;
+        invalidLink.value = false
     }
 }
 </script>
@@ -117,12 +119,14 @@ const handleRecoverPassword = async () => {
                     </v-col>
 
                     <v-col cols="12">
-                        <v-btn class="float-end" color="primary" @click.prevent="handleRecoverPassword"
-                        >Change Password</v-btn
+                        <v-btn
+                            class="float-end"
+                            color="primary"
+                            @click.prevent="handleRecoverPassword"
+                            >Change Password</v-btn
                         >
                     </v-col>
                 </v-row>
-                
 
                 <v-alert
                     border="start"

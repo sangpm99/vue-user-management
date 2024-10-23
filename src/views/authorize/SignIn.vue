@@ -3,20 +3,23 @@ import { ref, type Ref, reactive, type Reactive } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useAuthorizeStore } from '@/stores/authorizeStore'
 import { useLocalStorageStore } from '@/stores/localStorageStore'
-import { RecaptchaV2 } from "vue3-recaptcha-v2";
+import { RecaptchaV2, useRecaptcha } from 'vue3-recaptcha-v2'
+
+const { handleReset } = useRecaptcha()
 
 const handleWidgetId = (widgetId: number) => {
-  console.log("Widget ID: ", widgetId);
-};
+    handleReset(widgetId)
+    console.log('Widget ID: ', widgetId)
+}
 const handleErrorCalback = () => {
-  console.log("Error callback");
-};
+    console.log('Error callback')
+}
 const handleExpiredCallback = () => {
-  console.log("Expired callback");
-};
+    console.log('Expired callback')
+}
 const handleLoadCallback = (response: unknown) => {
-  console.log("Load callback", response);
-};
+    console.log('Load callback', response)
+}
 
 const localStorageStore = useLocalStorageStore()
 
@@ -193,7 +196,7 @@ const handleVerifyCode = async () => {
                 </v-row>
                 <br />
                 <RecaptchaV2
-                    @widget-id="handleWidgetId(1)"
+                    @widget-id="handleWidgetId"
                     @error-callback="handleErrorCalback"
                     @expired-callback="handleExpiredCallback"
                     @load-callback="handleLoadCallback"
