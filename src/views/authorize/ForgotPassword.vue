@@ -49,7 +49,7 @@ const handleSend = async () => {
     const arr = link.value.split('token=')
     token.value = arr[1]
     router.push({
-        path: '/authorize/recoverpassword',
+        path: '/change-password',
         query: { email: email.value, token: token.value }
     })
 }
@@ -86,17 +86,31 @@ const rules = [(value: string) => !!value || 'Please enter this field']
                             {{ invalid.message }}
                         </v-alert>
                     </v-col>
+                    
 
-                    <v-col cols="12" v-if="!(isGetLink && !invalid.isInvalid)">
-                        <v-btn class="float-end" color="primary" @click.prevent="handleGetLink"
+                    <v-col cols="12">
+                        <v-btn class="float-end" color="primary" @click.prevent="handleGetLink" v-if="!(isGetLink && !invalid.isInvalid)"
                             >Submit</v-btn
                         >
+                    </v-col>
+
+                    <v-col cols="12" v-if="isGetLink && !invalid.isInvalid">
+                        <v-alert
+                            border="start"
+                            close-label="Close Alert"
+                            color="success"
+                            variant="tonal"
+                            closable
+                            class="my-2"
+                        >
+                            Password reset link has been sent to your email, please reset your password soon.
+                        </v-alert>
                     </v-col>
                 </v-row>
             </div>
         </div>
 
-        <div class="fade-in-up" v-if="isGetLink && !invalid.isInvalid">
+        <!-- <div class="fade-in-up" v-if="isGetLink && !invalid.isInvalid">
             <div class="col-12 mt-2">
                 <div data-mdb-input-init class="form-outline">
                     <v-row dense>
@@ -117,7 +131,7 @@ const rules = [(value: string) => !!value || 'Please enter this field']
                     <v-btn color="primary" @click.prevent="handleSend">Send</v-btn>
                 </div>
             </div>
-        </div>
+        </div> -->
     </form>
 </template>
 

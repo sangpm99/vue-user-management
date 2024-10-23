@@ -110,11 +110,7 @@ watch(
                     </td>
                     <td>{{ user.department }}</td>
                     <td>{{ user.email }}</td>
-                    <td>
-                        <span v-for="(role, index) in user.roles" :key="index"
-                            >{{ role }}&nbsp;</span
-                        >
-                    </td>
+                    <td>{{ user.roles.join(", ") }}</td>
                 </tr>
             </tbody>
         </table>
