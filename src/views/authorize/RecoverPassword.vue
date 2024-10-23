@@ -6,6 +6,7 @@ import { useAuthorizeStore } from '@/stores/authorizeStore'
 const authorizeStore = useAuthorizeStore()
 const route = useRoute()
 const invalidLink: Ref<boolean> = ref(false);
+const invalidContent: Ref<string> = ref('Please confirm your forgotten password email then click link received before using this function.');
 
 const userData: Reactive<any> = reactive({
     email: '',
@@ -46,13 +47,31 @@ const invalid: Reactive<any> = reactive({
 })
 
 const handleRecoverPassword = async () => {
-    await authorizeStore.recoverPassword(
+    const res = await authorizeStore.recoverPassword(
         userData.email,
         userData.newPassword,
         userData.confirmNewPassword,
         userData.token,
         userData.reCaptcha
     )
+    if (res) {
+        switch (true) {
+            case res.status === 417:
+                invalidLink.value = true;
+                invalidContent.value = 'The token has expired or is invalid.'
+                break;
+            case res.status === 404:
+                invalidLink.value = true;
+                invalidContent.value = 'The Email is Incorrect'
+                break;
+
+            default:
+                invalidLink.value = true;
+                invalidContent.value = 'An error occurred, please try again.'
+        }
+    } else {
+        invalidLink.value = false;
+    }
 }
 </script>
 
@@ -114,7 +133,7 @@ const handleRecoverPassword = async () => {
                     class="my-2"
                     v-if="invalidLink"
                 >
-                    Please confirm your forgotten password email then click link received before using this function.
+                    {{ invalidContent }}
                 </v-alert>
             </div>
         </div>
