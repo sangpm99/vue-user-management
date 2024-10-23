@@ -239,9 +239,7 @@ onBeforeMount(async () => {
                         </v-card-text>
                     </v-form>
                 </div>
-                <div class="h-20">
-
-                </div>
+                <div class="h-20"></div>
             </div>
         </div>
     </div>
