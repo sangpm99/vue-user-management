@@ -71,11 +71,6 @@ const router = createRouter({
                     component: () => import('../views/roles/GetRoles.vue')
                 }
             ]
-        },
-        {
-            path: '/test',
-            component: () => import('@/test/Test.vue'),
-            name: 'test'
         }
     ]
 })

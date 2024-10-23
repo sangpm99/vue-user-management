@@ -1,12 +1,14 @@
-<script setup lang="ts">
-import { type Ref, ref, onBeforeMount } from 'vue'
+<!-- <script setup lang="ts">
+import { type Ref, ref, onBeforeMount, watch } from 'vue'
 import { useRoleStore } from '@/stores/roleStore';
 
-const props = defineProps<{ permissionsUnChanged?: string[] }>()
+const props = defineProps<{ permissionsUnChanged?: Array<any> }>()
 
 const roleStore = useRoleStore();
 
 const permissionsSelected: Ref<any> = ref([])
+
+const permissionSave: Ref<any> = ref([])
 
 const items: Ref<any> = ref([])
 
@@ -20,7 +22,7 @@ interface PermissionNode {
 
 const result: { [key: string]: PermissionNode[] } = {}
 
-const addPermission = async (permission: string) => {
+const addPermission = (permission: string) => {
     const parts = permission.split('.')
     const [, category, subCategory, action] = parts
 
@@ -41,8 +43,6 @@ const addPermission = async (permission: string) => {
         })
     }
 }
-
-
 
 onBeforeMount(async () => {
     const res = await roleStore.getPermissions();
@@ -66,9 +66,16 @@ onBeforeMount(async () => {
             children: [...transformedResult]
         }
     ]
-
-    permissionsSelected.value = props.permissionsUnChanged ?? [];
 })
+
+watch(
+    () => permissionsSelected.value,
+    () => {
+        permissionSave.value = permissionsSelected.value.map(item => item.name);
+    },{immediate: true}
+)
+
+defineEmits(['return-permission-selected']);
 </script>
 
 <template>
@@ -133,4 +140,4 @@ onBeforeMount(async () => {
     .v-list-item__prepend {
     margin-left: 2rem;
 }
-</style>
+</style> -->

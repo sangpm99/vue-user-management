@@ -84,7 +84,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-    <div v-if="user" :key="reMount">
+    <div class="m-h-100" v-if="user" :key="reMount">
         <h1>My Profile</h1>
 
         <div class="card shadow">
@@ -239,49 +239,8 @@ onBeforeMount(async () => {
                         </v-card-text>
                     </v-form>
                 </div>
-                <div class="d-flex justify-content-between align-items-center mb-4 text-body">
-                    <h3 class="mb-0">Recent photos</h3>
-                    <p class="mb-0"><a href="#!" class="text-muted">Show all</a></p>
-                </div>
-                <div class="row g-2">
-                    <div class="col mb-2">
-                        <img
-                            width="100%"
-                            height="500px"
-                            src="@/assets/images/spring.webp"
-                            alt="image 1"
-                            class="w-100 rounded-3"
-                        />
-                    </div>
-                    <div class="col mb-2">
-                        <img
-                            width="100%"
-                            height="500px"
-                            src="@/assets/images/summer.webp"
-                            alt="image 2"
-                            class="w-100 rounded-3"
-                        />
-                    </div>
-                </div>
-                <div class="row g-2">
-                    <div class="col">
-                        <img
-                            width="100%"
-                            height="500px"
-                            src="@/assets/images/fall.webp"
-                            alt="image 3"
-                            class="w-100 rounded-3"
-                        />
-                    </div>
-                    <div class="col">
-                        <img
-                            width="100%"
-                            height="500px"
-                            src="@/assets/images/winter.webp"
-                            alt="image 4"
-                            class="w-100 rounded-3"
-                        />
-                    </div>
+                <div class="h-20">
+
                 </div>
             </div>
         </div>
@@ -289,6 +248,9 @@ onBeforeMount(async () => {
 </template>
 
 <style scoped>
+.h-20 {
+    height: 20vh;
+}
 .cover {
     background-image: url('@/assets/images/star-night.webp');
     background-position: bottom;
