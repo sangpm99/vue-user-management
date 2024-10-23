@@ -29,7 +29,7 @@ app.use(router)
 app.use(vuetify)
 app.use(VueSweetalert2)
 app.component('font-awesome-icon', FontAwesomeIcon)
-.use(install, {
+app.use(install, {
     sitekey: '6Lf1uWkqAAAAADu_ZKUCBEDfimxOWYMvG-OrXOv0',
     cnDomains: false, // Optional, If you use in China, set this value true
   })
