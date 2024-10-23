@@ -69,7 +69,7 @@ const rules = [(value: string) => !!value || 'Please enter this field']
                             :rules="rules"
                             variant="outlined"
                             label="Email"
-                            :disabled="isGetLink && !invalid.isInvalid"
+                            v-if="!(isGetLink && !invalid.isInvalid)"
                         ></v-text-field>
                     </v-col>
 
