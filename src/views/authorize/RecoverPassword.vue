@@ -16,7 +16,9 @@ const userData: Reactive<any> = reactive({
 })
 
 onBeforeMount(() => {
-    if((route.query.email as string) && (route.query.token as string)) {
+    console.log(route.query.email)
+    console.log(route.query.token)
+    if((route.query.email !== undefined) && (route.query.token !== undefined)) {
         invalid.value = false;
         userData.email = route.query.email as string
         userData.token = route.query.token as string
