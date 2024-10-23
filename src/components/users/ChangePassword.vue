@@ -18,7 +18,7 @@ const rulesPassword = [
     (value: string) => !!value || 'You must enter this field',
     (value: string) => /[A-Z]/.test(value) || 'Password must contain a capital letter',
     (value: string) => /[0-9]/.test(value) || 'Password must contain a number',
-    (value: string) => /[!@#$%^&*(),.?":{}|<>]/.test(value) || 'Password must contain a symbol',
+    (value: string) => /[_!@#$%^&*(),.?":{}|<>]/.test(value) || 'Password must contain a symbol',
     (value: string) => value.length >= 8 || 'You must enter at least 8 characters'
 ]
 
