@@ -56,7 +56,7 @@ const handleRecoverPassword = async () => {
     )
     if (res) {
         switch (true) {
-            case res.status === 417:
+            case res.status === 417 || res.status === 406:
                 invalidLink.value = true;
                 invalidContent.value = 'The token has expired or is invalid.'
                 break;
