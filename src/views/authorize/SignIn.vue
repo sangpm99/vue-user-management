@@ -33,46 +33,46 @@ const rules = [(value: string) => !!value || 'Please enter this field']
 
 const handleSignIn = async () => {
     console.log(reCaptcha.value)
-    // if(reCaptcha.value === null) {
-    //     console.log(reCaptcha.value)
-    //     invalid.isInvalid = true
-    //     invalid.message = 'The reCaptcha must be authenticated.'
-    //     return;
-    // }
-    // const res = await authorizeStore.signIn(
-    //     email.value,
-    //     password.value,
-    //     reCaptcha.value,
-    //     rememberMe.value
-    // )
-    // user.value = res
-    // if (res !== undefined) {
-    //     switch (true) {
-    //         case res.status >= 200 && res.status <= 299:
-    //             invalid.isInvalid = false
-    //             if (user.value.data.data.twoFactorEnabled) {
-    //                 isTwoFactor.value = true
-    //             } else {
-    //                 localStorageStore.setUserData(user.value.data.data)
-    //                 window.location.href = '/admin/overview'
-    //             }
-    //             break
-    //         case res.status === 400:
-    //             invalid.isInvalid = true
-    //             invalid.message = 'The Email field is not a valid e-mail address.'
-    //             break
-    //         case res.status === 401:
-    //             invalid.isInvalid = true
-    //             invalid.message = 'Email or password is incorrect.'
-    //             break
-    //         default:
-    //             invalid.isInvalid = true
-    //             invalid.message = 'An error occurred, please try again later.'
-    //     }
-    // } else {
-    //     invalid.isInvalid = true
-    //     invalid.message = 'An error occurred, please try again later.'
-    // }
+    if(reCaptcha.value === null) {
+        console.log(reCaptcha.value)
+        invalid.isInvalid = true
+        invalid.message = 'The reCaptcha must be authenticated.'
+        return;
+    }
+    const res = await authorizeStore.signIn(
+        email.value,
+        password.value,
+        reCaptcha.value,
+        rememberMe.value
+    )
+    user.value = res
+    if (res !== undefined) {
+        switch (true) {
+            case res.status >= 200 && res.status <= 299:
+                invalid.isInvalid = false
+                if (user.value.data.data.twoFactorEnabled) {
+                    isTwoFactor.value = true
+                } else {
+                    localStorageStore.setUserData(user.value.data.data)
+                    window.location.href = '/admin/overview'
+                }
+                break
+            case res.status === 400:
+                invalid.isInvalid = true
+                invalid.message = 'The Email field is not a valid e-mail address.'
+                break
+            case res.status === 401:
+                invalid.isInvalid = true
+                invalid.message = 'Email or password is incorrect.'
+                break
+            default:
+                invalid.isInvalid = true
+                invalid.message = 'An error occurred, please try again later.'
+        }
+    } else {
+        invalid.isInvalid = true
+        invalid.message = 'An error occurred, please try again later.'
+    }
 }
 
 const handleVerifyCode = async () => {
