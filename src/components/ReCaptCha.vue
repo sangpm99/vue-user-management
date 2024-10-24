@@ -30,7 +30,7 @@ const handleLoadCallback = (response: unknown) => {
 
 <template>
     <RecaptchaV2
-        v-model="reCaptcha"
+        v-model="reCaptchaReceive"
         @widget-id="handleWidgetId"
         @error-callback="handleErrorCalback"
         @expired-callback="handleExpiredCallback"
