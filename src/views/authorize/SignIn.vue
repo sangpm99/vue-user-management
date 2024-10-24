@@ -5,17 +5,24 @@ import { useAuthorizeStore } from '@/stores/authorizeStore'
 import { useLocalStorageStore } from '@/stores/localStorageStore'
 import { RecaptchaV2 } from 'vue3-recaptcha-v2'
 
-
+// Ham goi khi khoi tao
 const handleWidgetId = (widgetId: number) => {
     console.log('Widget ID: ', widgetId)
 }
+
+// Ham goi khi loi
 const handleErrorCalback = () => {
     console.log('Error callback')
 }
+
+// Ham duoc goi khi het han
 const handleExpiredCallback = () => {
     console.log('Expired callback')
 }
+
+// Ham duoc goi khi click
 const handleLoadCallback = (response: unknown) => {
+    reCaptcha.value = "string"
     console.log('Load callback', response)
 }
 
@@ -27,7 +34,7 @@ const email: Ref<string> = ref<string>('')
 
 const password: Ref<string> = ref<string>('')
 
-const reCaptcha: Ref<string> = ref<string>('string')
+const reCaptcha: Ref<string | null> = ref(null)
 
 const rememberMe: Ref<boolean> = ref<boolean>(false)
 
@@ -46,6 +53,11 @@ const user: Ref<any> = ref({})
 const rules = [(value: string) => !!value || 'Please enter this field']
 
 const handleSignIn = async () => {
+    if(reCaptcha.value === null) {
+        invalid.isInvalid = true
+        invalid.message = 'The reCaptcha must be authenticated.'
+        return;
+    }
     const res = await authorizeStore.signIn(
         email.value,
         password.value,
@@ -201,7 +213,7 @@ const handleVerifyCode = async () => {
                     </v-alert>
                 </v-row>
                 <br />
-                
+
                 <v-btn class="float-end" color="primary" @click.prevent="handleVerifyCode"
                     >Submit</v-btn
                 >
@@ -210,5 +222,4 @@ const handleVerifyCode = async () => {
     </form>
 </template>
 
-<style>
-</style>
+<style></style>
