@@ -2,11 +2,12 @@
 import { ref, type Ref, reactive, type Reactive } from 'vue'
 import { useAuthorizeStore } from '@/stores/authorizeStore'
 import router from '@/routers'
+import ReCaptCha from '@/components/ReCaptCha.vue';
 
 const authorizeStore = useAuthorizeStore()
 
 const email = ref<string>('')
-const reCaptcha = ref<string>('string')
+const reCaptcha: Ref<string | null> = ref(null)
 
 const isGetLink: Ref<boolean> = ref(false)
 
@@ -20,6 +21,7 @@ const invalid: Reactive<any> = reactive({
 })
 
 const handleGetLink = async () => {
+    if(reCaptcha.value === null) {return}
     const res = await authorizeStore.forgotPassword(email.value, reCaptcha.value)
     if (res) {
         switch (true) {
@@ -45,14 +47,14 @@ const handleGetLink = async () => {
     isGetLink.value = true
 }
 
-const handleSend = async () => {
-    const arr = link.value.split('token=')
-    token.value = arr[1]
-    router.push({
-        path: '/change-password',
-        query: { email: email.value, token: token.value }
-    })
-}
+// const handleSend = async () => {
+//     const arr = link.value.split('token=')
+//     token.value = arr[1]
+//     router.push({
+//         path: '/change-password',
+//         query: { email: email.value, token: token.value }
+//     })
+// }
 
 const rules = [(value: string) => !!value || 'Please enter this field']
 </script>
@@ -86,6 +88,13 @@ const rules = [(value: string) => !!value || 'Please enter this field']
                             {{ invalid.message }}
                         </v-alert>
                     </v-col>
+
+                    <ReCaptCha 
+                        :re-captcha-receive="reCaptcha"
+                        @handle-error-callback="(value) => reCaptcha = value"
+                        @handle-expired-callback="(value) => reCaptcha = value"
+                        @handle-load-callback="(value) => reCaptcha = value"
+                    />
 
                     <v-col cols="12">
                         <v-btn
