@@ -7,23 +7,19 @@ import { RecaptchaV2 } from 'vue3-recaptcha-v2'
 
 // Ham goi khi khoi tao
 const handleWidgetId = (widgetId: number) => {
-    console.log('Widget ID: ', widgetId)
 }
 
 // Ham goi khi loi
 const handleErrorCalback = () => {
-    console.log('Error callback')
 }
 
 // Ham duoc goi khi het han
 const handleExpiredCallback = () => {
-    console.log('Expired callback')
 }
 
 // Ham duoc goi khi click
-const handleLoadCallback = (response: unknown) => {
-    reCaptcha.value = "string"
-    console.log('Load callback', response)
+const handleLoadCallback = (response: string) => {
+    reCaptcha.value = response;
 }
 
 const localStorageStore = useLocalStorageStore()
