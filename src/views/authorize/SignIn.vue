@@ -19,7 +19,11 @@ const handleExpiredCallback = () => {
 
 // Ham duoc goi khi click
 const handleLoadCallback = (response: unknown) => {
-    console.log(typeof(response));
+    if(typeof(response) === 'string') {
+        reCaptcha.value = response;
+    } else {
+        reCaptcha.value = JSON.stringify(response);
+    }
 }
 
 const localStorageStore = useLocalStorageStore()
