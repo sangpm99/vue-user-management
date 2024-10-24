@@ -15,6 +15,7 @@ const handleErrorCalback = () => {
 
 // Ham duoc goi khi het han
 const handleExpiredCallback = () => {
+    reCaptcha.value = null;
 }
 
 // Ham duoc goi khi click
