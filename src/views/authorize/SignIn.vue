@@ -150,7 +150,12 @@ const handleVerifyCode = async () => {
                     {{ invalid.message }}
                 </v-alert>
 
-                <ReCaptCha :reCaptchaReceive="reCaptcha" v-model="reCaptcha"/>
+                <ReCaptCha 
+                    :reCaptchaReceive="reCaptcha"
+                    @handleErrorCallback="(value) => reCaptcha = value"
+                    @handleExpiredCallback="(value) => reCaptcha = value"
+                    @handleLoadCallback="(value) => reCaptcha = value"
+                />
 
                 <v-btn class="float-end" color="primary" @click.prevent="handleSignIn"
                     >Sign In</v-btn
