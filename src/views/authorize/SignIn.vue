@@ -32,6 +32,7 @@ const user: Ref<any> = ref({})
 const rules = [(value: string) => !!value || 'Please enter this field']
 
 const handleSignIn = async () => {
+    console.log(reCaptcha.value)
     if(reCaptcha.value === null) {
         invalid.isInvalid = true
         invalid.message = 'The reCaptcha must be authenticated.'
