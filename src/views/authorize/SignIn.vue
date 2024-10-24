@@ -19,7 +19,7 @@ const handleExpiredCallback = () => {
 
 // Ham duoc goi khi click
 const handleLoadCallback = (response: unknown) => {
-    console.log(response);
+    console.log(typeof(response));
 }
 
 const localStorageStore = useLocalStorageStore()
