@@ -32,8 +32,7 @@ const user: Ref<any> = ref({})
 const rules = [(value: string) => !!value || 'Please enter this field']
 
 const handleSignIn = async () => {
-    console.log(reCaptcha.value)
-    if(import.meta.env.local.VITE_ENABLE_RECAPTCHA == undefined) { // for product <required reCaptCha>
+    if(import.meta.env.VITE_ENABLE_RECAPTCHA == undefined) { // for product <required reCaptCha>
         if(reCaptcha.value === null) {
             invalid.isInvalid = true
             invalid.message = 'The Email field is not a valid e-mail address.'
