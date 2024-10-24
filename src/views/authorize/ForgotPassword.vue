@@ -93,7 +93,8 @@ const rules = [(value: string) => !!value || 'Please enter this field']
                         </v-alert>
                     </v-col>
 
-                    <ReCaptCha 
+                    <ReCaptCha
+                        v-if="!(isGetLink && !invalid.isInvalid)"
                         :re-captcha-receive="reCaptcha"
                         @handle-error-callback="(value) => reCaptcha = value"
                         @handle-expired-callback="(value) => reCaptcha = value"

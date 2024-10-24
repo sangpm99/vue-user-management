@@ -124,7 +124,8 @@ const handleRecoverPassword = async () => {
                         </v-alert>
                     </v-col>
 
-                    <ReCaptCha 
+                    <ReCaptCha
+                        v-if="!invalidLink"
                         :re-captcha-receive="userData.reCaptcha"
                         @handle-error-callback="(value) => userData.reCaptcha = value"
                         @handle-expired-callback="(value) => userData.reCaptcha = value"
