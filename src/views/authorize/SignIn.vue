@@ -3,29 +3,7 @@ import { ref, type Ref, reactive, type Reactive } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useAuthorizeStore } from '@/stores/authorizeStore'
 import { useLocalStorageStore } from '@/stores/localStorageStore'
-import { RecaptchaV2 } from 'vue3-recaptcha-v2'
-
-// Ham goi khi khoi tao
-const handleWidgetId = (widgetId: number) => {
-}
-
-// Ham goi khi loi
-const handleErrorCalback = () => {
-}
-
-// Ham duoc goi khi het han
-const handleExpiredCallback = () => {
-    reCaptcha.value = null;
-}
-
-// Ham duoc goi khi click
-const handleLoadCallback = (response: unknown) => {
-    if(typeof(response) === 'string') {
-        reCaptcha.value = response;
-    } else {
-        reCaptcha.value = JSON.stringify(response);
-    }
-}
+import ReCaptCha from '@/components/ReCaptCha.vue'
 
 const localStorageStore = useLocalStorageStore()
 
@@ -172,12 +150,7 @@ const handleVerifyCode = async () => {
                     {{ invalid.message }}
                 </v-alert>
 
-                <RecaptchaV2
-                    @widget-id="handleWidgetId"
-                    @error-callback="handleErrorCalback"
-                    @expired-callback="handleExpiredCallback"
-                    @load-callback="handleLoadCallback"
-                />
+                <ReCaptCha :reCaptchaReceive="reCaptcha" v-model="reCaptcha"/>
 
                 <v-btn class="float-end" color="primary" @click.prevent="handleSignIn"
                     >Sign In</v-btn
