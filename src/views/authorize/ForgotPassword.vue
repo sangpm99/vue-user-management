@@ -21,7 +21,11 @@ const invalid: Reactive<any> = reactive({
 })
 
 const handleGetLink = async () => {
-    if(reCaptcha.value === null) {return}
+    if(reCaptcha.value === null) {
+        invalid.isInvalid = true
+        invalid.message = 'The reCaptcha must be authenticated.'
+        return
+    }
     const res = await authorizeStore.forgotPassword(email.value, reCaptcha.value)
     if (res) {
         switch (true) {

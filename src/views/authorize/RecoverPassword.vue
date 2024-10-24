@@ -2,6 +2,7 @@
 import { onBeforeMount, reactive, ref, type Reactive, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthorizeStore } from '@/stores/authorizeStore'
+import ReCaptCha from '@/components/ReCaptCha.vue';
 
 const authorizeStore = useAuthorizeStore()
 const route = useRoute()
@@ -15,7 +16,7 @@ const userData: Reactive<any> = reactive({
     token: '',
     newPassword: '',
     confirmNewPassword: '',
-    reCaptcha: 'string'
+    reCaptcha: null
 })
 
 onBeforeMount(() => {
@@ -49,6 +50,11 @@ const invalid: Reactive<any> = reactive({
 })
 
 const handleRecoverPassword = async () => {
+    if(userData.reCaptcha === null) {
+        invalidLink.value = true
+        invalidContent.value = 'The reCaptcha must be authenticated.'
+        return
+    }
     const res = await authorizeStore.recoverPassword(
         userData.email,
         userData.newPassword,
@@ -117,6 +123,13 @@ const handleRecoverPassword = async () => {
                             {{ invalid.message }}
                         </v-alert>
                     </v-col>
+
+                    <ReCaptCha 
+                        :re-captcha-receive="userData.reCaptcha"
+                        @handle-error-callback="(value) => userData.reCaptcha = value"
+                        @handle-expired-callback="(value) => userData.reCaptcha = value"
+                        @handle-load-callback="(value) => userData.reCaptcha = value"
+                    />
 
                     <v-col cols="12">
                         <v-btn
