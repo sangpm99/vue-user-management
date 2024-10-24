@@ -18,8 +18,8 @@ const handleExpiredCallback = () => {
 }
 
 // Ham duoc goi khi click
-const handleLoadCallback = (response: string) => {
-    reCaptcha.value = response;
+const handleLoadCallback = (response: unknown) => {
+    console.log(response);
 }
 
 const localStorageStore = useLocalStorageStore()
